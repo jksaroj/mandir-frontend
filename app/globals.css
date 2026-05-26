@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+body {
+  background: #fffaf5;
+  color: #1f2333;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@keyframes silkWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes softGlow {
+  0%, 100% {
+    opacity: 0.45;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translate3d(14px, -10px, 0) scale(1.04);
+  }
+}
+
+@keyframes shimmerUnderline {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.silk-wave-bg {
+  background-size: 200% 200%;
+  animation: silkWave 12s ease-in-out infinite;
+}
+
+.soft-glow::before {
+  content: "";
+  position: absolute;
+  inset: auto 8% 8% auto;
+  width: 260px;
+  height: 260px;
+  border-radius: 9999px;
+  background: rgba(217, 164, 65, 0.18);
+  filter: blur(48px);
+  animation: softGlow 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.gold-underline {
+  background: linear-gradient(90deg, transparent, #d9a441, #f6d680, #d9a441, transparent);
+  background-size: 200% 100%;
+  animation: shimmerUnderline 2.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .silk-wave-bg,
+  .soft-glow::before,
+  .gold-underline {
+    animation: none;
+  }
+}
