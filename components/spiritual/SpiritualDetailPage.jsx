@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 import { notFound, redirect } from "next/navigation";
 import Header from "@/components/site/Header";
 import Footer from "@/components/site/Footer";
@@ -7,8 +7,8 @@ import FloatingDivine from "@/components/animations/FloatingDivine";
 import WaveGrid, { WaveGridItem } from "@/components/animations/WaveGrid";
 import WaveText from "@/components/animations/WaveText";
 import I18n from "@/components/i18n/I18n";
-import I18nTabs from "@/components/i18n/I18nTabs";
 import SimpleSlider from "@/components/ui/SimpleSlider";
+import ShareButton from "@/components/ui/ShareButton";
 import FaqSection from "@/components/seo/FaqSection";
 import { DEFAULT_LOCALE } from "@/lib/i18n/config";
 import { getMessage } from "@/lib/i18n/getMessage";
@@ -17,19 +17,9 @@ import {
   getMantraHref,
   getSpiritualListHref
 } from "@/lib/mantras";
-import { BookOpen, Clock, Download, Languages, Play, Repeat, Share2, Sparkles, Star } from "lucide-react";
+import { BookOpen, Clock, Download, Languages, Play, Repeat, Sparkles, Star } from "lucide-react";
 
 const fallbackImage = "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&w=800&q=80";
-
-const tabKeys = [
-  "common.tabs.overview",
-  "common.tabs.lyrics",
-  "common.tabs.meaning",
-  "common.tabs.benefits",
-  "common.tabs.howToChant",
-  "common.tabs.whenToChant",
-  "common.tabs.related"
-];
 
 const navConfig = {
   mantra: { activeKey: "mantra", listKey: "nav.mantra", relatedKey: "common.relatedMantras", exploreKey: "common.exploreMoreMantras" },
@@ -61,7 +51,7 @@ function buildFaqs(item) {
 
 export async function generateSpiritualMetadata({ params, variant }) {
   const { slug } = await params;
-  const item = await fetchSpiritualItemBySlug(slug);
+  const item = await fetchSpiritualItemBySlug(slug, variant);
 
   if (!item) {
     return { title: `${getMessage(DEFAULT_LOCALE, navConfig[variant].listKey)} Not Found | Sri Devasthanam` };
@@ -75,7 +65,7 @@ export async function generateSpiritualMetadata({ params, variant }) {
 
 export default async function SpiritualDetailPage({ params, variant }) {
   const { slug } = await params;
-  const item = await fetchSpiritualItemBySlug(slug);
+  const item = await fetchSpiritualItemBySlug(slug, variant);
 
   if (!item) {
     notFound();
@@ -128,7 +118,7 @@ export default async function SpiritualDetailPage({ params, variant }) {
 
         <section className="grid gap-8 rounded-2xl border border-[#f1e4d6] bg-white p-6 shadow-sm lg:grid-cols-[420px_1fr]">
           <div className="relative h-[390px] overflow-hidden rounded-2xl">
-            <Image src={image} alt={item.title} fill priority sizes="420px" className="object-cover" />
+            <OptimizedImage src={image} alt={item.title} fill priority sizes="420px" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#3b1111]/45 to-transparent" />
             <span className="absolute bottom-5 left-5 text-7xl font-bold text-white">ॐ</span>
           </div>
@@ -138,7 +128,11 @@ export default async function SpiritualDetailPage({ params, variant }) {
               <I18n k="common.mostPopular" />
             </span>
             <WaveText as="h1" text={item.title} className="mt-5 block font-serif text-5xl font-bold text-[#351112]" />
-            <p className="mt-2 text-3xl font-bold text-[#9b5252]">{item.originalText || item.transliteration}</p>
+            {(item.originalText || item.transliteration) && (
+              <p className="mt-2 text-2xl font-bold text-[#9b5252]">
+                {String(item.originalText || item.transliteration).split("\n")[0]}
+              </p>
+            )}
             <div className="mt-5 flex flex-wrap gap-2">
               {[item.deity, item.categoryLabel || item.type, getMessage(DEFAULT_LOCALE, "common.vedic")].filter(Boolean).map((tag) => (
                 <span key={tag} className="rounded-full bg-[#fff7ed] px-3 py-1 text-xs font-extrabold text-[#6b2323]">
@@ -146,7 +140,9 @@ export default async function SpiritualDetailPage({ params, variant }) {
                 </span>
               ))}
             </div>
-            <p className="mt-6 text-base font-medium leading-8 text-slate-600">{item.excerpt}</p>
+            {item.excerpt && (
+              <p className="mt-6 whitespace-pre-line text-base font-medium leading-8 text-slate-600">{item.excerpt}</p>
+            )}
             <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {info.map(([labelKey, value, Icon]) => (
                 <div key={labelKey} className="rounded-xl bg-[#fff7ed] p-4">
@@ -165,47 +161,68 @@ export default async function SpiritualDetailPage({ params, variant }) {
                 <Download size={17} />
                 <I18n k="common.download" />
               </button>
-              <button type="button" className="inline-flex items-center gap-2 rounded-lg border border-[#d9bfa9] px-5 py-3 text-sm font-extrabold text-[#6b2323]">
-                <Share2 size={17} />
-                <I18n k="common.share" />
-              </button>
+              <ShareButton
+                title={item.title}
+                url={`${listHref}/${slug}`}
+                label={getMessage(DEFAULT_LOCALE, "common.share")}
+                modalTitle={`Share ${item.title}`}
+                className="inline-flex items-center gap-2 rounded-lg border border-[#d9bfa9] px-5 py-3 text-sm font-extrabold text-[#6b2323] hover:bg-[#fff7ed]"
+                iconSize={17}
+              />
             </div>
           </div>
         </section>
-
-        <I18nTabs tabKeys={tabKeys} className="mt-8" />
 
         <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
           <div className="space-y-8">
             <div className="rounded-2xl border border-[#f1e4d6] bg-white p-7 shadow-sm">
               <I18n k="common.tabs.lyrics" as="h2" className="text-2xl font-extrabold text-[#351112]" />
-              <div className="mt-6 rounded-2xl bg-[#fff7ed] p-8 text-center">
-                <p className="text-7xl font-bold text-[#d9a441]">ॐ</p>
-                <p className="mt-5 text-4xl font-bold text-[#5b1f1f]">{item.originalText || item.title}</p>
-                <p className="mt-4 text-lg font-semibold text-slate-600">{item.transliteration || item.title}</p>
+              {/* Complete path/lyrics — user yahan poora chalisa/mantra padh sakta hai */}
+              <div className="mt-6 rounded-2xl bg-[#fff7ed] p-6 sm:p-10">
+                <p className="text-center text-6xl font-bold text-[#d9a441]">ॐ</p>
+                <p className="mx-auto mt-6 max-w-2xl whitespace-pre-line text-center font-serif text-xl font-semibold leading-10 text-[#5b1f1f] sm:text-2xl sm:leading-[2.9rem]">
+                  {item.originalText || item.title}
+                </p>
+                {item.originalTextHi && item.originalTextHi !== item.originalText && (
+                  <div className="mt-8 border-t border-[#eadfc8] pt-7">
+                    <p className="text-center text-xs font-extrabold uppercase tracking-[0.25em] text-[#b66a14]">
+                      हिंदी में पढ़ें
+                    </p>
+                    <p className="mx-auto mt-4 max-w-2xl whitespace-pre-line text-center font-serif text-xl font-semibold leading-10 text-[#5b1f1f] sm:text-2xl sm:leading-[2.9rem]">
+                      {item.originalTextHi}
+                    </p>
+                  </div>
+                )}
+                {item.transliteration && (
+                  <p className="mx-auto mt-8 max-w-2xl whitespace-pre-line border-t border-[#eadfc8] pt-6 text-center text-base font-semibold leading-8 text-slate-600">
+                    {item.transliteration}
+                  </p>
+                )}
               </div>
               <div className="mt-7 grid gap-5 md:grid-cols-2">
                 <div className="rounded-xl border border-[#f1e4d6] p-5">
                   <I18n k="common.transliteration" as="h3" className="font-extrabold" />
-                  <p className="mt-3 text-sm font-medium leading-7 text-slate-600">{item.transliteration || item.title}</p>
+                  <p className="mt-3 whitespace-pre-line text-sm font-medium leading-7 text-slate-600">
+                    {item.transliteration || item.title}
+                  </p>
                 </div>
                 <div className="rounded-xl border border-[#f1e4d6] p-5">
                   <I18n k="common.meaning" as="h3" className="font-extrabold" />
-                  <p className="mt-3 text-sm font-medium leading-7 text-slate-600">{item.excerpt}</p>
+                  <p className="mt-3 whitespace-pre-line text-sm font-medium leading-7 text-slate-600">{item.excerpt}</p>
                 </div>
               </div>
             </div>
 
             <div className="rounded-2xl border border-[#f1e4d6] bg-white p-7 shadow-sm">
               <I18n k="common.howToChant" as="h2" className="text-2xl font-extrabold text-[#351112]" />
-              <p className="mt-5 text-sm font-medium leading-7 text-slate-600">
+              <p className="mt-5 whitespace-pre-line text-sm font-medium leading-7 text-slate-600">
                 {item.howToChant || <I18n k="common.defaultHowToChant" />}
               </p>
             </div>
 
             <div className="rounded-2xl border border-[#f1e4d6] bg-white p-7 shadow-sm">
               <I18n k="common.whenToChant" as="h2" className="text-2xl font-extrabold text-[#351112]" />
-              <p className="mt-4 text-sm font-medium leading-7 text-slate-600">
+              <p className="mt-4 whitespace-pre-line text-sm font-medium leading-7 text-slate-600">
                 {item.notes || <I18n k="common.defaultWhenToChant" />}
               </p>
             </div>

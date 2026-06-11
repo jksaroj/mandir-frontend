@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, Pause, Play } from "lucide-react";
+import Stagger, { StaggerItem } from "@/components/animations/Stagger";
 import {
   fallbackAartis,
   fallbackChalisas,
@@ -111,29 +112,35 @@ export default function DevotionalColumns({ items = [] }) {
       >
         Aarti, Mantra &amp; Chalisa
       </h2>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Column
-          title="Popular Aartis"
-          items={aartis}
-          viewAllHref="/mantras"
-          playingId={playingId}
-          onToggle={onToggle}
-        />
-        <Column
-          title="Powerful Mantras"
-          items={mantras}
-          viewAllHref="/mantras"
-          playingId={playingId}
-          onToggle={onToggle}
-        />
-        <Column
-          title="Popular Chalisas"
-          items={chalisas}
-          viewAllHref="/chalisa"
-          playingId={playingId}
-          onToggle={onToggle}
-        />
-      </div>
+      <Stagger className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" stagger={0.14}>
+        <StaggerItem>
+          <Column
+            title="Popular Aartis"
+            items={aartis}
+            viewAllHref="/mantras"
+            playingId={playingId}
+            onToggle={onToggle}
+          />
+        </StaggerItem>
+        <StaggerItem>
+          <Column
+            title="Powerful Mantras"
+            items={mantras}
+            viewAllHref="/mantras"
+            playingId={playingId}
+            onToggle={onToggle}
+          />
+        </StaggerItem>
+        <StaggerItem>
+          <Column
+            title="Popular Chalisas"
+            items={chalisas}
+            viewAllHref="/chalisa"
+            playingId={playingId}
+            onToggle={onToggle}
+          />
+        </StaggerItem>
+      </Stagger>
     </section>
   );
 }

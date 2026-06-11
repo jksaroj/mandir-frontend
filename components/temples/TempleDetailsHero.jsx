@@ -6,6 +6,7 @@ import FadeUp from "@/components/animations/FadeUp";
 import FloatingDivine from "@/components/animations/FloatingDivine";
 import SimpleSlider from "@/components/ui/SimpleSlider";
 import OptimizedImage from "@/components/ui/OptimizedImage";
+import ShareButton from "@/components/ui/ShareButton";
 import { IMAGE_SIZES, templeImageAlt } from "@/lib/images";
 
 export default function TempleDetailsHero({ temple }) {
@@ -111,6 +112,15 @@ export default function TempleDetailsHero({ temple }) {
             <button type="button" className="flex h-12 w-12 items-center justify-center rounded-lg border border-[#d9b7a6] text-[#9b5252]">
               <Heart size={18} />
             </button>
+            <ShareButton
+              title={temple.name}
+              url={temple.slug ? `/temples/${temple.slug}` : ""}
+              label={`Share ${temple.name}`}
+              modalTitle="Share this temple"
+              iconOnly
+              iconSize={18}
+              className="flex h-12 w-12 items-center justify-center rounded-lg border border-[#d9b7a6] text-[#9b5252] hover:bg-[#fff5e9]"
+            />
           </div>
         </div>
       </FadeUp>

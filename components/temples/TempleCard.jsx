@@ -11,19 +11,19 @@ export default function TempleCard({ temple, variant = "listing" }) {
   return (
     <Link href={href} className="block h-full cursor-pointer" aria-label={`View details for ${temple.name}`}>
       <article
-        className={`h-full overflow-hidden transition duration-200 hover:-translate-y-2 hover:shadow-lg active:scale-[0.98] ${
+        className={`group card-lift h-full overflow-hidden active:scale-[0.98] ${
           isHome
             ? "rounded-xl bg-white shadow-md"
             : "rounded-2xl border border-[#f1e7dc] bg-white shadow-sm"
         }`}
       >
-        <div className="relative h-40">
+        <div className="relative h-40 overflow-hidden">
           <OptimizedImage
             src={temple.image}
             alt={templeImageAlt(temple.name, { context: "hero" })}
             fill
             sizes={IMAGE_SIZES.card}
-            className="object-cover"
+            className="img-zoom object-cover"
             quality={80}
           />
           <span

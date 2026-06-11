@@ -6,14 +6,14 @@ import { fallbackEvents } from "@/lib/homeContent";
 
 function EventCard({ event }) {
   return (
-    <article className="flex h-full w-[min(100%,300px)] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#f1e4d6] bg-white shadow-sm transition hover:shadow-temple sm:w-[280px]">
-      <div className="relative h-40">
+    <article className="group card-lift flex h-full w-[min(100%,300px)] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#f1e4d6] bg-white shadow-sm sm:w-[280px]">
+      <div className="relative h-40 overflow-hidden">
         <Image
           src={event.image}
           alt={`${event.name} — spiritual event`}
           fill
           sizes="280px"
-          className="object-cover"
+          className="img-zoom object-cover"
           loading="lazy"
         />
       </div>

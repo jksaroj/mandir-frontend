@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 import Header from "@/components/site/Header";
 import Footer from "@/components/site/Footer";
 import AnimatedCard from "@/components/animations/AnimatedCard";
@@ -8,9 +9,10 @@ import FloatingDivine from "@/components/animations/FloatingDivine";
 import WaveGrid, { WaveGridItem } from "@/components/animations/WaveGrid";
 import I18n from "@/components/i18n/I18n";
 import I18nWaveText from "@/components/i18n/I18nWaveText";
+import ShareButton from "@/components/ui/ShareButton";
 import { getMessage } from "@/lib/i18n/getMessage";
 import { DEFAULT_LOCALE } from "@/lib/i18n/config";
-import { BookOpen, Clock, Music2, Play, Search, Share2, Star } from "lucide-react";
+import { BookOpen, Clock, Music2, Play, Search, Star } from "lucide-react";
 import { fetchSpiritualItems, getMantraHref } from "@/lib/mantras";
 
 const heroImage = "https://images.unsplash.com/photo-1604608678051-64d46d9cc0e1?auto=format&fit=crop&w=1200&q=80";
@@ -142,7 +144,7 @@ export default async function SpiritualListingPage({ variant }) {
               {items.map((item) => (
                 <FadeUp key={item.slug}>
                   <article className="grid gap-5 rounded-2xl border border-[#f1e4d6] bg-white p-5 shadow-sm md:grid-cols-[110px_1fr_auto] md:items-center">
-                    <Image src={item.image} alt={item.title} width={110} height={100} className="h-[100px] w-[110px] rounded-xl object-cover" />
+                    <OptimizedImage src={item.image} alt={item.title} width={110} height={100} className="h-[100px] w-[110px] rounded-xl object-cover" />
                     <div>
                       <Link href={getMantraHref(item)} className="text-xl font-extrabold text-[#351112]">
                         {item.title}
@@ -160,9 +162,15 @@ export default async function SpiritualListingPage({ variant }) {
                       <Link href={getMantraHref(item)} className="rounded-lg border border-[#9b5252] px-4 py-2 text-xs font-extrabold text-[#6b2323]">
                         <I18n k="common.lyrics" />
                       </Link>
-                      <button type="button" className="rounded-lg bg-[#fff2df] px-4 py-2 text-xs font-extrabold text-[#6b2323]">
-                        <Share2 size={14} />
-                      </button>
+                      <ShareButton
+                        title={item.title}
+                        url={getMantraHref(item)}
+                        label={`Share ${item.title}`}
+                        modalTitle={`Share ${item.title}`}
+                        iconOnly
+                        iconSize={14}
+                        className="rounded-lg bg-[#fff2df] px-4 py-2 text-xs font-extrabold text-[#6b2323]"
+                      />
                     </div>
                   </article>
                 </FadeUp>
@@ -174,7 +182,7 @@ export default async function SpiritualListingPage({ variant }) {
                 <WaveGridItem key={item.slug}>
                   <Link href={getMantraHref(item)} className="block">
                     <AnimatedCard className="rounded-2xl border border-[#f1e4d6] bg-white p-6 shadow-sm transition hover:shadow-md">
-                      <Image src={item.image} alt={item.title} width={80} height={80} className="h-20 w-20 rounded-xl object-cover" />
+                      <OptimizedImage src={item.image} alt={item.title} width={80} height={80} className="h-20 w-20 rounded-xl object-cover" />
                       <h3 className="mt-5 font-extrabold">{item.title}</h3>
                       <p className="mt-2 text-sm font-semibold text-slate-500">
                         {item.excerpt ? item.excerpt : <I18n k="common.readLyricsMeaning" />}
@@ -187,10 +195,10 @@ export default async function SpiritualListingPage({ variant }) {
           )}
         </div>
         <aside className="space-y-6">
-          <div className="rounded-2xl border border-[#f1e4d6] bg-white p-6 shadow-sm">
+          <div className="gold-ring rounded-2xl border border-[#f1e4d6] bg-white p-6 shadow-sm">
             <I18n k={config.sidebarDaily} as="h3" className="text-xl font-extrabold" />
             <FloatingDivine className="mt-6 rounded-2xl bg-[#fff2df] p-6 text-center">
-              <p className="text-6xl font-bold text-[#d9a441]">ॐ</p>
+              <p className="gentle-float diya-flicker text-6xl font-bold text-[#d9a441]">ॐ</p>
               <h4 className="mt-4 font-extrabold">
                 {featured?.title ? featured.title : <I18n k={config.defaultTitle} />}
               </h4>

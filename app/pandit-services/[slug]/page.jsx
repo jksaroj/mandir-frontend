@@ -7,6 +7,7 @@ import FadeUp from "@/components/animations/FadeUp";
 import WaveText from "@/components/animations/WaveText";
 import WaveGrid, { WaveGridItem } from "@/components/animations/WaveGrid";
 import Tabs from "@/components/ui/Tabs";
+import ShareButton from "@/components/ui/ShareButton";
 import { fetchPanditBySlug } from "@/lib/pandits";
 import {
   BadgeCheck,
@@ -17,7 +18,6 @@ import {
   Mail,
   MapPin,
   Phone,
-  Share2,
   Star
 } from "lucide-react";
 
@@ -88,7 +88,14 @@ export default async function PanditProfilePage({ params }) {
               <div className="mt-7 flex flex-wrap gap-3">
                 <button className="rounded-lg bg-[#6b2323] px-7 py-3 text-sm font-extrabold text-white">Book Now</button>
                 <button className="rounded-lg border border-[#9b5252] px-7 py-3 text-sm font-extrabold text-[#6b2323]">Contact Pandit</button>
-                <button className="inline-flex items-center gap-2 rounded-lg border border-[#d9bfa9] px-5 py-3 text-sm font-extrabold text-[#6b2323]"><Share2 size={16} /> Share Profile</button>
+                <ShareButton
+                  title={pandit.name}
+                  url={`/pandit-services/${slug}`}
+                  label="Share Profile"
+                  modalTitle={`Share ${pandit.name}`}
+                  className="inline-flex items-center gap-2 rounded-lg border border-[#d9bfa9] px-5 py-3 text-sm font-extrabold text-[#6b2323] hover:bg-[#fff7ed]"
+                  iconSize={16}
+                />
               </div>
             </div>
             <aside className="rounded-2xl bg-[#fff7ed] p-6 text-center">

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { Landmark, Eye, EyeOff, LogIn } from 'lucide-react';
 
 export default function LoginPage() {
@@ -60,9 +61,14 @@ export default function LoginPage() {
 
       {/* Main */}
       <div className="flex flex-1 items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md">
+        <motion.div
+          initial={{ opacity: 0, y: 32, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full max-w-md"
+        >
           {/* Card */}
-          <div className="bg-white rounded-2xl shadow-md border border-[#f1e7dc] overflow-hidden">
+          <div className="gold-ring bg-white rounded-2xl shadow-md border border-[#f1e7dc] overflow-hidden">
             {/* Header strip */}
             <div className="bg-gradient-to-r from-[#6b2323] to-[#9b3a3a] px-8 py-6 text-center">
               <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-white/20">
@@ -154,7 +160,7 @@ export default function LoginPage() {
             <a href="#" className="underline">Terms of Service</a> and{' '}
             <a href="#" className="underline">Privacy Policy</a>.
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

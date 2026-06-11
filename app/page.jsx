@@ -7,7 +7,9 @@ import UpcomingEvents from "@/components/home/UpcomingEvents";
 import BlogArticles from "@/components/home/BlogArticles";
 import FAQSection from "@/components/home/FAQSection";
 import Footer from "@/components/home/Footer";
+import Reveal from "@/components/animations/Reveal";
 import { fetchHomeData } from "@/lib/home";
+import { fetchBanners } from "@/lib/banners";
 
 export const revalidate = 60;
 
@@ -33,19 +35,34 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const { temples, spiritualItems, events } = await fetchHomeData();
+  const [{ temples, spiritualItems, events }, banners] = await Promise.all([
+    fetchHomeData(),
+    fetchBanners()
+  ]);
 
   return (
     <>
       <Header />
       <main className="min-h-screen bg-cream">
-        <HeroSection />
-        <PopularTemples temples={temples} />
-        <SpiritualReels />
-        <DevotionalColumns items={spiritualItems} />
-        <UpcomingEvents events={events} />
-        <BlogArticles />
-        <FAQSection />
+        <HeroSection banners={banners} />
+        <Reveal>
+          <PopularTemples temples={temples} />
+        </Reveal>
+        <Reveal direction="left">
+          <SpiritualReels />
+        </Reveal>
+        <Reveal direction="right">
+          <DevotionalColumns items={spiritualItems} />
+        </Reveal>
+        <Reveal scale>
+          <UpcomingEvents events={events} />
+        </Reveal>
+        <Reveal>
+          <BlogArticles />
+        </Reveal>
+        <Reveal>
+          <FAQSection />
+        </Reveal>
       </main>
       <Footer />
     </>

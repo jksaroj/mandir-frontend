@@ -17,7 +17,7 @@ const exploreLinks = [
   { label: "Mantras", href: "/mantras" },
   { label: "Chalisas", href: "/chalisa" },
   { label: "Events", href: "#events" },
-  { label: "Spiritual Reels", href: "#reels" },
+  { label: "Spiritual Reels", href: "/reels" },
   { label: "Blog", href: "#blog" },
   { label: "Pandit Services", href: "/pandit-services" }
 ];

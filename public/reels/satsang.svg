@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440">
+  <defs><radialGradient id="g" cx=".5" cy=".42"><stop stop-color="#f7d27a"/><stop offset=".48" stop-color="#5b2a15"/><stop offset="1" stop-color="#120b08"/></radialGradient></defs>
+  <rect width="700" height="440" fill="url(#g)"/>
+  <circle cx="350" cy="164" r="78" fill="#ffe2a3"/>
+  <path d="M238 350c30-88 194-88 224 0Z" fill="#5b2a15"/>
+  <g fill="#22100a" opacity=".85"><circle cx="150" cy="335" r="24"/><circle cx="230" cy="350" r="22"/><circle cx="470" cy="350" r="22"/><circle cx="550" cy="335" r="24"/></g>
+  <text x="42" y="72" fill="#fff" font-family="Arial" font-size="34" font-weight="800">Satsang Amrit Vani</text>
+</svg>

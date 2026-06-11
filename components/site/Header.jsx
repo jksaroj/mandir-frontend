@@ -8,6 +8,7 @@ const navItems = [
   { key: "nav.temples", activeKey: "temples", href: "/temples" },
   { key: "nav.mantra", activeKey: "mantra", href: "/mantras" },
   { key: "nav.chalisa", activeKey: "chalisa", href: "/chalisa" },
+  { key: "Spiritual Reels", activeKey: "reels", href: "/reels", plain: true },
   { key: "nav.festivals", activeKey: "festivals", href: "#" },
   { key: "nav.panditServices", activeKey: "pandit", href: "/pandit-services" }
 ];
@@ -35,7 +36,7 @@ export default function Header({ active = "home" }) {
                 active === item.activeKey ? "text-[#d9a441]" : "text-white"
               }`}
             >
-              <I18n k={item.key} />
+              {item.plain ? item.key : <I18n k={item.key} />}
               {item.activeKey === "temples" && <ChevronDown size={13} />}
               {active === item.activeKey && (
                 <span className="gold-underline absolute bottom-4 left-0 h-0.5 w-full rounded" />

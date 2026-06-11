@@ -12,6 +12,7 @@ import TempleReviews from "@/components/temples/TempleReviews";
 import TempleTimings from "@/components/temples/TempleTimings";
 import TempleScheduleGrid from "@/components/temples/TempleScheduleGrid";
 import FaqSection from "@/components/seo/FaqSection";
+import Reveal from "@/components/animations/Reveal";
 import { fetchAllTempleSlugs, fetchTempleBySlug } from "@/lib/temples";
 import { resolveImageUrl } from "@/lib/images";
 
@@ -116,25 +117,39 @@ export default async function TempleDetailsPage({ params }) {
         </section>
         <TempleInfoTabs />
         <section id="darshan-timings" className="scroll-mt-24">
-          <TempleTimings temple={temple} />
-          <TempleScheduleGrid scheduleTimings={temple.scheduleTimings} />
+          <Reveal>
+            <TempleTimings temple={temple} />
+          </Reveal>
+          <Reveal>
+            <TempleScheduleGrid scheduleTimings={temple.scheduleTimings} />
+          </Reveal>
         </section>
         <span id="pooja-seva" className="block scroll-mt-24" />
         <span id="history" className="block scroll-mt-24" />
         <section id="gallery" className="scroll-mt-24">
-          <TempleGallery temple={temple} />
+          <Reveal scale>
+            <TempleGallery temple={temple} />
+          </Reveal>
         </section>
         <section id="facilities" className="scroll-mt-24">
-          <TempleFacilities facilities={temple.facilities} />
+          <Reveal direction="left">
+            <TempleFacilities facilities={temple.facilities} />
+          </Reveal>
         </section>
         <section id="how-to-reach" className="scroll-mt-24">
-          <TempleLocation temple={temple} />
+          <Reveal direction="right">
+            <TempleLocation temple={temple} />
+          </Reveal>
         </section>
-        <TempleNearbyPlaces temple={temple} />
+        <Reveal>
+          <TempleNearbyPlaces temple={temple} />
+        </Reveal>
         <section id="reviews" className="scroll-mt-24">
-          <TempleReviews temple={temple} />
+          <Reveal>
+            <TempleReviews temple={temple} />
+          </Reveal>
         </section>
-        <section className="mt-10 overflow-hidden rounded-2xl border border-[#f1e7dc] bg-[#fff2df] px-6 py-9 text-center shadow-sm">
+        <section className="gold-ring card-lift mt-10 overflow-hidden rounded-2xl border border-[#f1e7dc] bg-[#fff2df] px-6 py-9 text-center shadow-sm">
           <h2 className="font-serif text-3xl font-bold text-[#3d1717]">
             Plan your visit for a divine experience.
           </h2>

@@ -1,5 +1,6 @@
 import { Landmark, UsersRound, HandHeart, Flower2 } from "lucide-react";
 import WaveGrid, { WaveGridItem } from "@/components/animations/WaveGrid";
+import CountUp from "@/components/animations/CountUp";
 
 const stats = [
   { value: "20,000+", label: "Temples Listed", icon: Landmark },
@@ -17,7 +18,9 @@ export default function StatsSection() {
           <WaveGridItem key={label} className={`flex items-center justify-center gap-5 ${index > 0 ? "lg:border-l lg:border-maroon/15" : ""}`}>
             <Icon className="text-[#d77a12]" size={38} strokeWidth={1.6} />
             <div>
-              <p className="text-2xl font-extrabold text-maroon">{value}</p>
+              <p className="text-2xl font-extrabold text-maroon">
+                <CountUp value={value} />
+              </p>
               <p className="text-sm font-bold text-[#11162b]">{label}</p>
             </div>
           </WaveGridItem>

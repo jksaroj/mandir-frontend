@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#111327"/><stop offset=".5" stop-color="#17425f"/><stop offset="1" stop-color="#f5a735"/></linearGradient></defs>
+  <rect width="700" height="440" fill="url(#g)"/>
+  <circle cx="390" cy="190" r="92" fill="#8bd3ff" opacity=".9"/>
+  <path d="M246 188h282" stroke="#ffc857" stroke-width="18" stroke-linecap="round"/>
+  <path d="M325 98c80-40 144 14 128 90" fill="#15162a"/>
+  <path d="M423 83c26-42 46-48 82-60-10 36-25 58-62 75" fill="#21a675"/>
+  <circle cx="476" cy="42" r="14" fill="#2843a8"/>
+  <text x="42" y="72" fill="#fff" font-family="Arial" font-size="34" font-weight="800">Radhe Krishna Bhajan</text>
+</svg>

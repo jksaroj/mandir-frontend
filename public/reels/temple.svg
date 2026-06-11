@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f6b64a"/><stop offset=".55" stop-color="#8d3315"/><stop offset="1" stop-color="#31120a"/></linearGradient></defs>
+  <rect width="700" height="440" fill="url(#g)"/>
+  <path d="M105 350h490L552 205l-70-40-58 185H276l-58-185-70 40-43 145Z" fill="#ffe2a3"/>
+  <path d="M300 350V210l50-95 50 95v140" fill="#b94a18"/>
+  <path d="M350 104V58" stroke="#ffe2a3" stroke-width="12" stroke-linecap="round"/>
+  <text x="42" y="72" fill="#fff" font-family="Arial" font-size="34" font-weight="800">Temple Darshan</text>
+</svg>

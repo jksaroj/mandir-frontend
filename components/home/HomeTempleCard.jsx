@@ -22,15 +22,15 @@ export default function HomeTempleCard({ temple }) {
     `Visit ${temple.name} for darshan, aarti timings and spiritual guidance.`;
 
   return (
-    <article className="flex h-full w-[min(100%,280px)] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#f1e7dc] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-temple sm:w-[260px] lg:w-[calc((100%-5*1.25rem)/5)] lg:min-w-[200px] lg:max-w-[240px]">
+    <article className="group card-lift flex h-full w-[min(100%,280px)] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#f1e7dc] bg-white shadow-sm sm:w-[260px] lg:w-[calc((100%-5*1.25rem)/5)] lg:min-w-[200px] lg:max-w-[240px]">
       <Link href={href} className="block">
-        <div className="relative h-44">
+        <div className="relative h-44 overflow-hidden">
           <OptimizedImage
             src={temple.image}
             alt={templeImageAlt(temple.name, { context: "card" })}
             fill
             sizes={IMAGE_SIZES.card}
-            className="object-cover"
+            className="img-zoom object-cover"
             quality={80}
           />
           <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-extrabold text-[#b86b12] shadow-sm">

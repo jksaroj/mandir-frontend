@@ -1,5 +1,6 @@
 import "./globals.css";
 import AppProviders from "@/components/providers/AppProviders";
+import ScrollProgress from "@/components/animations/ScrollProgress";
 import { getServerLocale } from "@/lib/i18n/server";
 
 export const metadata = {
@@ -13,6 +14,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang={locale === "hi" ? "hi" : "en"}>
       <body>
+        <ScrollProgress />
         <AppProviders initialLocale={locale}>{children}</AppProviders>
       </body>
     </html>

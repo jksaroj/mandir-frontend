@@ -8,6 +8,7 @@ import TempleByState from "@/components/temples/TempleByState";
 import TempleCategoryGrid from "@/components/temples/TempleCategoryGrid";
 import TempleFilters from "@/components/temples/TempleFilters";
 import TempleHero from "@/components/temples/TempleHero";
+import Reveal from "@/components/animations/Reveal";
 import { fetchTemples } from "@/lib/temples";
 
 export const metadata = {
@@ -25,13 +26,27 @@ export default async function TemplesPage() {
     <main className="min-h-screen bg-[#fffaf6] text-[#15172b]">
       <Header />
       <TempleHero />
-      <TempleFilters />
-      <TempleCategoryGrid />
-      <PopularTempleCards temples={temples} />
-      <TempleByState />
-      <RecentlyAddedTemples temples={temples} />
-      <TempleBenefits />
-      <NewsletterSection />
+      <Reveal direction="none" duration={0.6}>
+        <TempleFilters />
+      </Reveal>
+      <Reveal>
+        <TempleCategoryGrid />
+      </Reveal>
+      <Reveal direction="left">
+        <PopularTempleCards temples={temples} />
+      </Reveal>
+      <Reveal direction="right">
+        <TempleByState />
+      </Reveal>
+      <Reveal>
+        <RecentlyAddedTemples temples={temples} />
+      </Reveal>
+      <Reveal scale>
+        <TempleBenefits />
+      </Reveal>
+      <Reveal>
+        <NewsletterSection />
+      </Reveal>
       <Footer />
     </main>
   );

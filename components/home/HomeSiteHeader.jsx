@@ -13,7 +13,7 @@ const navItems = [
   { label: "Mantras", href: "/mantras", key: "mantra" },
   { label: "Chalisas", href: "/chalisa", key: "chalisa" },
   { label: "Upcoming Events", href: "#events", key: "events" },
-  { label: "Spiritual Reels", href: "#reels", key: "reels" },
+  { label: "Spiritual Reels", href: "/reels", key: "reels" },
   { label: "Pandit Services", href: "/pandit-services", key: "pandit", badge: "Soon" },
   { label: "Blog / Articles", href: "#blog", key: "blog" }
 ];

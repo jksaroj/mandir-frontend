@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440">
+  <defs><radialGradient id="g" cx=".5" cy=".45"><stop stop-color="#ffe99a"/><stop offset=".45" stop-color="#b64b13"/><stop offset="1" stop-color="#120808"/></radialGradient></defs>
+  <rect width="700" height="440" fill="url(#g)"/>
+  <path d="M175 315h350" stroke="#ffe7a3" stroke-width="16" stroke-linecap="round"/>
+  <g fill="#ffd56a"><path d="M250 260c-28-42 10-70 0-112 48 44 56 78 0 112Z"/><path d="M350 260c-28-42 10-70 0-112 48 44 56 78 0 112Z"/><path d="M450 260c-28-42 10-70 0-112 48 44 56 78 0 112Z"/></g>
+  <text x="42" y="72" fill="#fff" font-family="Arial" font-size="34" font-weight="800">Shri Aarti Sangrah</text>
+</svg>
