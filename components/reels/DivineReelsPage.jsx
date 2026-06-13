@@ -19,51 +19,10 @@ import {
 } from "lucide-react";
 import Header from "@/components/home/Header";
 import Footer from "@/components/home/Footer";
-import { apiGet } from "@/lib/api";
-import { resolveImageUrl } from "@/lib/images";
+import { fetchReels } from "@/lib/reels";
 import ReelPopup from "@/components/reels/ReelPopup";
 
 const heroImage = "/reels/hero-krishna.png";
-
-const fallbackThumbs = [
-  "/reels/shiva.svg",
-  "/reels/hanuman.svg",
-  "/reels/krishna.svg",
-  "/reels/aarti.svg",
-  "/reels/temple.svg",
-  "/reels/durga.svg",
-  "/reels/ganesh.svg",
-  "/reels/satsang.svg"
-];
-
-const fallbackReels = [
-  ["Om Namah Shivaya", "Shiv", "Bhajan", "12.5K", "00:30"],
-  ["Shri Hanuman Chalisa", "Hanuman", "Aarti", "15.8K", "00:28"],
-  ["Radhe Krishna Bhajan", "Krishna", "Bhajan", "18.2K", "00:29"],
-  ["Shri Aarti Sangrah", "Aarti", "Aarti", "9.1K", "00:26"],
-  ["Kashi Vishwanath Darshan", "Temple", "Temple", "7.2K", "00:30"],
-  ["Maa Devi Mahima", "Durga", "Bhajan", "11.6K", "00:30"],
-  ["Ganpati Bappa Morya", "Ganesh", "Bhajan", "10.2K", "00:27"],
-  ["Shanti Mantra", "Mantra", "Mantra", "8.3K", "00:25"],
-  ["Satsang Amrit Vani", "Pravachan", "Pravachan", "6.4K", "00:28"],
-  ["Radha Naam Ki Mahima", "Krishna", "Bhajan", "9.8K", "00:29"],
-  ["Mandir Ki Subah", "Temple", "Temple", "7.9K", "00:24"],
-  ["Aarti Deep Darshan", "Aarti", "Aarti", "13.4K", "00:31"],
-  ["Bhakti Ras Kirtan", "Bhajan", "Bhajan", "5.8K", "00:27"],
-  ["Mahamrityunjaya Mantra", "Shiv", "Mantra", "14.7K", "00:30"],
-  ["Sant Vani", "Pravachan", "Pravachan", "6.9K", "00:32"],
-  ["Vrindavan Darshan", "Krishna", "Temple", "12.1K", "00:29"]
-].map(([title, deity, category, views, duration], index) => ({
-  _id: `fallback-${index}`,
-  title,
-  deity,
-  category,
-  views,
-  duration,
-  sourceType: "youtube",
-  thumbnail: fallbackThumbs[index % fallbackThumbs.length],
-  status: "active"
-}));
 
 const filters = [
   { id: "all", label: "All", icon: Flame },
@@ -77,42 +36,22 @@ const filters = [
 
 const PER_PAGE = 10;
 
-function normalizeApiReel(reel, index) {
-  return {
-    ...reel,
-    _id: reel._id || reel.id || `api-${index}`,
-    title: reel.title || "Divine Reel",
-    category: reel.category || "Bhajan",
-    deity: reel.deity || "Bhakti",
-    views: reel.views || `${(6 + (index % 14) + 0.2).toFixed(1)}K`,
-    duration: reel.duration || `00:${25 + (index % 7)}`,
-    thumbnail: resolveImageUrl(reel.thumbnail, fallbackThumbs[index % fallbackThumbs.length])
-  };
-}
-
-function getReelUrl(reel) {
-  if (reel.videoUrl) return reel.videoUrl;
-  if (reel.videoFile) return resolveImageUrl(reel.videoFile, "");
-  return typeof window !== "undefined" ? window.location.href : "/reels";
-}
-
 function ReelCard({ reel, onOpen }) {
   return (
-    <article className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+    <article className="group card-lift overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
       <button
         type="button"
-        className="relative block w-full aspect-[16/10] bg-gray-100 text-left"
+        className="relative block w-full aspect-[16/10] bg-gray-100 text-left overflow-hidden"
         onClick={() => onOpen(reel)}
         aria-label={`Play ${reel.title}`}
       >
         <img
           src={reel.thumbnail}
           alt={`${reel.title} reel thumbnail`}
-          className="h-full w-full object-cover"
+          className="img-zoom h-full w-full object-cover"
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/30" />
-        {/* Play overlay */}
         <span className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg">
             <Play size={18} fill="#e2382d" className="text-[#e2382d] ml-0.5" />
@@ -132,7 +71,7 @@ function ReelCard({ reel, onOpen }) {
         <div className="mt-2">
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gray-500">
             <span className="text-sm">🙏</span>
-            Brahmatatva
+            Sri Devasthanam
           </span>
         </div>
       </div>
@@ -140,8 +79,20 @@ function ReelCard({ reel, onOpen }) {
   );
 }
 
+function CardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-lg border border-gray-100 bg-white">
+      <div className="aspect-[16/10] w-full animate-pulse bg-gray-100" />
+      <div className="px-3 pb-3 pt-2 space-y-2">
+        <div className="h-4 w-3/4 animate-pulse rounded bg-gray-100" />
+        <div className="h-3 w-1/2 animate-pulse rounded bg-gray-100" />
+      </div>
+    </div>
+  );
+}
+
 export default function DivineReelsPage() {
-  const [reels, setReels] = useState(fallbackReels);
+  const [reels, setReels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState("latest");
@@ -151,18 +102,16 @@ export default function DivineReelsPage() {
 
   useEffect(() => {
     let ignore = false;
-    async function loadReels() {
+    async function load() {
       setLoading(true);
-      const response = await apiGet("/reels?limit=100");
-      if (!ignore && Array.isArray(response?.data) && response.data.length) {
-        setReels(response.data.filter((r) => r.status !== "inactive").map(normalizeApiReel));
+      const data = await fetchReels({ limit: 100 });
+      if (!ignore) {
+        setReels(data);
+        setLoading(false);
       }
-      if (!ignore) setLoading(false);
     }
-    loadReels();
-    return () => {
-      ignore = true;
-    };
+    load();
+    return () => { ignore = true; };
   }, []);
 
   useEffect(() => {
@@ -171,7 +120,10 @@ export default function DivineReelsPage() {
   }, [filter, sort]);
 
   const filtered = useMemo(() => {
-    const list = filter === "all" ? reels : reels.filter((r) => r.category === filter || r.deity === filter);
+    const list =
+      filter === "all"
+        ? reels
+        : reels.filter((r) => r.category === filter || r.deity === filter);
     if (sort === "oldest") return [...list].reverse();
     if (sort === "popular") return [...list].sort((a, b) => parseFloat(b.views) - parseFloat(a.views));
     return list;
@@ -194,7 +146,14 @@ export default function DivineReelsPage() {
       <main className="min-h-screen bg-white">
         <section className="relative overflow-hidden border-b border-gray-200 bg-black text-white">
           <div className="absolute inset-0">
-            <Image src={heroImage} alt="Lord Krishna playing flute" fill priority sizes="100vw" className="object-cover object-center opacity-70" />
+            <Image
+              src={heroImage}
+              alt="Lord Krishna playing flute"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center opacity-70"
+            />
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/10" />
           </div>
           <div className="relative mx-auto flex min-h-[140px] max-w-7xl items-center px-4 py-7 sm:px-6 lg:px-8">
@@ -237,7 +196,7 @@ export default function DivineReelsPage() {
               <span className="sr-only">Sort reels</span>
               <select
                 value={sort}
-                onChange={(event) => setSort(event.target.value)}
+                onChange={(e) => setSort(e.target.value)}
                 className="h-11 w-full appearance-none rounded-lg border border-gray-200 bg-white px-4 text-xs font-bold text-gray-700 shadow-sm outline-none"
               >
                 <option value="latest">Latest</option>
@@ -248,26 +207,35 @@ export default function DivineReelsPage() {
             </label>
           </div>
 
+          {/* Loading skeletons */}
           {loading && (
-            <div className="mt-6 flex items-center justify-center gap-2 rounded-lg border border-gray-100 bg-gray-50 py-8 text-sm font-semibold text-gray-500">
-              <LoaderCircle size={18} className="animate-spin" />
-              Loading reels...
+            <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <CardSkeleton key={i} />
+              ))}
             </div>
           )}
 
+          {/* Empty state */}
           {!loading && filtered.length === 0 && (
             <div className="mt-6 rounded-lg border border-dashed border-gray-200 py-14 text-center text-sm font-semibold text-gray-500">
-              No reels found.
+              {reels.length === 0
+                ? "Abhi koi reel available nahi hai. Admin panel se reels upload karein."
+                : "Is category mein koi reel nahi mili."}
             </div>
           )}
 
-          <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {shown.map((reel, i) => (
-              <ReelCard key={reel._id} reel={reel} onOpen={() => setActiveIndex(i)} />
-            ))}
-          </div>
+          {/* Reels grid */}
+          {!loading && shown.length > 0 && (
+            <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {shown.map((reel, i) => (
+                <ReelCard key={reel._id} reel={reel} onOpen={() => setActiveIndex(i)} />
+              ))}
+            </div>
+          )}
 
-          {filtered.length > 0 && (
+          {/* Pagination */}
+          {!loading && filtered.length > PER_PAGE && (
             <div className="mt-6 flex flex-col items-center gap-4">
               <div className="flex items-center gap-2">
                 <button
@@ -279,21 +247,23 @@ export default function DivineReelsPage() {
                 >
                   <ChevronLeft size={16} />
                 </button>
-                {Array.from({ length: totalPages }, (_, index) => index + 1)
-                  .filter((item) => item <= 4 || item === totalPages || Math.abs(item - page) <= 1)
-                  .map((item, index, arr) => (
-                    <span key={item} className="contents">
-                      {index > 0 && item - arr[index - 1] > 1 && <span className="px-1 text-xs text-gray-400">...</span>}
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter((n) => n <= 4 || n === totalPages || Math.abs(n - page) <= 1)
+                  .map((n, idx, arr) => (
+                    <span key={n} className="contents">
+                      {idx > 0 && n - arr[idx - 1] > 1 && (
+                        <span className="px-1 text-xs text-gray-400">...</span>
+                      )}
                       <button
                         type="button"
-                        onClick={() => changePage(item)}
+                        onClick={() => changePage(n)}
                         className={`h-9 min-w-9 rounded-lg border px-3 text-xs font-bold ${
-                          page === item
+                          page === n
                             ? "border-red-600 bg-red-600 text-white shadow-sm"
                             : "border-gray-200 bg-white text-gray-700"
                         }`}
                       >
-                        {item}
+                        {n}
                       </button>
                     </span>
                   ))}
@@ -311,7 +281,7 @@ export default function DivineReelsPage() {
               <button
                 type="button"
                 disabled={!hasMore}
-                onClick={() => setVisible((count) => count + PER_PAGE)}
+                onClick={() => setVisible((c) => c + PER_PAGE)}
                 className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-6 py-3 text-xs font-extrabold text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-gray-300"
               >
                 <RotateCw size={14} />

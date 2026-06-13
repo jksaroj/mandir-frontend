@@ -2,55 +2,15 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Clock } from "lucide-react";
+import { Clock, LoaderCircle } from "lucide-react";
 import HorizontalScroll from "@/components/ui/HorizontalScroll";
-import { reelFilters, spiritualReels } from "@/lib/homeContent";
-import { apiGet } from "@/lib/api";
-import { resolveImageUrl } from "@/lib/images";
+import { reelFilters } from "@/lib/homeContent";
+import { fetchReels } from "@/lib/reels";
 import ReelPopup from "@/components/reels/ReelPopup";
-
-const fallbackThumbs = [
-  "/reels/shiva.svg",
-  "/reels/hanuman.svg",
-  "/reels/krishna.svg",
-  "/reels/aarti.svg",
-  "/reels/temple.svg",
-  "/reels/durga.svg"
-];
-
-function youtubeIdFromUrl(url) {
-  const raw = String(url || "");
-  const patterns = [
-    /youtube\.com\/shorts\/([^?&/]+)/i,
-    /youtube\.com\/watch\?v=([^?&/]+)/i,
-    /youtu\.be\/([^?&/]+)/i,
-    /youtube\.com\/embed\/([^?&/]+)/i
-  ];
-  for (const pattern of patterns) {
-    const match = raw.match(pattern);
-    if (match?.[1]) return match[1];
-  }
-  return "";
-}
-
-function normalizeApiReel(reel, index) {
-  const youtubeId = reel.sourceType === "youtube" ? youtubeIdFromUrl(reel.videoUrl) : "";
-  return {
-    ...reel,
-    id: reel._id || reel.id || `api-${index}`,
-    title: reel.title || "Divine Reel",
-    deity: reel.deity || reel.category || "Bhakti",
-    filter: String(reel.category || reel.deity || "all").toLowerCase(),
-    duration: reel.duration || `0:${25 + (index % 7)}`,
-    youtubeId,
-    href: reel.videoUrl || (reel.videoFile ? resolveImageUrl(reel.videoFile, "") : "/reels"),
-    thumbnail: resolveImageUrl(reel.thumbnail, fallbackThumbs[index % fallbackThumbs.length])
-  };
-}
 
 function ReelCard({ reel, onOpen }) {
   return (
-    <article className="group relative w-[min(100%,200px)] shrink-0 snap-start overflow-hidden rounded-2xl border border-[#f1e4d6] bg-[#1a1212] shadow-md sm:w-[180px]">
+    <article className="group card-lift relative w-[min(100%,200px)] shrink-0 snap-start overflow-hidden rounded-2xl border border-[#f1e4d6] bg-[#1a1212] shadow-md sm:w-[180px]">
       <div className="relative aspect-[9/16] w-full">
         <button
           type="button"
@@ -61,7 +21,7 @@ function ReelCard({ reel, onOpen }) {
           <img
             src={reel.thumbnail}
             alt={`${reel.title} — ${reel.deity} spiritual reel thumbnail`}
-            className="h-full w-full object-cover"
+            className="img-zoom h-full w-full object-cover"
             loading="lazy"
           />
           <span className="absolute inset-0 flex items-center justify-center bg-black/30 transition group-hover:bg-black/15">
@@ -90,41 +50,60 @@ function ReelCard({ reel, onOpen }) {
   );
 }
 
+function ReelSkeleton() {
+  return (
+    <div className="w-[min(100%,200px)] shrink-0 snap-start sm:w-[180px]">
+      <div className="aspect-[9/16] w-full animate-pulse rounded-2xl bg-[#f1e4d6]" />
+      <div className="mt-2 h-4 w-3/4 animate-pulse rounded bg-[#f1e4d6]" />
+    </div>
+  );
+}
+
 export default function SpiritualReels() {
-  const [reels, setReels] = useState(spiritualReels);
+  const [reels, setReels] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [activeIndex, setActiveIndex] = useState(null);
 
   useEffect(() => {
     let ignore = false;
-    async function loadReels() {
-      const response = await apiGet("/reels?limit=12");
-      if (!ignore && Array.isArray(response?.data) && response.data.length) {
-        setReels(response.data.map(normalizeApiReel));
+    async function load() {
+      setLoading(true);
+      const data = await fetchReels({ limit: 12 });
+      if (!ignore) {
+        setReels(data);
+        setLoading(false);
       }
     }
-    loadReels();
-    return () => {
-      ignore = true;
-    };
+    load();
+    return () => { ignore = true; };
   }, []);
 
   const filtered = useMemo(() => {
     if (filter === "all") return reels;
-    return reels.filter((r) => r.filter === filter || String(r.deity || "").toLowerCase() === filter);
+    return reels.filter(
+      (r) => r.filter === filter || String(r.deity || "").toLowerCase() === filter || String(r.category || "").toLowerCase() === filter
+    );
   }, [filter, reels]);
 
   return (
     <section id="reels" className="bg-gradient-to-b from-[#fffaf5] to-cream py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-extrabold text-[#11162b] sm:text-3xl">
-          Spiritual Reels &amp; Bhakti Shorts
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm text-slate-500">
-          Short devotional videos — hover to play on desktop, tap on mobile.
-        </p>
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-extrabold text-[#11162b] sm:text-3xl">
+              Spiritual Reels &amp; Bhakti Shorts
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm text-slate-500">
+              Short devotional videos — tap to play.
+            </p>
+          </div>
+          <Link href="/reels" className="text-sm font-bold text-maroon hover:underline">
+            View All Reels →
+          </Link>
+        </div>
 
-        <div className="mt-5 flex flex-wrap gap-2" role="group" aria-label="Filter reels">
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter reels">
           {reelFilters.map((f) => (
             <button
               key={f.id}
@@ -143,11 +122,25 @@ export default function SpiritualReels() {
         </div>
 
         <div className="mt-6">
-          <HorizontalScroll ariaLabel="Spiritual reels carousel">
-            {filtered.map((reel, i) => (
-              <ReelCard key={reel.id} reel={reel} onOpen={() => setActiveIndex(i)} />
-            ))}
-          </HorizontalScroll>
+          {loading ? (
+            <div className="flex gap-4 overflow-hidden">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <ReelSkeleton key={i} />
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-[#f1e4d6] py-14 text-center">
+              <p className="text-sm font-semibold text-slate-400">
+                {reels.length === 0 ? "Koi reel upload nahi hui abhi. Admin se reels add karwayein." : "Is category mein koi reel nahi mili."}
+              </p>
+            </div>
+          ) : (
+            <HorizontalScroll ariaLabel="Spiritual reels carousel">
+              {filtered.map((reel, i) => (
+                <ReelCard key={reel.id} reel={reel} onOpen={() => setActiveIndex(i)} />
+              ))}
+            </HorizontalScroll>
+          )}
         </div>
       </div>
 
