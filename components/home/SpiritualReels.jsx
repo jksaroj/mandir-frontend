@@ -4,10 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Clock } from "lucide-react";
 import HorizontalScroll from "@/components/ui/HorizontalScroll";
-import ShareButton from "@/components/ui/ShareButton";
 import { reelFilters, spiritualReels } from "@/lib/homeContent";
 import { apiGet } from "@/lib/api";
 import { resolveImageUrl } from "@/lib/images";
+import ReelPopup from "@/components/reels/ReelPopup";
 
 const fallbackThumbs = [
   "/reels/shiva.svg",
@@ -48,54 +48,28 @@ function normalizeApiReel(reel, index) {
   };
 }
 
-function ReelCard({ reel }) {
-  const [playing, setPlaying] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-
-  const handlePlay = () => setPlaying(true);
-  const handlePause = () => setPlaying(false);
-
-  const shareUrl = reel.href || (reel.youtubeId ? `https://www.youtube.com/watch?v=${reel.youtubeId}` : "/reels");
-
+function ReelCard({ reel, onOpen }) {
   return (
-    <article
-      className="group relative w-[min(100%,200px)] shrink-0 snap-start overflow-hidden rounded-2xl border border-[#f1e4d6] bg-[#1a1212] shadow-md sm:w-[180px]"
-      onMouseEnter={handlePlay}
-      onMouseLeave={handlePause}
-    >
+    <article className="group relative w-[min(100%,200px)] shrink-0 snap-start overflow-hidden rounded-2xl border border-[#f1e4d6] bg-[#1a1212] shadow-md sm:w-[180px]">
       <div className="relative aspect-[9/16] w-full">
-        {playing && loaded && reel.youtubeId ? (
-          <iframe
-            title={reel.title}
-            src={`https://www.youtube.com/embed/${reel.youtubeId}?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1`}
-            className="absolute inset-0 h-full w-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        <button
+          type="button"
+          className="absolute inset-0 h-full w-full"
+          onClick={() => onOpen(reel)}
+          aria-label={`Play ${reel.title}`}
+        >
+          <img
+            src={reel.thumbnail}
+            alt={`${reel.title} — ${reel.deity} spiritual reel thumbnail`}
+            className="h-full w-full object-cover"
             loading="lazy"
           />
-        ) : (
-          <button
-            type="button"
-            className="absolute inset-0 h-full w-full"
-            onClick={() => {
-              setLoaded(true);
-              if (reel.youtubeId) setPlaying((p) => !p);
-              else if (reel.href) window.open(reel.href, "_blank", "noopener,noreferrer");
-            }}
-            aria-label={playing ? `Pause ${reel.title}` : `Play ${reel.title}`}
-          >
-            <img
-              src={reel.thumbnail}
-              alt={`${reel.title} — ${reel.deity} spiritual reel thumbnail`}
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-            <span className="absolute inset-0 flex items-center justify-center bg-black/25 transition group-hover:bg-black/15">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-maroon shadow-lg">
-                <span className="ml-0.5 border-y-[6px] border-l-[10px] border-y-transparent border-l-maroon" />
-              </span>
+          <span className="absolute inset-0 flex items-center justify-center bg-black/30 transition group-hover:bg-black/15">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-maroon shadow-lg">
+              <span className="ml-0.5 border-y-[6px] border-l-[10px] border-y-transparent border-l-maroon" />
             </span>
-          </button>
-        )}
+          </span>
+        </button>
         <span className="absolute left-2 top-2 rounded-md bg-black/55 px-2 py-0.5 text-[10px] font-bold text-white">
           {reel.deity}
         </span>
@@ -106,19 +80,10 @@ function ReelCard({ reel }) {
       </div>
       <div className="p-3">
         <h3 className="line-clamp-2 text-sm font-extrabold leading-snug text-white">{reel.title}</h3>
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-2">
           <Link href="/reels" className="text-[11px] font-semibold text-[#d9a441] hover:underline">
             Watch more
           </Link>
-          <ShareButton
-            title={reel.title}
-            url={shareUrl}
-            label={`Share ${reel.title}`}
-            modalTitle="Share this reel"
-            iconOnly
-            iconSize={14}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
-          />
         </div>
       </div>
     </article>
@@ -128,6 +93,7 @@ function ReelCard({ reel }) {
 export default function SpiritualReels() {
   const [reels, setReels] = useState(spiritualReels);
   const [filter, setFilter] = useState("all");
+  const [activeIndex, setActiveIndex] = useState(null);
 
   useEffect(() => {
     let ignore = false;
@@ -178,12 +144,20 @@ export default function SpiritualReels() {
 
         <div className="mt-6">
           <HorizontalScroll ariaLabel="Spiritual reels carousel">
-            {filtered.map((reel) => (
-              <ReelCard key={reel.id} reel={reel} />
+            {filtered.map((reel, i) => (
+              <ReelCard key={reel.id} reel={reel} onOpen={() => setActiveIndex(i)} />
             ))}
           </HorizontalScroll>
         </div>
       </div>
+
+      {activeIndex !== null && (
+        <ReelPopup
+          reels={filtered}
+          initialIndex={activeIndex}
+          onClose={() => setActiveIndex(null)}
+        />
+      )}
     </section>
   );
 }

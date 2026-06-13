@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
-  Bookmark,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -13,7 +12,6 @@ import {
   Landmark,
   LoaderCircle,
   Mic,
-  MoreHorizontal,
   Music2,
   Play,
   RotateCw,
@@ -21,9 +19,9 @@ import {
 } from "lucide-react";
 import Header from "@/components/home/Header";
 import Footer from "@/components/home/Footer";
-import ShareButton from "@/components/ui/ShareButton";
 import { apiGet } from "@/lib/api";
 import { resolveImageUrl } from "@/lib/images";
+import ReelPopup from "@/components/reels/ReelPopup";
 
 const heroImage = "/reels/hero-krishna.png";
 
@@ -98,11 +96,15 @@ function getReelUrl(reel) {
   return typeof window !== "undefined" ? window.location.href : "/reels";
 }
 
-function ReelCard({ reel }) {
-  const shareUrl = getReelUrl(reel);
+function ReelCard({ reel, onOpen }) {
   return (
-    <article className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-      <div className="relative aspect-[16/10] bg-gray-100">
+    <article className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+      <button
+        type="button"
+        className="relative block w-full aspect-[16/10] bg-gray-100 text-left"
+        onClick={() => onOpen(reel)}
+        aria-label={`Play ${reel.title}`}
+      >
         <img
           src={reel.thumbnail}
           alt={`${reel.title} reel thumbnail`}
@@ -110,47 +112,28 @@ function ReelCard({ reel }) {
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/30" />
+        {/* Play overlay */}
+        <span className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg">
+            <Play size={18} fill="#e2382d" className="text-[#e2382d] ml-0.5" />
+          </span>
+        </span>
         <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-[10px] font-bold text-white">
           <Play size={10} fill="currentColor" />
           {reel.views}
         </span>
-        <button
-          type="button"
-          className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded border border-white/40 bg-black/25 text-white"
-          aria-label={`Save ${reel.title}`}
-        >
-          <Bookmark size={15} />
-        </button>
         <span className="absolute bottom-2 right-2 rounded bg-black/75 px-1.5 py-0.5 text-[10px] font-bold text-white">
           {reel.duration}
         </span>
-      </div>
+      </button>
       <div className="px-3 pb-3 pt-2">
         <h3 className="line-clamp-1 text-sm font-extrabold text-[#1d1d1f]">{reel.title}</h3>
         <p className="mt-1 text-[11px] font-bold text-[#e2382d]">#{reel.deity || reel.category}</p>
-        <div className="mt-3 flex items-center justify-between">
+        <div className="mt-2">
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gray-500">
             <span className="text-sm">🙏</span>
             Brahmatatva
           </span>
-          <div className="flex items-center gap-1">
-            <ShareButton
-              title={reel.title}
-              url={shareUrl}
-              label={`Share ${reel.title}`}
-              modalTitle="Share this reel"
-              iconOnly
-              iconSize={15}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-[#e2382d] transition hover:bg-red-50"
-            />
-            <button
-              type="button"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-gray-600 transition hover:bg-gray-100"
-              aria-label={`More options for ${reel.title}`}
-            >
-              <MoreHorizontal size={16} />
-            </button>
-          </div>
         </div>
       </div>
     </article>
@@ -164,6 +147,7 @@ export default function DivineReelsPage() {
   const [sort, setSort] = useState("latest");
   const [page, setPage] = useState(1);
   const [visible, setVisible] = useState(PER_PAGE);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   useEffect(() => {
     let ignore = false;
@@ -278,8 +262,8 @@ export default function DivineReelsPage() {
           )}
 
           <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {shown.map((reel) => (
-              <ReelCard key={reel._id} reel={reel} />
+            {shown.map((reel, i) => (
+              <ReelCard key={reel._id} reel={reel} onOpen={() => setActiveIndex(i)} />
             ))}
           </div>
 
@@ -338,6 +322,14 @@ export default function DivineReelsPage() {
         </section>
       </main>
       <Footer />
+
+      {activeIndex !== null && (
+        <ReelPopup
+          reels={shown}
+          initialIndex={activeIndex}
+          onClose={() => setActiveIndex(null)}
+        />
+      )}
     </>
   );
 }
