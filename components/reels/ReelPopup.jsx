@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Check, ChevronLeft, ChevronRight, Copy, Eye, Share2, X } from "lucide-react";
+import { Check, Copy, Eye, Share2, X } from "lucide-react";
 import { apiPost } from "@/lib/api";
 import { resolveImageUrl } from "@/lib/images";
 
@@ -174,12 +174,10 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
     touchStartRef.current = null;
     if (!start || !touch) return;
 
-    const dx = touch.clientX - start.x;
     const dy = touch.clientY - start.y;
-    const primary = Math.abs(dy) >= Math.abs(dx) ? dy : dx;
 
-    if (Math.abs(primary) < 45) return;
-    if (primary < 0) goNext();
+    if (Math.abs(dy) < 45) return;
+    if (dy < 0) goNext();
     else goPrev();
   }, [goNext, goPrev]);
 
@@ -234,9 +232,6 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
 
   if (!mounted || !reel) return null;
 
-  const hasPrev = index > 0;
-  const hasNext = index < reels.length - 1;
-
   const content = (
     <div
       ref={overlayRef}
@@ -249,19 +244,8 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
       aria-modal="true"
       aria-label={reel?.title ? "Playing: " + reel.title : "Reel player"}
     >
-      {/* ── Prev button ── */}
-      <button
-        type="button"
-        onClick={goPrev}
-        disabled={!hasPrev}
-        className="absolute left-2 top-1/2 z-10 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition hover:bg-white/30 disabled:opacity-20 disabled:cursor-not-allowed sm:left-6"
-        aria-label="Previous reel"
-      >
-        <ChevronLeft size={26} />
-      </button>
-
       {/* ── Modal card ── */}
-      <div className="relative mx-14 w-full max-w-sm overflow-hidden rounded-2xl bg-[#0e0808] shadow-2xl sm:mx-0">
+      <div className="relative flex h-[100dvh] w-full max-w-none flex-col overflow-hidden bg-[#0e0808] shadow-2xl sm:h-auto sm:max-w-sm sm:rounded-2xl">
 
         {/* Close button */}
         <button
@@ -281,7 +265,7 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
         )}
 
         {/* ── Video area (9:16) ── */}
-        <div className="relative aspect-[9/16] w-full bg-black">
+        <div className="relative min-h-0 flex-1 bg-black sm:aspect-[9/16] sm:w-full sm:flex-none">
           {youtubeId ? (
             <iframe
               key={youtubeId}
@@ -343,16 +327,6 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
         </div>
       </div>
 
-      {/* ── Next button ── */}
-      <button
-        type="button"
-        onClick={goNext}
-        disabled={!hasNext}
-        className="absolute right-2 top-1/2 z-10 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition hover:bg-white/30 disabled:opacity-20 disabled:cursor-not-allowed sm:right-6"
-        aria-label="Next reel"
-      >
-        <ChevronRight size={26} />
-      </button>
     </div>
   );
 

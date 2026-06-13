@@ -118,9 +118,9 @@ export default function HeroSection({ banners = [] }) {
       <TempleSilhouette className="bottom-0 left-3 hidden scale-125 opacity-55 blur-sm sm:block" />
 
       {/* ===== Content — new style ===== */}
-      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-7 px-4 pb-10 pt-7 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-6 lg:px-8 lg:pb-12 lg:pt-9">
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-7 px-4 pb-10 pt-0 sm:px-6 sm:pt-7 lg:grid-cols-[1.05fr_0.95fr] lg:gap-6 lg:px-8 lg:pb-12 lg:pt-9">
         {/* Left — text */}
-        <div className="order-2 lg:order-1">
+        <div className="order-2 text-center lg:order-1">
           <AnimatePresence mode="wait">
             <motion.div
               key={`text-${slide.deity}-${active}`}
@@ -129,7 +129,7 @@ export default function HeroSection({ banners = [] }) {
               exit={{ opacity: 0, x: 14 }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center gap-3">
                 <span className="h-px w-10 bg-[#C65A2E]/60" aria-hidden />
                 <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.3em] text-[#8E3F22]">
                   <Sparkles size={13} className="diya-flicker" aria-hidden />
@@ -139,7 +139,7 @@ export default function HeroSection({ banners = [] }) {
 
               <h1
                 id="home-hero-heading"
-                className="mt-4 font-serif text-[2.2rem] font-black leading-[1.04] sm:text-5xl lg:text-[3.4rem]"
+                className="mx-auto mt-4 max-w-3xl font-serif text-[1.55rem] font-black leading-[1.08] sm:text-[2.15rem] lg:text-[2.4rem]"
               >
                 {slide.title === slide.highlight ? (
                   <span className="bg-gradient-to-r from-[#C65A2E] via-[#E08A3D] to-[#9F3F21] bg-clip-text text-transparent">
@@ -159,13 +159,13 @@ export default function HeroSection({ banners = [] }) {
                 )}
               </h1>
 
-              <p className="mt-4 max-w-xl border-l-2 border-[#C65A2E]/30 pl-4 text-sm leading-7 text-[#60483A] sm:text-base">
+              <p className="mx-auto mt-4 max-w-xl border-t-2 border-[#C65A2E]/30 px-2 pt-4 text-sm leading-7 text-[#60483A] sm:text-base lg:border-l-2 lg:border-t-0 lg:pl-4 lg:pt-0">
                 {slide.text}
               </p>
             </motion.div>
           </AnimatePresence>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/temples"
               className="group inline-flex items-center gap-2 rounded-xl bg-[#2B1D16] px-7 py-3.5 text-sm font-bold text-[#F6EFE6] shadow-[0_18px_38px_rgba(43,29,22,0.25)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#C65A2E]"
@@ -185,7 +185,7 @@ export default function HeroSection({ banners = [] }) {
 
           {/* Slide controls — counter + arrows (new style, bottom-left) */}
           {slides.length > 1 && (
-            <div className="mt-7 flex items-center gap-5">
+            <div className="mt-7 flex items-center justify-center gap-5">
               <div className="font-serif text-sm font-bold tracking-widest text-[#8E3F22]">
                 {String(active + 1).padStart(2, "0")}
                 <span className="mx-1 text-[#C9A88F]">/</span>
@@ -220,11 +220,11 @@ export default function HeroSection({ banners = [] }) {
         </div>
 
         {/* Right — mandir-arch image frame (new style) */}
-        <div className="order-1 mx-auto w-full max-w-[230px] sm:max-w-[290px] lg:order-2 lg:max-w-[320px]">
+        <div className="order-1 -mx-4 w-[calc(100%+2rem)] max-w-none sm:mx-auto sm:w-full sm:max-w-[290px] lg:order-2 lg:max-w-[320px]">
           <div className="relative">
             {/* Offset arch outline behind */}
             <div
-              className="pointer-events-none absolute -right-4 -top-4 h-full w-full rounded-b-[2rem] rounded-t-[999px] border-2 border-dashed border-[#C65A2E]/30"
+              className="pointer-events-none absolute -right-4 -top-4 hidden h-full w-full rounded-b-[2rem] rounded-t-[999px] border-2 border-dashed border-[#C65A2E]/30 sm:block"
               aria-hidden
             />
             <div
@@ -233,7 +233,7 @@ export default function HeroSection({ banners = [] }) {
             />
 
             {/* Arch frame */}
-            <div className="relative aspect-[3/4] overflow-hidden rounded-b-[2rem] rounded-t-[999px] border-[6px] border-white/80 bg-[#EADBC8] shadow-[0_35px_90px_rgba(80,44,27,0.28)] ring-1 ring-[#C65A2E]/20">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-none border-0 bg-[#EADBC8] shadow-[0_24px_60px_rgba(80,44,27,0.18)] sm:aspect-[3/4] sm:rounded-b-[2rem] sm:rounded-t-[999px] sm:border-[6px] sm:border-white/80 sm:shadow-[0_35px_90px_rgba(80,44,27,0.28)] sm:ring-1 sm:ring-[#C65A2E]/20">
               {slides.map((item, index) => (
                 <img
                   key={`${item.deity}-${index}`}
