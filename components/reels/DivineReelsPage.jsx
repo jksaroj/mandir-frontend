@@ -26,6 +26,7 @@ const heroImage = "/reels/hero-krishna.png";
 
 const filters = [
   { id: "all", label: "All", icon: Flame },
+  { id: "Bhakti", label: "Bhakti", icon: Sparkles },
   { id: "Bhajan", label: "Bhajan", icon: Music2 },
   { id: "Aarti", label: "Aarti", icon: Sparkles },
   { id: "Mantra", label: "Mantra", icon: Headphones },
@@ -123,7 +124,13 @@ export default function DivineReelsPage() {
     const list =
       filter === "all"
         ? reels
-        : reels.filter((r) => r.category === filter || r.deity === filter);
+        : reels.filter((r) => {
+            const active = filter.toLowerCase();
+            return (
+              String(r.category || "").toLowerCase() === active ||
+              String(r.deity || "").toLowerCase().includes(active)
+            );
+          });
     if (sort === "oldest") return [...list].reverse();
     if (sort === "popular") return [...list].sort((a, b) => parseFloat(b.views) - parseFloat(a.views));
     return list;

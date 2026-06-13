@@ -87,6 +87,8 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
   const [copied, setCopied] = useState(false);
   const [mounted, setMounted] = useState(false);
   const overlayRef = useRef(null);
+  const wheelLockRef = useRef(false);
+  const touchStartRef = useRef(null);
 
   const reel = reels[index];
   const reelId = reel?._id || reel?.id;
@@ -104,6 +106,14 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
 
   const currentViews  = views[reelId]      ?? (Number(reel?.views)      || 0);
   const currentShares = shareCounts[reelId] ?? (Number(reel?.shareCount) || 0);
+
+  const goPrev = useCallback(() => {
+    setIndex((i) => Math.max(i - 1, 0));
+  }, []);
+
+  const goNext = useCallback(() => {
+    setIndex((i) => Math.min(i + 1, reels.length - 1));
+  }, [reels.length]);
 
   // Portal mount guard
   useEffect(() => { setMounted(true); }, []);
@@ -134,12 +144,44 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
   useEffect(() => {
     const handler = (e) => {
       if (e.key === "Escape")                               onClose();
-      if (e.key === "ArrowRight" || e.key === "ArrowDown")  setIndex((i) => Math.min(i + 1, reels.length - 1));
-      if (e.key === "ArrowLeft"  || e.key === "ArrowUp")    setIndex((i) => Math.max(i - 1, 0));
+      if (e.key === "ArrowRight" || e.key === "ArrowDown")  { e.preventDefault(); goNext(); }
+      if (e.key === "ArrowLeft"  || e.key === "ArrowUp")    { e.preventDefault(); goPrev(); }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [onClose, reels.length]);
+  }, [goNext, goPrev, onClose]);
+
+  const handleWheel = useCallback((e) => {
+    if (Math.abs(e.deltaY) < 35 || wheelLockRef.current) return;
+    e.preventDefault();
+    wheelLockRef.current = true;
+    if (e.deltaY > 0) goNext();
+    else goPrev();
+    window.setTimeout(() => {
+      wheelLockRef.current = false;
+    }, 450);
+  }, [goNext, goPrev]);
+
+  const handleTouchStart = useCallback((e) => {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  }, []);
+
+  const handleTouchEnd = useCallback((e) => {
+    const start = touchStartRef.current;
+    const touch = e.changedTouches?.[0];
+    touchStartRef.current = null;
+    if (!start || !touch) return;
+
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    const primary = Math.abs(dy) >= Math.abs(dx) ? dy : dx;
+
+    if (Math.abs(primary) < 45) return;
+    if (primary < 0) goNext();
+    else goPrev();
+  }, [goNext, goPrev]);
 
   // Increment view count when reel changes
   useEffect(() => {
@@ -200,6 +242,9 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
       ref={overlayRef}
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-sm"
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
+      onWheel={handleWheel}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
       role="dialog"
       aria-modal="true"
       aria-label={reel?.title ? "Playing: " + reel.title : "Reel player"}
@@ -207,7 +252,7 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
       {/* ── Prev button ── */}
       <button
         type="button"
-        onClick={() => setIndex((i) => Math.max(i - 1, 0))}
+        onClick={goPrev}
         disabled={!hasPrev}
         className="absolute left-2 top-1/2 z-10 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition hover:bg-white/30 disabled:opacity-20 disabled:cursor-not-allowed sm:left-6"
         aria-label="Previous reel"
@@ -301,7 +346,7 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
       {/* ── Next button ── */}
       <button
         type="button"
-        onClick={() => setIndex((i) => Math.min(i + 1, reels.length - 1))}
+        onClick={goNext}
         disabled={!hasNext}
         className="absolute right-2 top-1/2 z-10 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition hover:bg-white/30 disabled:opacity-20 disabled:cursor-not-allowed sm:right-6"
         aria-label="Next reel"

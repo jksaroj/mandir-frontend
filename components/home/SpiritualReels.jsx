@@ -2,16 +2,28 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Clock, LoaderCircle } from "lucide-react";
-import HorizontalScroll from "@/components/ui/HorizontalScroll";
+import { Clock } from "lucide-react";
 import { reelFilters } from "@/lib/homeContent";
 import { fetchReels } from "@/lib/reels";
 import ReelPopup from "@/components/reels/ReelPopup";
 
+function reelTags(reel) {
+  const source = Array.isArray(reel?.tags) ? reel.tags.join(" ") : String(reel?.tags || "");
+  const hashtags = source.match(/#[^\s#]+/g);
+  const raw = hashtags?.length ? hashtags : source.split(/[,\n|\s]+/);
+
+  return raw
+    .map((tag) => String(tag || "").trim())
+    .filter(Boolean)
+    .slice(0, 2);
+}
+
 function ReelCard({ reel, onOpen }) {
+  const tags = reelTags(reel);
+
   return (
-    <article className="group card-lift relative w-[min(100%,200px)] shrink-0 snap-start overflow-hidden rounded-2xl border border-[#f1e4d6] bg-[#1a1212] shadow-md sm:w-[180px]">
-      <div className="relative aspect-[9/16] w-full">
+    <article className="group card-lift relative overflow-hidden rounded-2xl border border-[#f1e4d6] bg-[#1a1212] shadow-md">
+      <div className="relative aspect-[9/11] w-full">
         <button
           type="button"
           className="absolute inset-0 h-full w-full"
@@ -40,10 +52,16 @@ function ReelCard({ reel, onOpen }) {
       </div>
       <div className="p-3">
         <h3 className="line-clamp-2 text-sm font-extrabold leading-snug text-white">{reel.title}</h3>
-        <div className="mt-2">
-          <Link href="/reels" className="text-[11px] font-semibold text-[#d9a441] hover:underline">
-            Watch more
-          </Link>
+        <div className="mt-3 flex min-h-6 min-w-0 gap-1.5 overflow-hidden whitespace-nowrap">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="min-w-0 max-w-[48%] shrink truncate rounded-full border border-white/10 bg-white/10 px-2 py-0.5 text-[10px] font-bold text-[#f6d38a]"
+              title={tag}
+            >
+              {tag.startsWith("#") ? tag : `#${tag}`}
+            </span>
+          ))}
         </div>
       </div>
     </article>
@@ -52,8 +70,8 @@ function ReelCard({ reel, onOpen }) {
 
 function ReelSkeleton() {
   return (
-    <div className="w-[min(100%,200px)] shrink-0 snap-start sm:w-[180px]">
-      <div className="aspect-[9/16] w-full animate-pulse rounded-2xl bg-[#f1e4d6]" />
+    <div>
+      <div className="aspect-[9/11] w-full animate-pulse rounded-2xl bg-[#f1e4d6]" />
       <div className="mt-2 h-4 w-3/4 animate-pulse rounded bg-[#f1e4d6]" />
     </div>
   );
@@ -82,9 +100,14 @@ export default function SpiritualReels() {
   const filtered = useMemo(() => {
     if (filter === "all") return reels;
     return reels.filter(
-      (r) => r.filter === filter || String(r.deity || "").toLowerCase() === filter || String(r.category || "").toLowerCase() === filter
+      (r) =>
+        r.filter === filter ||
+        String(r.deity || "").toLowerCase().includes(filter) ||
+        String(r.category || "").toLowerCase().includes(filter)
     );
   }, [filter, reels]);
+
+  const shown = useMemo(() => filtered.slice(0, 4), [filtered]);
 
   return (
     <section id="reels" className="bg-gradient-to-b from-[#fffaf5] to-cream py-12">
@@ -123,8 +146,8 @@ export default function SpiritualReels() {
 
         <div className="mt-6">
           {loading ? (
-            <div className="flex gap-4 overflow-hidden">
-              {Array.from({ length: 6 }).map((_, i) => (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
                 <ReelSkeleton key={i} />
               ))}
             </div>
@@ -135,18 +158,18 @@ export default function SpiritualReels() {
               </p>
             </div>
           ) : (
-            <HorizontalScroll ariaLabel="Spiritual reels carousel">
-              {filtered.map((reel, i) => (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {shown.map((reel, i) => (
                 <ReelCard key={reel.id} reel={reel} onOpen={() => setActiveIndex(i)} />
               ))}
-            </HorizontalScroll>
+            </div>
           )}
         </div>
       </div>
 
       {activeIndex !== null && (
         <ReelPopup
-          reels={filtered}
+          reels={shown}
           initialIndex={activeIndex}
           onClose={() => setActiveIndex(null)}
         />
