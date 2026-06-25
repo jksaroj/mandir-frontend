@@ -10,8 +10,11 @@ import I18n from "@/components/i18n/I18n";
 import SimpleSlider from "@/components/ui/SimpleSlider";
 import ShareButton from "@/components/ui/ShareButton";
 import FaqSection from "@/components/seo/FaqSection";
+import JsonLd from "@/components/seo/JsonLd";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import { DEFAULT_LOCALE } from "@/lib/i18n/config";
 import { getMessage } from "@/lib/i18n/getMessage";
+import { absoluteUrl, buildMetadata, faqSchema, seoKeywords } from "@/lib/seo";
 import {
   fetchSpiritualItemBySlug,
   getMantraHref,
@@ -54,13 +57,32 @@ export async function generateSpiritualMetadata({ params, variant }) {
   const item = await fetchSpiritualItemBySlug(slug, variant);
 
   if (!item) {
-    return { title: `${getMessage(DEFAULT_LOCALE, navConfig[variant].listKey)} Not Found | brahmatatva` };
+    return buildMetadata({
+      title: `${getMessage(DEFAULT_LOCALE, navConfig[variant].listKey)} Not Found`,
+      description: "The requested devotional content could not be found on BrahmaTatva.",
+      path: `/${variant === "chalisa" ? "chalisa" : "mantras"}/${slug}`,
+      keywords: ["BrahmaTatva", variant]
+    });
   }
 
-  return {
-    title: `${item.title} | brahmatatva`,
-    description: item.excerpt || `${item.title} lyrics, meaning, benefits, chanting method and timing.`
-  };
+  const path = `/${variant === "chalisa" ? "chalisa" : "mantras"}/${slug}`;
+  return buildMetadata({
+    title: item.title,
+    description: item.excerpt || `${item.title} lyrics, meaning, benefits, chanting method and timing.`,
+    path,
+    image: item.image || fallbackImage,
+    type: "article",
+    keywords: seoKeywords(
+      item.title,
+      item.deity,
+      item.type,
+      "lyrics",
+      "meaning",
+      "benefits",
+      "chanting",
+      variant === "chalisa" ? "chalisa" : "mantra"
+    )
+  });
 }
 
 export default async function SpiritualDetailPage({ params, variant }) {
@@ -77,7 +99,41 @@ export default async function SpiritualDetailPage({ params, variant }) {
 
   const config = navConfig[variant];
   const listHref = getSpiritualListHref(variant);
+  const pageHref = `${listHref}/${slug}`;
   const image = item.image || fallbackImage;
+  const faqs = buildFaqs(item);
+  const breadcrumbs = [
+    { name: "Home", href: "/" },
+    { name: getMessage(DEFAULT_LOCALE, config.listKey), href: listHref },
+    { name: item.title, href: pageHref }
+  ];
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: item.title,
+    description: item.excerpt,
+    image,
+    url: absoluteUrl(pageHref),
+    inLanguage: ["hi-IN", "en-IN"],
+    author: { "@type": "Organization", name: "BrahmaTatva" },
+    publisher: {
+      "@type": "Organization",
+      name: "BrahmaTatva",
+      logo: { "@type": "ImageObject", url: absoluteUrl("/images/BrahmaTatvaLogo.png") }
+    },
+    mainEntityOfPage: absoluteUrl(pageHref)
+  };
+  const audioSchema = item.audioUrl
+    ? {
+        "@context": "https://schema.org",
+        "@type": "AudioObject",
+        name: item.title,
+        description: item.excerpt,
+        contentUrl: item.audioUrl,
+        thumbnailUrl: image,
+        encodingFormat: "audio/mpeg"
+      }
+    : null;
   const hasBenefits = item.benefits?.length > 0;
   const relatedSlides =
     item.related?.length > 0
@@ -100,7 +156,11 @@ export default async function SpiritualDetailPage({ params, variant }) {
 
   return (
     <main className="min-h-screen bg-[#fffaf5] text-[#1f2937]">
+      <JsonLd data={[articleSchema, audioSchema, faqSchema(faqs)]} />
       <Header active={config.activeKey} />
+      <div className="sr-only">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-7 flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-500">
           <Link href="/">
@@ -299,7 +359,7 @@ export default async function SpiritualDetailPage({ params, variant }) {
         <FaqSection
           title={`${item.title} FAQs`}
           description={`Common questions about the meaning, benefits, timing, and correct way to chant ${item.title}.`}
-          items={buildFaqs(item)}
+          items={faqs}
         />
       </div>
       <Footer />

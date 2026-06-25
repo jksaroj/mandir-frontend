@@ -12,10 +12,11 @@ import TempleReviews from "@/components/temples/TempleReviews";
 import TempleTimings from "@/components/temples/TempleTimings";
 import TempleScheduleGrid from "@/components/temples/TempleScheduleGrid";
 import FaqSection from "@/components/seo/FaqSection";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
+import JsonLd from "@/components/seo/JsonLd";
 import { fetchAllTempleSlugs, fetchTempleBySlug } from "@/lib/temples";
 import { resolveImageUrl } from "@/lib/images";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://brahmatatva.com";
+import { absoluteUrl, buildMetadata, faqSchema, seoKeywords } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -24,7 +25,7 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }) {
+async function legacyTempleMetadata({ params }) {
   const { slug } = await params;
   const temple = await fetchTempleBySlug(slug);
 
@@ -68,6 +69,41 @@ export async function generateMetadata({ params }) {
   };
 }
 
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const temple = await fetchTempleBySlug(slug);
+
+  if (!temple) {
+    return buildMetadata({
+      title: "Temple Not Found",
+      description: "The requested temple guide could not be found on BrahmaTatva.",
+      path: `/temples/${slug}`,
+      keywords: ["BrahmaTatva", "Hindu temple"]
+    });
+  }
+
+  const description =
+    temple.excerpt ||
+    `Plan your visit to ${temple.name} in ${temple.city}. Darshan timings, facilities, how to reach, gallery and devotee reviews on BrahmaTatva.`;
+
+  return buildMetadata({
+    title: `${temple.name} - Darshan Timings & Visit Guide`,
+    description,
+    path: `/temples/${slug}`,
+    image: resolveImageUrl(temple.image),
+    type: "article",
+    keywords: seoKeywords(
+      temple.name,
+      temple.deity,
+      temple.city,
+      "darshan timings",
+      "temple history",
+      "Hindu temple",
+      "pilgrimage India"
+    )
+  });
+}
+
 export default async function TempleDetailsPage({ params }) {
   const { slug } = await params;
   const temple = await fetchTempleBySlug(slug);
@@ -76,14 +112,20 @@ export default async function TempleDetailsPage({ params }) {
     notFound();
   }
 
-  const pageUrl = `${SITE_URL}/temples/${slug}`;
+  const pageUrl = absoluteUrl(`/temples/${slug}`);
   const heroImage = resolveImageUrl(temple.image);
+  const breadcrumbs = [
+    { name: "Home", href: "/" },
+    { name: "Temples", href: "/temples" },
+    { name: temple.name, href: `/temples/${slug}` }
+  ];
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "HinduTemple",
+    "@type": "TouristAttraction",
     name: temple.name,
     description: temple.excerpt,
     image: temple.images?.length ? temple.images : [heroImage],
+    touristType: "Pilgrimage",
     address: {
       "@type": "PostalAddress",
       addressLocality: temple.city,
@@ -94,11 +136,11 @@ export default async function TempleDetailsPage({ params }) {
 
   return (
     <main className="min-h-screen bg-[#fffaf6] text-[#15172b]">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={[jsonLd, faqSchema(temple.faqs)]} />
       <Header />
+      <div className="sr-only">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-7 flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-500">
           <Link href="/" className="hover:text-[#6b2323]">

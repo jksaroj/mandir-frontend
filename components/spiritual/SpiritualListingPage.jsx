@@ -10,8 +10,11 @@ import WaveGrid, { WaveGridItem } from "@/components/animations/WaveGrid";
 import I18n from "@/components/i18n/I18n";
 import I18nWaveText from "@/components/i18n/I18nWaveText";
 import ShareButton from "@/components/ui/ShareButton";
+import JsonLd from "@/components/seo/JsonLd";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import { getMessage } from "@/lib/i18n/getMessage";
 import { DEFAULT_LOCALE } from "@/lib/i18n/config";
+import { itemListSchema } from "@/lib/seo";
 import { BookOpen, Clock, Music2, Play, Search, Star } from "lucide-react";
 import { fetchSpiritualItems, getMantraHref } from "@/lib/mantras";
 
@@ -72,10 +75,20 @@ export default async function SpiritualListingPage({ variant }) {
   const items = await fetchSpiritualItems({ type: variant });
   const featured = items[0];
   const searchPlaceholder = getMessage(DEFAULT_LOCALE, config.searchPlaceholder);
+  const listPath = variant === "chalisa" ? "/chalisa" : "/mantras";
+  const listName = variant === "chalisa" ? "Chalisa" : "Mantras";
+  const breadcrumbs = [
+    { name: "Home", href: "/" },
+    { name: listName, href: listPath }
+  ];
 
   return (
     <main className="min-h-screen bg-[#fffaf5] text-[#1f2937]">
+      <JsonLd data={itemListSchema(items, listPath)} />
       <Header active={config.activeKey} />
+      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
       <section className="relative overflow-hidden bg-[#fff2df]">
         <div className="absolute right-0 top-0 hidden h-full w-1/2 lg:block">
           <Image src={heroImage} alt="Spiritual book and diya" fill priority sizes="50vw" className="object-cover" />

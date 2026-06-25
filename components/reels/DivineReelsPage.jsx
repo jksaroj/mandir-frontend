@@ -92,9 +92,9 @@ function CardSkeleton() {
   );
 }
 
-export default function DivineReelsPage() {
-  const [reels, setReels] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function DivineReelsPage({ initialReels = [] }) {
+  const [reels, setReels] = useState(initialReels);
+  const [loading, setLoading] = useState(initialReels.length === 0);
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState("latest");
   const [page, setPage] = useState(1);
@@ -104,7 +104,7 @@ export default function DivineReelsPage() {
   useEffect(() => {
     let ignore = false;
     async function load() {
-      setLoading(true);
+      if (!initialReels.length) setLoading(true);
       const data = await fetchReels({ limit: 100 });
       if (!ignore) {
         setReels(data);

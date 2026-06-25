@@ -22,11 +22,9 @@ import {
   UserRound
 } from "lucide-react";
 import { fetchPandits, getPanditHref } from "@/lib/pandits";
-
-export const metadata = {
-  title: "Pandit Services | brahmatatva",
-  description: "Find experienced and verified pandits for poojas, homas, rituals and spiritual services."
-};
+import JsonLd from "@/components/seo/JsonLd";
+import Breadcrumbs from "@/components/seo/Breadcrumbs";
+import { absoluteUrl, buildMetadata, DEFAULT_OG_IMAGE, seoKeywords } from "@/lib/seo";
 
 const heroImage = "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&w=1200&q=80";
 const panditImage = "https://images.unsplash.com/photo-1566753323558-f4e0952af115?auto=format&fit=crop&w=500&q=80";
@@ -54,12 +52,56 @@ function CheckboxList({ title, items }) {
 
 export const revalidate = 60;
 
+export async function generateMetadata() {
+  return buildMetadata({
+    title: "Pandit Services",
+    description: "Find experienced and verified pandits for pooja, homam, havan, graha shanti, marriage rituals and spiritual services across India.",
+    path: "/pandit-services",
+    image: DEFAULT_OG_IMAGE,
+    keywords: seoKeywords("pandit services", "book pandit online", "pooja services", "havan", "homam", "graha shanti", "Hindu rituals")
+  });
+}
+
 export default async function PanditServicesPage() {
   const panditList = await fetchPandits();
+  const breadcrumbs = [
+    { name: "Home", href: "/" },
+    { name: "Pandit Services", href: "/pandit-services" }
+  ];
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Pandit Services",
+    serviceType: "Hindu Ritual and Pooja Services",
+    provider: { "@type": "Organization", name: "BrahmaTatva", url: absoluteUrl("/") },
+    areaServed: { "@type": "Country", name: "India" },
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "INR",
+      lowPrice: "1500",
+      availability: "https://schema.org/InStock"
+    }
+  };
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "BrahmaTatva Pandit Services",
+    url: absoluteUrl("/pandit-services"),
+    image: DEFAULT_OG_IMAGE,
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "IN"
+    },
+    areaServed: "India"
+  };
 
   return (
     <main className="min-h-screen bg-[#fffaf5] text-[#1f2937]">
+      <JsonLd data={[serviceSchema, localBusinessSchema]} />
       <Header active="pandit" />
+      <div className="sr-only">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
       <section className="relative overflow-hidden bg-[#fff2df]">
         <div className="absolute right-0 top-0 hidden h-full w-1/2 lg:block">
           <Image src={heroImage} alt="Pandit performing ritual" fill priority sizes="50vw" className="object-cover" />
