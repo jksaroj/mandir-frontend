@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Bell, ChevronDown, Landmark, Search, UserRound } from "lucide-react";
+import { Bell, ChevronDown, Search, UserRound } from "lucide-react";
 import I18n from "@/components/i18n/I18n";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import BrahmaTatvaLogo from "@/components/ui/BrahmaTatvaLogo";
 
 const navItems = [
   { key: "nav.home", activeKey: "home", href: "/" },
@@ -17,14 +18,8 @@ export default function Header({ active = "home" }) {
   return (
     <header className="sticky top-0 z-50 bg-gradient-to-r from-[#1f1515] via-[#2b1717] to-[#3b1111] text-white shadow-md silk-wave-bg">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-b from-[#ffc65e] to-[#d77719] text-white shadow">
-            <Landmark size={29} strokeWidth={1.8} />
-          </span>
-          <span>
-            <I18n k="brand.name" className="block text-lg font-bold leading-tight" />
-            <I18n k="brand.tagline" className="block text-xs font-medium text-white/75" />
-          </span>
+        <Link href="/" className="flex items-center">
+          <BrahmaTatvaLogo height={40} variant="dark" />
         </Link>
 
         <nav className="hidden items-center gap-7 text-sm font-bold lg:flex">

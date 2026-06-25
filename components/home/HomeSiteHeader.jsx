@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Landmark, Menu, Search, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
-import I18n from "@/components/i18n/I18n";
 import { HomeSearchInline, HomeSearchOverlay } from "@/components/home/HomeSearch";
+import BrahmaTatvaLogo from "@/components/ui/BrahmaTatvaLogo";
 
 const navItems = [
   { label: "Home", href: "/", key: "home" },
@@ -26,14 +26,8 @@ export default function HomeSiteHeader() {
     <>
       <header className="sticky top-0 z-50 border-b border-[#f1e4d6]/80 bg-cream/95 shadow-sm backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:h-[4.5rem] sm:px-6 lg:gap-6 lg:px-8">
-          <Link href="/" className="flex shrink-0 items-center gap-2.5">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-b from-[#ffc65e] to-[#d77719] text-white shadow-md">
-              <Landmark size={24} strokeWidth={1.8} />
-            </span>
-            <span className="hidden sm:block">
-              <I18n k="brand.name" className="block text-base font-bold leading-tight text-[#351112]" />
-              <span className="block text-[11px] font-medium text-slate-500">Temples · Mantras · Bhakti</span>
-            </span>
+          <Link href="/" className="flex shrink-0 items-center">
+            <BrahmaTatvaLogo height={40} variant="light" />
           </Link>
 
           <HomeSearchInline className="mx-auto hidden max-w-md flex-1 lg:block" />
@@ -92,7 +86,7 @@ export default function HomeSiteHeader() {
           />
           <nav className="absolute right-0 top-0 flex h-full w-[min(100%,320px)] flex-col bg-cream shadow-2xl transition-transform duration-300">
             <div className="flex items-center justify-between border-b border-[#f1e4d6] px-5 py-4">
-              <I18n k="brand.name" className="font-bold text-[#351112]" />
+              <BrahmaTatvaLogo height={40} variant="light" />
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}

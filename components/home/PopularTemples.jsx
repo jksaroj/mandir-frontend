@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import HorizontalScroll from "@/components/ui/HorizontalScroll";
 import HomeTempleCard from "@/components/home/HomeTempleCard";
 import { temples as staticTemples } from "@/lib/temples";
 
 export default function PopularTemples({ temples = staticTemples }) {
+  const shown = temples.slice(0, 8);
+
   return (
     <section id="temples" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
@@ -26,11 +27,13 @@ export default function PopularTemples({ temples = staticTemples }) {
         </Link>
       </div>
 
-      <HorizontalScroll ariaLabel="Popular temples carousel">
-        {temples.slice(0, 12).map((temple) => (
-          <HomeTempleCard key={temple.slug} temple={temple} />
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {shown.map((temple) => (
+          <div key={temple.slug} className="flex w-full">
+            <HomeTempleCard temple={temple} grid />
+          </div>
         ))}
-      </HorizontalScroll>
+      </div>
     </section>
   );
 }

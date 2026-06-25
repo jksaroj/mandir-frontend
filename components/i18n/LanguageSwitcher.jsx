@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronDown, Languages } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { LOCALES } from "@/lib/i18n/config";
 import { useTranslation } from "@/components/providers/LanguageProvider";
 
@@ -11,7 +12,12 @@ const localeOptions = [
 
 export default function LanguageSwitcher({ variant = "dark" }) {
   const { locale, setLocale, t } = useTranslation();
+  const router = useRouter();
   const isLight = variant === "light";
+  const changeLocale = (nextLocale) => {
+    setLocale(nextLocale);
+    router.refresh();
+  };
 
   return (
     <div className="relative">
@@ -23,7 +29,7 @@ export default function LanguageSwitcher({ variant = "dark" }) {
       />
       <select
         value={locale}
-        onChange={(event) => setLocale(event.target.value)}
+        onChange={(event) => changeLocale(event.target.value)}
         aria-label={t("language.switchLabel")}
         className={`h-10 min-w-[108px] cursor-pointer appearance-none rounded-lg pl-8 pr-8 text-xs font-bold transition focus:outline-none focus:ring-2 focus:ring-[#d9a441]/60 sm:pl-9 ${
           isLight
