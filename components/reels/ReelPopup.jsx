@@ -168,6 +168,10 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
     touchStartRef.current = { x: touch.clientX, y: touch.clientY };
   }, []);
 
+  const handleTouchMove = useCallback((e) => {
+    if (touchStartRef.current) e.preventDefault();
+  }, []);
+
   const handleTouchEnd = useCallback((e) => {
     const start = touchStartRef.current;
     const touch = e.changedTouches?.[0];
@@ -177,7 +181,7 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
     const dy = touch.clientY - start.y;
 
     if (Math.abs(dy) < 45) return;
-    if (dy < 0) goNext();
+    if (dy > 0) goNext();
     else goPrev();
   }, [goNext, goPrev]);
 
@@ -239,6 +243,7 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
       role="dialog"
       aria-modal="true"
@@ -298,9 +303,20 @@ export default function ReelPopup({ reels = [], initialIndex = 0, onClose }) {
           )}
 
           {reel?.deity && (
-            <span className="absolute left-3 bottom-3 rounded-md bg-black/60 px-2 py-0.5 text-[11px] font-bold text-[#d9a441] backdrop-blur-sm">
+            <span className="absolute left-3 bottom-3 z-20 rounded-md bg-black/60 px-2 py-0.5 text-[11px] font-bold text-[#d9a441] backdrop-blur-sm">
               #{reel.deity}
             </span>
+          )}
+
+          {reels.length > 1 && (
+            <div
+              className="absolute inset-0 z-10 cursor-ns-resize touch-none"
+              onWheel={handleWheel}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              aria-hidden="true"
+            />
           )}
         </div>
 
