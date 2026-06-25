@@ -45,10 +45,11 @@ export default function SimpleSlider({ slides, autoPlay = false, interval = 5000
       }}
       tabIndex={0}
     >
-      <div className="overflow-hidden rounded-2xl">
+      <div className="h-full overflow-hidden rounded-2xl">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
+            className="h-full"
             initial={reduceMotion ? false : { opacity: 0, x: 28 }}
             animate={reduceMotion ? undefined : { opacity: 1, x: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, x: -28 }}

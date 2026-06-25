@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Star } from "lucide-react";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 
 const reviews = [
   ["Ramesh Kumar", "May 15, 2025", "Very peaceful and divine experience. The arrangements were excellent.", "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80"],
@@ -16,6 +16,15 @@ const bars = [
 ];
 
 export default function TempleReviews({ temple }) {
+  const reviewItems = temple.reviews?.length
+    ? temple.reviews.map((item) => [
+        item.reviewer_name,
+        item.visit_date || item.created_at || "",
+        item.review_text,
+        item.reviewer_image,
+      ])
+    : reviews;
+
   return (
     <section className="mt-10">
       <div className="mb-5 flex items-center justify-between">
@@ -50,10 +59,10 @@ export default function TempleReviews({ temple }) {
           </div>
         </div>
         <div className="grid gap-5 md:grid-cols-3">
-          {reviews.map(([name, date, text, image]) => (
+          {reviewItems.map(([name, date, text, image]) => (
             <article key={name} className="rounded-2xl border border-[#f1e7dc] bg-white p-5 shadow-sm">
               <div className="flex items-center gap-3">
-                <Image src={image} alt={name} width={46} height={46} className="h-11 w-11 rounded-full object-cover" />
+                <OptimizedImage src={image} alt={name} width={46} height={46} className="h-11 w-11 rounded-full object-cover" />
                 <div>
                   <h3 className="font-extrabold">{name}</h3>
                   <p className="text-xs font-semibold text-slate-500">{date}</p>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { MapPin, Plane, TrainFront, Bus } from "lucide-react";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 
 const TABS = [
   { id: "air", label: "By Air", icon: Plane },
@@ -103,7 +104,7 @@ export default function TempleLocation({ temple }) {
                 referrerPolicy="no-referrer-when-downgrade"
               />
             ) : (
-              <Image
+              <OptimizedImage
                 src={temple.image}
                 alt={`${temple.name} location`}
                 fill

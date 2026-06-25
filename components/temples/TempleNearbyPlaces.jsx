@@ -1,9 +1,10 @@
-import Image from "next/image";
 import AnimatedCard from "@/components/animations/AnimatedCard";
 import WaveGrid, { WaveGridItem } from "@/components/animations/WaveGrid";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 
 export default function TempleNearbyPlaces({ temple }) {
   const places = temple.nearby ?? [];
+  if (!places.length) return null;
 
   return (
     <section className="mt-10">
@@ -18,7 +19,7 @@ export default function TempleNearbyPlaces({ temple }) {
           <WaveGridItem key={name}>
             <AnimatedCard as="article" className="overflow-hidden rounded-2xl border border-[#f1e7dc] bg-white shadow-sm">
               <div className="relative h-28">
-                <Image
+                <OptimizedImage
                   src={temple.images[index % temple.images.length]}
                   alt={name}
                   fill

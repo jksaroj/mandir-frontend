@@ -5,9 +5,11 @@ import Header from "@/components/temples/Header";
 import TempleDetailsHero from "@/components/temples/TempleDetailsHero";
 import TempleFacilities from "@/components/temples/TempleFacilities";
 import TempleGallery from "@/components/temples/TempleGallery";
+import TempleHistory from "@/components/temples/TempleHistory";
 import TempleInfoTabs from "@/components/temples/TempleInfoTabs";
 import TempleLocation from "@/components/temples/TempleLocation";
 import TempleNearbyPlaces from "@/components/temples/TempleNearbyPlaces";
+import TemplePoojaSeva from "@/components/temples/TemplePoojaSeva";
 import TempleReviews from "@/components/temples/TempleReviews";
 import TempleTimings from "@/components/temples/TempleTimings";
 import TempleScheduleGrid from "@/components/temples/TempleScheduleGrid";
@@ -124,8 +126,16 @@ export default async function TempleDetailsPage({ params }) {
             <TempleScheduleGrid scheduleTimings={temple.scheduleTimings} />
           </Reveal>
         </section>
-        <span id="pooja-seva" className="block scroll-mt-24" />
-        <span id="history" className="block scroll-mt-24" />
+        <section id="pooja-seva" className="scroll-mt-24">
+          <Reveal>
+            <TemplePoojaSeva poojas={temple.poojas} />
+          </Reveal>
+        </section>
+        <section id="history" className="scroll-mt-24">
+          <Reveal>
+            <TempleHistory temple={temple} />
+          </Reveal>
+        </section>
         <section id="gallery" className="scroll-mt-24">
           <Reveal scale>
             <TempleGallery temple={temple} />
