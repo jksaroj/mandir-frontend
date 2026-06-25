@@ -18,7 +18,10 @@ export default function LanguageSwitcher({ variant = "dark" }) {
   const isLight = variant === "light";
   const changeLocale = (nextLocale) => {
     setLocale(nextLocale);
-    const query = typeof window !== "undefined" ? window.location.search : "";
+    const currentSearch = typeof window !== "undefined" ? window.location.search : "";
+    const params = new URLSearchParams(currentSearch);
+    params.set("lang", nextLocale);
+    const query = params.toString() ? `?${params.toString()}` : "";
     const nextPath = localizePath(pathname, nextLocale);
     router.push(`${nextPath}${query}`);
     router.refresh();

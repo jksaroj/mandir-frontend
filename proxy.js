@@ -42,10 +42,26 @@ export function proxy(request) {
   }
 
   const isHindiPath = pathname === HINDI_PREFIX || pathname.startsWith(`${HINDI_PREFIX}/`);
+  const requestedLocale = request.nextUrl.searchParams.get("lang");
+  const forcedLocale = requestedLocale === "hi" || requestedLocale === "en" ? requestedLocale : "";
   const cookieLocale = request.cookies.get(LOCALE_COOKIE)?.value;
   const canonicalPath = getCanonicalPath(pathname);
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-locale", isHindiPath ? "hi" : "en");
+  const activeLocale = forcedLocale || (isHindiPath ? "hi" : "en");
+  requestHeaders.set("x-locale", activeLocale);
+
+  if (forcedLocale) {
+    const url = request.nextUrl.clone();
+    url.searchParams.delete("lang");
+    url.pathname = forcedLocale === "hi" ? localizePath(pathname, "hi") : localizePath(pathname, "en");
+    const response = NextResponse.redirect(url);
+    response.cookies.set(LOCALE_COOKIE, forcedLocale, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax"
+    });
+    return response;
+  }
 
   if (!isHindiPath && cookieLocale === "hi" && pathname !== "/login") {
     const url = request.nextUrl.clone();
