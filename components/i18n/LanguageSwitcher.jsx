@@ -1,8 +1,9 @@
 "use client";
 
 import { ChevronDown, Languages } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LOCALES } from "@/lib/i18n/config";
+import { localizePath } from "@/lib/i18n/paths";
 import { useTranslation } from "@/components/providers/LanguageProvider";
 
 const localeOptions = [
@@ -13,9 +14,13 @@ const localeOptions = [
 export default function LanguageSwitcher({ variant = "dark" }) {
   const { locale, setLocale, t } = useTranslation();
   const router = useRouter();
+  const pathname = usePathname();
   const isLight = variant === "light";
   const changeLocale = (nextLocale) => {
     setLocale(nextLocale);
+    const query = typeof window !== "undefined" ? window.location.search : "";
+    const nextPath = localizePath(pathname, nextLocale);
+    router.push(`${nextPath}${query}`);
     router.refresh();
   };
 

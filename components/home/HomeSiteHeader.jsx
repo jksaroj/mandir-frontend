@@ -1,52 +1,82 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, Search, X } from "lucide-react";
+import { ChevronDown, Menu, Search, X } from "lucide-react";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import { useTranslation } from "@/components/providers/LanguageProvider";
 import { HomeSearchInline, HomeSearchOverlay } from "@/components/home/HomeSearch";
 import BrahmaTatvaLogo from "@/components/ui/BrahmaTatvaLogo";
+import { localizePath } from "@/lib/i18n/paths";
+import { fetchHeaderMenu } from "@/lib/menus";
 
-const navItems = [
-  { label: "Home", href: "/", key: "home" },
-  { label: "Temples", href: "/temples", key: "temples" },
-  { label: "Mantras", href: "/mantras", key: "mantra" },
-  { label: "Chalisas", href: "/chalisa", key: "chalisa" },
-  { label: "Upcoming Events", href: "#events", key: "events" },
-  { label: "Spiritual Reels", href: "/reels", key: "reels" },
-  { label: "Pandit Services", href: "/pandit-services", key: "pandit", badge: "Soon" },
-  { label: "Blog / Articles", href: "#blog", key: "blog" }
-];
+function MenuLink({ item, locale, mobile = false, onClick }) {
+  const hasChildren = item.children?.length > 0;
+  const href = localizePath(item.url || "#", locale);
+
+  if (mobile) {
+    return (
+      <li>
+        <Link href={href} onClick={onClick} className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-bold text-[#351112] hover:bg-white">
+          {item.label}
+          {hasChildren && <ChevronDown size={14} />}
+        </Link>
+        {hasChildren && (
+          <ul className="ml-4 border-l border-[#ead8c7] pl-2">
+            {item.children.map((child) => <MenuLink key={child.id} item={child} locale={locale} mobile onClick={onClick} />)}
+          </ul>
+        )}
+      </li>
+    );
+  }
+
+  return (
+    <div className="group relative">
+      <Link href={href} className="flex whitespace-nowrap rounded-lg px-2.5 py-2 text-xs font-bold text-[#4a3030] transition hover:bg-white hover:text-[#c48a2a] lg:text-[13px]">
+        {item.label}
+        {hasChildren && <ChevronDown size={13} className="ml-1 mt-0.5" />}
+      </Link>
+      {hasChildren && (
+        <div className="invisible absolute left-0 top-full z-50 min-w-52 rounded-lg border border-[#f1e4d6] bg-white py-2 opacity-0 shadow-xl transition group-hover:visible group-hover:opacity-100">
+          {item.children.map((child) => (
+            <MenuLink key={child.id} item={child} locale={locale} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function HomeSiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [navItems, setNavItems] = useState([]);
+  const { locale } = useTranslation();
+
+  useEffect(() => {
+    let mounted = true;
+    fetchHeaderMenu().then((items) => {
+      if (mounted) setNavItems(items);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [locale]);
 
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-[#f1e4d6]/80 bg-cream/95 shadow-sm backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:h-[4.5rem] sm:px-6 lg:gap-6 lg:px-8">
-          <Link href="/" className="flex shrink-0 items-center">
+          <Link href={localizePath("/", locale)} className="flex shrink-0 items-center">
             <BrahmaTatvaLogo height={40} variant="light" />
           </Link>
 
           <HomeSearchInline className="mx-auto hidden max-w-md flex-1 lg:block" />
 
           <nav className="hidden items-center gap-1 xl:flex" aria-label="Main navigation">
-            {navItems.map((item) => (
-              <Link
-                key={item.key}
-                href={item.href}
-                className="whitespace-nowrap rounded-lg px-2.5 py-2 text-xs font-bold text-[#4a3030] transition hover:bg-white hover:text-[#c48a2a] lg:text-[13px]"
-              >
-                {item.label}
-                {item.badge && (
-                  <span className="ml-1 rounded bg-[#fff0d6] px-1.5 py-0.5 text-[10px] font-extrabold text-[#b86b12]">
-                    {item.badge}
-                  </span>
-                )}
-              </Link>
-            ))}
+            {navItems.length ? navItems.map((item) => <MenuLink key={item.id} item={item} locale={locale} />) : (
+              <span className="rounded-lg px-2.5 py-2 text-xs font-bold text-[#4a3030]">comming</span>
+            )}
             <LanguageSwitcher variant="light" />
           </nav>
 
@@ -97,22 +127,9 @@ export default function HomeSiteHeader() {
               </button>
             </div>
             <ul className="flex-1 space-y-1 overflow-y-auto p-4">
-              {navItems.map((item) => (
-                <li key={item.key}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-bold text-[#351112] hover:bg-white"
-                  >
-                    {item.label}
-                    {item.badge && (
-                      <span className="rounded bg-[#fff0d6] px-2 py-0.5 text-[10px] font-extrabold text-[#b86b12]">
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              ))}
+              {navItems.length ? navItems.map((item) => <MenuLink key={item.id} item={item} locale={locale} mobile onClick={() => setMenuOpen(false)} />) : (
+                <li className="rounded-xl px-4 py-3 text-sm font-bold text-[#351112]">comming</li>
+              )}
             </ul>
             <div className="border-t border-[#f1e4d6] p-4">
               <LanguageSwitcher variant="light" />

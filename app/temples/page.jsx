@@ -15,6 +15,7 @@ import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import { buildMetadata, DEFAULT_OG_IMAGE, itemListSchema, seoKeywords } from "@/lib/seo";
 
 export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   const temples = await fetchTemples();

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Camera, Landmark, Mail, MapPin, MessageCircle, Phone, Video } from "lucide-react";
+import FooterMenu from "@/components/site/FooterMenu";
 
 const quickLinks = ["Home", "Temples", "Mantra & Chalisa", "Festival & Events", "Pooja & Seva"];
 const supportLinks = ["Help Center", "FAQ", "Terms & Conditions", "Privacy Policy", "Refund Policy"];
@@ -31,11 +32,7 @@ export default function Footer() {
         </div>
         <div>
           <h3 className="font-extrabold">Quick Links</h3>
-          <ul className="mt-4 space-y-3 text-sm text-white/75">
-            {quickLinks.map((link) => (
-              <li key={link}><Link href={link === "Home" ? "/" : "#"}>{link}</Link></li>
-            ))}
-          </ul>
+          <FooterMenu className="mt-4 space-y-3 text-sm text-white/75" />
         </div>
         <div>
           <h3 className="font-extrabold">Help & Support</h3>

@@ -3,6 +3,7 @@ import { buildMetadata, DEFAULT_OG_IMAGE, seoKeywords } from "@/lib/seo";
 import { fetchSpiritualItems } from "@/lib/mantras";
 
 export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata() {
   const items = await fetchSpiritualItems({ type: "mantra" });

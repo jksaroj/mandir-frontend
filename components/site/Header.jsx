@@ -1,43 +1,61 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Bell, ChevronDown, Search, UserRound } from "lucide-react";
-import I18n from "@/components/i18n/I18n";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import { useTranslation } from "@/components/providers/LanguageProvider";
 import BrahmaTatvaLogo from "@/components/ui/BrahmaTatvaLogo";
+import { localizePath } from "@/lib/i18n/paths";
+import { fetchHeaderMenu } from "@/lib/menus";
 
-const navItems = [
-  { key: "nav.home", activeKey: "home", href: "/" },
-  { key: "nav.temples", activeKey: "temples", href: "/temples" },
-  { key: "nav.mantra", activeKey: "mantra", href: "/mantras" },
-  { key: "nav.chalisa", activeKey: "chalisa", href: "/chalisa" },
-  { key: "Spiritual Reels", activeKey: "reels", href: "/reels", plain: true },
-  { key: "nav.festivals", activeKey: "festivals", href: "#" },
-  { key: "nav.panditServices", activeKey: "pandit", href: "/pandit-services" }
-];
+function MenuLink({ item, locale }) {
+  const hasChildren = item.children?.length > 0;
+  return (
+    <div className="group relative">
+      <Link
+        href={localizePath(item.url || "#", locale)}
+        className="relative flex items-center gap-1 py-7 text-white transition hover:text-[#d9a441]"
+      >
+        {item.label}
+        {hasChildren && <ChevronDown size={13} />}
+      </Link>
+      {hasChildren && (
+        <div className="invisible absolute left-0 top-full z-50 min-w-52 rounded-lg border border-white/10 bg-[#321010] py-2 opacity-0 shadow-xl transition group-hover:visible group-hover:opacity-100">
+          {item.children.map((child) => (
+            <MenuLink key={child.id} item={child} locale={locale} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Header({ active = "home" }) {
+  const { locale } = useTranslation();
+  const [navItems, setNavItems] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchHeaderMenu().then((items) => {
+      if (mounted) setNavItems(items);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [locale]);
+
   return (
     <header className="sticky top-0 z-50 bg-gradient-to-r from-[#1f1515] via-[#2b1717] to-[#3b1111] text-white shadow-md silk-wave-bg">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center">
+        <Link href={localizePath("/", locale)} className="flex items-center">
           <BrahmaTatvaLogo height={40} variant="dark" />
         </Link>
 
         <nav className="hidden items-center gap-7 text-sm font-bold lg:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.key}
-              href={item.href}
-              className={`relative flex items-center gap-1 py-7 transition hover:text-[#d9a441] ${
-                active === item.activeKey ? "text-[#d9a441]" : "text-white"
-              }`}
-            >
-              {item.plain ? item.key : <I18n k={item.key} />}
-              {item.activeKey === "temples" && <ChevronDown size={13} />}
-              {active === item.activeKey && (
-                <span className="gold-underline absolute bottom-4 left-0 h-0.5 w-full rounded" />
-              )}
-            </Link>
-          ))}
+          {navItems.length ? navItems.map((item) => (
+            <MenuLink key={item.id} item={item} locale={locale} />
+          )) : <span className="py-7 text-white">comming</span>}
         </nav>
 
         <div className="flex items-center gap-3">
@@ -58,11 +76,11 @@ export default function Header({ active = "home" }) {
             <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500" />
           </button>
           <Link
-            href="/login"
+            href={localizePath("/login", locale)}
             className="flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-xs font-bold text-[#6b2323] shadow-sm transition hover:bg-[#fff7f0]"
           >
             <UserRound size={17} />
-            <I18n k="nav.loginRegister" />
+            Login
           </Link>
         </div>
       </div>

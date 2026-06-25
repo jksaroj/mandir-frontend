@@ -19,6 +19,7 @@ import { resolveImageUrl } from "@/lib/images";
 import { absoluteUrl, buildMetadata, faqSchema, seoKeywords } from "@/lib/seo";
 
 export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   const slugs = await fetchAllTempleSlugs();

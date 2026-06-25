@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Landmark } from "lucide-react";
 import I18n from "@/components/i18n/I18n";
+import FooterMenu from "@/components/site/FooterMenu";
 
 function SocialIcon({ children, label }) {
   return (
@@ -113,15 +114,7 @@ export default function HomeFooter() {
 
         <div>
           <h3 className="text-sm font-extrabold uppercase tracking-wide text-[#d9a441]">Explore</h3>
-          <ul className="mt-4 space-y-2.5 text-sm text-white/80">
-            {exploreLinks.map((link) => (
-              <li key={link.href + link.label}>
-                <Link href={link.href} className="transition hover:text-white">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <FooterMenu />
         </div>
 
         <div>

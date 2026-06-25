@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Camera, Landmark, Mail, MapPin, MessageCircle, Phone, Video } from "lucide-react";
 import I18n from "@/components/i18n/I18n";
+import FooterMenu from "@/components/site/FooterMenu";
 
 const quickLinks = [
   ["nav.home", "/"],
@@ -48,15 +49,7 @@ export default function Footer() {
         </div>
         <div>
           <I18n k="footer.quickLinks" as="h3" className="font-extrabold" />
-          <ul className="mt-4 space-y-3 text-sm text-white/75">
-            {quickLinks.map(([key, href]) => (
-              <li key={key}>
-                <Link href={href}>
-                  <I18n k={key} />
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <FooterMenu className="mt-4 space-y-3 text-sm text-white/75" />
         </div>
         <div>
           <I18n k="footer.helpSupport" as="h3" className="font-extrabold" />
