@@ -8,7 +8,7 @@ const articles = [
 ];
 
 const testimonials = [
-  { name: "Ramesh Kumar", text: "Sri Devasthanam helped me book pooja seamlessly and the experience was divine.", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80" },
+  { name: "Ramesh Kumar", text: "brahmatatva helped me book pooja seamlessly and the experience was divine.", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80" },
   { name: "Priya Sharma", text: "Great platform for finding temples and reading mantras. Very useful.", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80" },
   { name: "Anil Verma", text: "Pandit services are excellent and very professional.", image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=160&q=80" }
 ];

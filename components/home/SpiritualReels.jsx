@@ -22,7 +22,7 @@ function ReelCard({ reel, onOpen }) {
   const tags = reelTags(reel);
 
   return (
-    <article className="group card-lift relative w-[180px] shrink-0 overflow-hidden rounded-2xl border border-[#f1e4d6] bg-[#1a1212] shadow-md sm:w-[190px] lg:w-auto lg:flex-1">
+    <article className="group card-lift relative overflow-hidden rounded-2xl border border-[#f1e4d6] bg-[#1a1212] shadow-md">
       <div className="relative aspect-[9/11] w-full">
         <button
           type="button"
@@ -70,7 +70,7 @@ function ReelCard({ reel, onOpen }) {
 
 function ReelSkeleton() {
   return (
-    <div className="w-[180px] shrink-0 sm:w-[190px] lg:w-auto lg:flex-1">
+    <div>
       <div className="aspect-[9/11] w-full animate-pulse rounded-2xl bg-[#f1e4d6]" />
       <div className="mt-2 h-4 w-3/4 animate-pulse rounded bg-[#f1e4d6]" />
     </div>
@@ -146,8 +146,8 @@ export default function SpiritualReels() {
 
         <div className="mt-6">
           {loading ? (
-            <div className="-mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 lg:w-[70%]">
-              <div className="flex w-max gap-5 lg:w-full">
+            <div>
+              <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <ReelSkeleton key={i} />
                 ))}
@@ -160,8 +160,8 @@ export default function SpiritualReels() {
               </p>
             </div>
           ) : (
-            <div className="-mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0 lg:w-[70%]">
-              <div className="flex w-max gap-5 lg:w-full">
+            <div>
+              <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
                 {shown.map((reel, i) => (
                   <ReelCard key={reel.id} reel={reel} onOpen={() => setActiveIndex(i)} />
                 ))}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CalendarDays, Clock, Heart, MapPin, Navigation, Shirt, Star, UserRound } from "lucide-react";
+import { Clock, Heart, MapPin, Navigation, Star, UserRound } from "lucide-react";
 import FadeUp from "@/components/animations/FadeUp";
 import FloatingDivine from "@/components/animations/FloatingDivine";
 import SimpleSlider from "@/components/ui/SimpleSlider";
@@ -29,7 +29,6 @@ export default function TempleDetailsHero({ temple }) {
   const badges = [
     ["Deity", temple.deity, UserRound],
     ["Temple Timings", temple.templeTimings, Clock],
-    ["Dress Code", temple.dressCode, Shirt]
   ];
 
   return (
@@ -89,7 +88,7 @@ export default function TempleDetailsHero({ temple }) {
             <span className="text-sm font-semibold text-slate-500">({temple.reviewCount} Reviews)</span>
           </div>
           <p className="mt-5 max-w-2xl text-base font-medium leading-8 text-slate-600">{temple.excerpt}</p>
-          <div className="mt-7 grid gap-4 sm:grid-cols-3">
+          <div className="mt-7 grid gap-4 sm:grid-cols-2">
             {badges.map(([label, value, Icon]) => (
               <div key={label} className="flex gap-3 rounded-xl bg-[#fff5e9] p-4">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-[#d89b2b]">
@@ -103,9 +102,6 @@ export default function TempleDetailsHero({ temple }) {
             ))}
           </div>
           <div className="mt-7 flex flex-wrap gap-4">
-            <a href="#" className="inline-flex items-center gap-2 rounded-lg bg-[#6b2323] px-8 py-3 text-sm font-extrabold text-white">
-              <CalendarDays size={17} /> Book Darshan / Seva
-            </a>
             <a href="#" className="inline-flex items-center gap-2 rounded-lg border border-[#9b5252] px-8 py-3 text-sm font-extrabold text-[#6b2323]">
               <Navigation size={17} /> Get Directions
             </a>

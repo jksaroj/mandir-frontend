@@ -53,7 +53,7 @@ export default function LoginPage() {
             <Landmark size={22} strokeWidth={1.8} />
           </span>
           <span>
-            <span className="block text-base font-bold text-white leading-tight">Sri Devasthanam</span>
+            <span className="block text-base font-bold text-white leading-tight">brahmatatva</span>
             <span className="block text-xs text-white/70">Temple Management System</span>
           </span>
         </Link>
@@ -75,7 +75,7 @@ export default function LoginPage() {
                 <Landmark size={28} className="text-white" />
               </div>
               <h1 className="text-xl font-extrabold text-white">Welcome Back</h1>
-              <p className="mt-1 text-sm text-white/75">Sign in to your Sri Devasthanam account</p>
+              <p className="mt-1 text-sm text-white/75">Sign in to your brahmatatva account</p>
             </div>
 
             {/* Form */}

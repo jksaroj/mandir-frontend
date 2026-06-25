@@ -14,7 +14,7 @@ export default function Footer() {
               <Landmark size={28} />
             </span>
             <div>
-              <p className="font-bold">Sri Devasthanam</p>
+              <p className="font-bold">brahmatatva</p>
               <p className="text-xs text-white/75">Temple Management System</p>
             </div>
           </div>
@@ -46,7 +46,7 @@ export default function Footer() {
         <div>
           <h3 className="font-extrabold">Contact Us</h3>
           <ul className="mt-4 space-y-4 text-sm leading-6 text-white/75">
-            <li className="flex gap-3"><Mail size={17} /> support@sridevasthanam.com</li>
+            <li className="flex gap-3"><Mail size={17} /> support@brahmatatva.com</li>
             <li className="flex gap-3"><Phone size={17} /> +91 98765 43210</li>
             <li className="flex gap-3"><MapPin size={17} /> 123 Temple Street, Spiritual City, Bharat, 560001</li>
           </ul>
@@ -54,7 +54,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <p>© 2025 Sri Devasthanam. All rights reserved.</p>
+          <p>© 2025 brahmatatva. All rights reserved.</p>
           <div className="flex gap-8"><a href="#">Terms & Conditions</a><a href="#">Privacy Policy</a></div>
         </div>
       </div>

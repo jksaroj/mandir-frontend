@@ -12,7 +12,7 @@ import Reveal from "@/components/animations/Reveal";
 import { fetchTemples } from "@/lib/temples";
 
 export const metadata = {
-  title: "Temples | Sri Devasthanam",
+  title: "Temples | brahmatatva",
   description:
     "Discover temples, their history, darshan timings, deities, and spiritual services."
 };

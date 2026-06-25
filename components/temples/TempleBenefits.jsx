@@ -9,7 +9,7 @@ const benefits = [
 export default function TempleBenefits() {
   return (
     <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
-      <h2 className="sr-only">Benefits of Using Sri Devasthanam Temple Directory</h2>
+      <h2 className="sr-only">Benefits of Using brahmatatva Temple Directory</h2>
       <div className="grid gap-6 md:grid-cols-3">
         {benefits.map(([title, text, Icon]) => (
           <div key={title} className="flex gap-5 rounded-2xl border border-[#f1e7dc] bg-[#fff4e6] p-6 shadow-sm">

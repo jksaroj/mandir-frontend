@@ -54,11 +54,11 @@ export async function generateSpiritualMetadata({ params, variant }) {
   const item = await fetchSpiritualItemBySlug(slug, variant);
 
   if (!item) {
-    return { title: `${getMessage(DEFAULT_LOCALE, navConfig[variant].listKey)} Not Found | Sri Devasthanam` };
+    return { title: `${getMessage(DEFAULT_LOCALE, navConfig[variant].listKey)} Not Found | brahmatatva` };
   }
 
   return {
-    title: `${item.title} | Sri Devasthanam`,
+    title: `${item.title} | brahmatatva`,
     description: item.excerpt || `${item.title} lyrics, meaning, benefits, chanting method and timing.`
   };
 }

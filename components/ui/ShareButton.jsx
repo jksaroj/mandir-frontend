@@ -17,7 +17,7 @@ function resolveShareUrl(url) {
 }
 
 export default function ShareButton({
-  title = "Sri Devasthanam",
+  title = "brahmatatva",
   url = "",
   label = "Share",
   modalTitle = "Share this page",

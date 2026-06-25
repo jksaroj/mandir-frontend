@@ -30,7 +30,7 @@ const timeline = [
   ["2001", "Completed Vedic studies and began assisting senior priests in daily rituals."],
   ["2008", "Started independent pooja and homam services for families."],
   ["2016", "Recognized for community rituals and temple events."],
-  ["2026", "Serving devotees through Sri Devasthanam verified pandit services."]
+  ["2026", "Serving devotees through brahmatatva verified pandit services."]
 ];
 
 export async function generateMetadata({ params }) {
@@ -38,11 +38,11 @@ export async function generateMetadata({ params }) {
   const pandit = await fetchPanditBySlug(slug);
 
   if (!pandit) {
-    return { title: "Pandit Not Found | Sri Devasthanam" };
+    return { title: "Pandit Not Found | brahmatatva" };
   }
 
   return {
-    title: `${pandit.name} | Sri Devasthanam`,
+    title: `${pandit.name} | brahmatatva`,
     description: `${pandit.name} profile, services, availability, pricing, reviews and booking.`
   };
 }
@@ -147,7 +147,7 @@ export default async function PanditProfilePage({ params }) {
             <div className="rounded-2xl border border-[#f1e4d6] bg-white p-6 shadow-sm">
               <h3 className="text-xl font-extrabold">Contact Information</h3>
               <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-slate-600"><Phone size={16} /> +91 98765 43210</p>
-              <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-slate-600"><Mail size={16} /> pandit@sridevasthanam.com</p>
+              <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-slate-600"><Mail size={16} /> pandit@brahmatatva.com</p>
               <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-slate-600"><Briefcase size={16} /> {pandit.experienceYears} Experience</p>
             </div>
           </aside>

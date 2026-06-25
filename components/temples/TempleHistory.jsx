@@ -1,5 +1,15 @@
 export default function TempleHistory({ temple }) {
-  const paragraphs = [temple.history, !temple.history ? temple.description : ""].filter(Boolean);
+  const seen = new Set();
+  const paragraphs = [
+    temple.history,
+    temple.description,
+    ...(temple.about?.paragraphs ?? []),
+  ].filter((paragraph) => {
+    const value = String(paragraph || "").trim();
+    if (!value || seen.has(value)) return false;
+    seen.add(value);
+    return true;
+  });
 
   if (!paragraphs.length) return null;
 

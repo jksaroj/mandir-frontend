@@ -1,7 +1,7 @@
 import DivineReelsPage from "@/components/reels/DivineReelsPage";
 
 export const metadata = {
-  title: "Divine Reels | Sri Devasthanam",
+  title: "Divine Reels | brahmatatva",
   description: "Watch devotional reels, bhajans, aartis, mantras, temple darshan and pravachan shorts."
 };
 

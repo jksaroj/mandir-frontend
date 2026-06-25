@@ -4,8 +4,13 @@ import ScrollProgress from "@/components/animations/ScrollProgress";
 import { getServerLocale } from "@/lib/i18n/server";
 
 export const metadata = {
-  title: "Sri Devasthanam",
-  description: "Temple Management System homepage"
+  title: "brahmatatva",
+  description: "Temple Management System homepage",
+  alternates: {
+    types: {
+      "application/rss+xml": "/rss.xml"
+    }
+  }
 };
 
 export default async function RootLayout({ children }) {

@@ -14,9 +14,9 @@ import { fetchBanners } from "@/lib/banners";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Sri Devasthanam | Famous Temples, Mantras, Chalisa & Spiritual Reels",
+  title: "brahmatatva | Famous Temples, Mantras, Chalisa & Spiritual Reels",
   description:
-    "Discover famous temples in India, Hanuman Chalisa, powerful mantras for peace, spiritual reels, upcoming festivals and devotional articles on Sri Devasthanam.",
+    "Discover famous temples in India, Hanuman Chalisa, powerful mantras for peace, spiritual reels, upcoming festivals and devotional articles on brahmatatva.",
   keywords: [
     "temples in India",
     "Hanuman Chalisa",
@@ -27,7 +27,7 @@ export const metadata = {
     "Hindu devotional"
   ],
   openGraph: {
-    title: "Sri Devasthanam — Temples, Mantras & Bhakti",
+    title: "brahmatatva — Temples, Mantras & Bhakti",
     description:
       "Your trusted platform for temple darshan, mantras, chalisas, spiritual shorts and pilgrimage guides.",
     type: "website"

@@ -2,8 +2,8 @@ import Footer from "@/components/temples/Footer";
 import Header from "@/components/temples/Header";
 
 export const metadata = {
-  title: "Template | Sri Devasthanam",
-  description: "Sri Devasthanam template route."
+  title: "Template | brahmatatva",
+  description: "brahmatatva template route."
 };
 
 export default function TemplatePage() {
@@ -13,7 +13,7 @@ export default function TemplatePage() {
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="rounded-2xl border border-[#f1e7dc] bg-white p-10 text-center shadow-sm">
           <p className="text-sm font-extrabold uppercase tracking-[0.2em] text-[#d89b2b]">
-            Sri Devasthanam
+            brahmatatva
           </p>
           <h1 className="mt-4 font-serif text-5xl font-bold text-[#5b1f1f]">
             Template

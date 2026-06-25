@@ -72,7 +72,7 @@ function ReelCard({ reel, onOpen }) {
         <div className="mt-2">
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-gray-500">
             <span className="text-sm">🙏</span>
-            Sri Devasthanam
+            brahmatatva
           </span>
         </div>
       </div>

@@ -150,7 +150,7 @@ export default function HomeFooter() {
         <div>
           <h3 className="text-sm font-extrabold uppercase tracking-wide text-[#d9a441]">Contact</h3>
           <ul className="mt-4 space-y-3 text-sm text-white/80">
-            <li>support@sridevasthanam.com</li>
+            <li>support@brahmatatva.com</li>
             <li>+91 98765 43210</li>
             <li>123 Temple Street, Spiritual City, Bharat</li>
           </ul>

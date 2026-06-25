@@ -1,7 +1,7 @@
 import SpiritualListingPage from "@/components/spiritual/SpiritualListingPage";
 
 export const metadata = {
-  title: "Chalisa | Sri Devasthanam",
+  title: "Chalisa | brahmatatva",
   description: "Read and chant sacred chalisas for devotion, courage, and spiritual upliftment."
 };
 

@@ -74,7 +74,7 @@ export default function Footer() {
           <I18n k="footer.contactUs" as="h3" className="font-extrabold" />
           <ul className="mt-4 space-y-4 text-sm leading-6 text-white/75">
             <li className="flex gap-3">
-              <Mail size={17} /> support@sridevasthanam.com
+              <Mail size={17} /> support@brahmatatva.com
             </li>
             <li className="flex gap-3">
               <Phone size={17} /> +91 98765 43210

@@ -5,8 +5,6 @@ import Header from "@/components/temples/Header";
 import TempleDetailsHero from "@/components/temples/TempleDetailsHero";
 import TempleFacilities from "@/components/temples/TempleFacilities";
 import TempleGallery from "@/components/temples/TempleGallery";
-import TempleHistory from "@/components/temples/TempleHistory";
-import TempleInfoTabs from "@/components/temples/TempleInfoTabs";
 import TempleLocation from "@/components/temples/TempleLocation";
 import TempleNearbyPlaces from "@/components/temples/TempleNearbyPlaces";
 import TemplePoojaSeva from "@/components/temples/TemplePoojaSeva";
@@ -14,11 +12,10 @@ import TempleReviews from "@/components/temples/TempleReviews";
 import TempleTimings from "@/components/temples/TempleTimings";
 import TempleScheduleGrid from "@/components/temples/TempleScheduleGrid";
 import FaqSection from "@/components/seo/FaqSection";
-import Reveal from "@/components/animations/Reveal";
 import { fetchAllTempleSlugs, fetchTempleBySlug } from "@/lib/temples";
 import { resolveImageUrl } from "@/lib/images";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sridevasthanam.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://brahmatatva.com";
 
 export const revalidate = 60;
 
@@ -32,24 +29,24 @@ export async function generateMetadata({ params }) {
   const temple = await fetchTempleBySlug(slug);
 
   if (!temple) {
-    return { title: "Temple Not Found | Sri Devasthanam" };
+    return { title: "Temple Not Found | brahmatatva" };
   }
 
   const description =
     temple.excerpt ||
-    `Plan your visit to ${temple.name} in ${temple.city}. Darshan timings, facilities, how to reach, gallery, and devotee reviews on Sri Devasthanam.`;
+    `Plan your visit to ${temple.name} in ${temple.city}. Darshan timings, facilities, how to reach, gallery, and devotee reviews on brahmatatva.`;
   const ogImage = resolveImageUrl(temple.image);
   const canonical = `${SITE_URL}/temples/${slug}`;
 
   return {
-    title: `${temple.name} — Darshan Timings & Visit Guide | Sri Devasthanam`,
+    title: `${temple.name} — Darshan Timings & Visit Guide | brahmatatva`,
     description,
     alternates: { canonical },
     openGraph: {
-      title: `${temple.name} | Sri Devasthanam`,
+      title: `${temple.name} | brahmatatva`,
       description,
       url: canonical,
-      siteName: "Sri Devasthanam",
+      siteName: "brahmatatva",
       locale: "en_IN",
       type: "website",
       images: [
@@ -63,7 +60,7 @@ export async function generateMetadata({ params }) {
     },
     twitter: {
       card: "summary_large_image",
-      title: `${temple.name} | Sri Devasthanam`,
+      title: `${temple.name} | brahmatatva`,
       description,
       images: [ogImage],
     },
@@ -117,47 +114,25 @@ export default async function TempleDetailsPage({ params }) {
         <section id="overview" className="scroll-mt-24">
           <TempleDetailsHero temple={temple} />
         </section>
-        <TempleInfoTabs />
         <section id="darshan-timings" className="scroll-mt-24">
-          <Reveal>
-            <TempleTimings temple={temple} />
-          </Reveal>
-          <Reveal>
-            <TempleScheduleGrid scheduleTimings={temple.scheduleTimings} />
-          </Reveal>
+          <TempleTimings temple={temple} />
+          <TempleScheduleGrid scheduleTimings={temple.scheduleTimings} />
         </section>
         <section id="pooja-seva" className="scroll-mt-24">
-          <Reveal>
-            <TemplePoojaSeva poojas={temple.poojas} />
-          </Reveal>
-        </section>
-        <section id="history" className="scroll-mt-24">
-          <Reveal>
-            <TempleHistory temple={temple} />
-          </Reveal>
+          <TemplePoojaSeva poojas={temple.poojas} />
         </section>
         <section id="gallery" className="scroll-mt-24">
-          <Reveal scale>
-            <TempleGallery temple={temple} />
-          </Reveal>
+          <TempleGallery temple={temple} />
         </section>
         <section id="facilities" className="scroll-mt-24">
-          <Reveal direction="left">
-            <TempleFacilities facilities={temple.facilities} />
-          </Reveal>
+          <TempleFacilities facilities={temple.facilities} />
         </section>
         <section id="how-to-reach" className="scroll-mt-24">
-          <Reveal direction="right">
-            <TempleLocation temple={temple} />
-          </Reveal>
+          <TempleLocation temple={temple} />
         </section>
-        <Reveal>
-          <TempleNearbyPlaces temple={temple} />
-        </Reveal>
+        <TempleNearbyPlaces temple={temple} />
         <section id="reviews" className="scroll-mt-24">
-          <Reveal>
-            <TempleReviews temple={temple} />
-          </Reveal>
+          <TempleReviews temple={temple} />
         </section>
         <section className="gold-ring card-lift mt-10 overflow-hidden rounded-2xl border border-[#f1e7dc] bg-[#fff2df] px-6 py-9 text-center shadow-sm">
           <h2 className="font-serif text-3xl font-bold text-[#3d1717]">

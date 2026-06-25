@@ -12,7 +12,7 @@ const stats = [
 export default function StatsSection() {
   return (
     <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
-      <h2 className="sr-only">Sri Devasthanam Platform Statistics</h2>
+      <h2 className="sr-only">brahmatatva Platform Statistics</h2>
       <WaveGrid className="grid gap-4 rounded-2xl bg-[#fff3df] px-8 py-7 shadow-sm sm:grid-cols-2 lg:grid-cols-4">
         {stats.map(({ value, label, icon: Icon }, index) => (
           <WaveGridItem key={label} className={`flex items-center justify-center gap-5 ${index > 0 ? "lg:border-l lg:border-maroon/15" : ""}`}>

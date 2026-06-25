@@ -24,7 +24,7 @@ import {
 import { fetchPandits, getPanditHref } from "@/lib/pandits";
 
 export const metadata = {
-  title: "Pandit Services | Sri Devasthanam",
+  title: "Pandit Services | brahmatatva",
   description: "Find experienced and verified pandits for poojas, homas, rituals and spiritual services."
 };
 

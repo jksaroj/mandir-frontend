@@ -1,7 +1,7 @@
 import SpiritualListingPage from "@/components/spiritual/SpiritualListingPage";
 
 export const metadata = {
-  title: "Mantras | Sri Devasthanam",
+  title: "Mantras | brahmatatva",
   description: "Discover powerful mantras for peace, positivity, strength and spiritual growth."
 };
 

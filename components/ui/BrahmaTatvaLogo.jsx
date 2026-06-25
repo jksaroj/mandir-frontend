@@ -1,10 +1,16 @@
-﻿export default function BrahmaTatvaLogo({ className = "", height = 40 }) {
+/**
+ * BrahmaTatva SVG Logo
+ * variant="light"  — dark text (cream/white background headers)
+ * variant="dark"   — white + gold text (dark maroon background headers)
+ */
+export default function BrahmaTatvaLogo({ className = "", height = 44, variant = "light" }) {
   return (
     <img
       src="/images/BrahmaTatvaLogo.png"
       alt="BrahmaTatva"
-      className={className}
-      style={{ height: `${height}px`, width: "auto" }}
+      height={height}
+      className={`h-auto w-auto ${variant === "dark" ? "brightness-0 invert" : ""} ${className}`}
+      style={{ maxHeight: height }}
     />
   );
 }
