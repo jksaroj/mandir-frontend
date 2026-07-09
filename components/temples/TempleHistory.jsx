@@ -1,4 +1,16 @@
 export default function TempleHistory({ temple }) {
+  if (temple.historyHtml || temple.descriptionHtml) {
+    return (
+      <section className="mt-8 rounded-2xl border border-[#f1e7dc] bg-white p-7 shadow-sm">
+        <h2 className="text-xl font-extrabold">History</h2>
+        <div
+          className="mt-5 max-w-none text-sm font-medium leading-7 text-slate-600 [&_p]:mb-4"
+          dangerouslySetInnerHTML={{ __html: temple.historyHtml || temple.descriptionHtml }}
+        />
+      </section>
+    );
+  }
+
   const seen = new Set();
   const paragraphs = [
     temple.history,

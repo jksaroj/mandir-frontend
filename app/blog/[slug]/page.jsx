@@ -8,6 +8,15 @@ import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import { fetchBlogBySlug, fetchBlogs } from "@/lib/blogs";
 import { absoluteUrl, buildMetadata, seoKeywords, stripHtml } from "@/lib/seo";
 
+function sanitizeHtml(value = "") {
+  return String(value)
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
+    .replace(/\son\w+="[^"]*"/gi, "")
+    .replace(/\son\w+='[^']*'/gi, "")
+    .replace(/\sjavascript:/gi, "");
+}
+
 export const revalidate = 60;
 
 export async function generateStaticParams() {
@@ -78,9 +87,10 @@ export default async function BlogDetailPage({ params }) {
           By {blog.author} · {new Date(blog.publishedAt).toLocaleDateString("en-IN")}
         </p>
         <Image src={blog.imageUrl} alt={`${blog.title} featured image`} width={1200} height={630} priority className="mt-8 aspect-[1200/630] w-full rounded-lg object-cover" />
-        <div className="prose prose-slate mt-8 max-w-none">
-          <p>{stripHtml(blog.content || blog.description)}</p>
-        </div>
+        <div
+          className="prose prose-slate mt-8 max-w-none"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(blog.content || blog.description) || `<p>${stripHtml(blog.description)}</p>` }}
+        />
         <div className="mt-10 flex flex-wrap gap-3">
           <Link href="/temples" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Explore Temples</Link>
           <Link href="/mantras" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Read Mantras</Link>

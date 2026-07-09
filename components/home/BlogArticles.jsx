@@ -2,7 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, Clock } from "lucide-react";
 import HorizontalScroll from "@/components/ui/HorizontalScroll";
-import { blogArticles } from "@/lib/homeContent";
+import { fetchBlogs } from "@/lib/blogs";
+
+function estimateReadTime(article) {
+  const text = `${article.description || ""} ${article.content || ""}`.replace(/<[^>]*>/g, " ");
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  return `${Math.max(1, Math.ceil(words / 180))} min read`;
+}
 
 function ArticleCard({ article }) {
   return (
@@ -41,7 +47,19 @@ function ArticleCard({ article }) {
   );
 }
 
-export default function BlogArticles() {
+export default async function BlogArticles() {
+  const blogs = await fetchBlogs();
+  if (!blogs.length) return null;
+
+  const articles = blogs.slice(0, 8).map((blog) => ({
+    slug: blog.slug,
+    title: blog.title,
+    excerpt: blog.shortDescription || blog.description,
+    readTime: estimateReadTime(blog),
+    image: blog.imageUrl,
+    href: `/blog/${blog.slug}`,
+  }));
+
   return (
     <section id="blog" className="bg-gradient-to-b from-cream to-[#fff9f0] py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -53,7 +71,7 @@ export default function BlogArticles() {
         </p>
         <div className="mt-6">
           <HorizontalScroll ariaLabel="Blog articles carousel">
-            {blogArticles.map((article) => (
+            {articles.map((article) => (
               <ArticleCard key={article.slug} article={article} />
             ))}
           </HorizontalScroll>
