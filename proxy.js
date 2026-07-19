@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { LOCALE_COOKIE } from "./lib/i18n/config";
-import { HINDI_PREFIX, localizePath, normalizeInternalPath, stripLocalePrefix } from "./lib/i18n/paths";
+import { HINDI_PREFIX, normalizeInternalPath, stripLocalePrefix } from "./lib/i18n/paths";
 
 const PUBLIC_FILE = /\.(.*)$/;
 const ROUTE_ALIASES = {
@@ -47,13 +47,13 @@ export function proxy(request) {
   const cookieLocale = request.cookies.get(LOCALE_COOKIE)?.value;
   const canonicalPath = getCanonicalPath(pathname);
   const requestHeaders = new Headers(request.headers);
-  const activeLocale = forcedLocale || (isHindiPath ? "hi" : "en");
+  const activeLocale = forcedLocale || (isHindiPath ? "hi" : cookieLocale === "hi" ? "hi" : "en");
   requestHeaders.set("x-locale", activeLocale);
 
   if (forcedLocale) {
     const url = request.nextUrl.clone();
     url.searchParams.delete("lang");
-    url.pathname = forcedLocale === "hi" ? localizePath(pathname, "hi") : localizePath(pathname, "en");
+    url.pathname = canonicalPath;
     const response = NextResponse.redirect(url);
     response.cookies.set(LOCALE_COOKIE, forcedLocale, {
       path: "/",
@@ -63,17 +63,11 @@ export function proxy(request) {
     return response;
   }
 
-  if (!isHindiPath && cookieLocale === "hi" && pathname !== "/login") {
-    const url = request.nextUrl.clone();
-    url.pathname = localizePath(pathname, "hi");
-    return NextResponse.redirect(url);
-  }
-
   if (isHindiPath || isSingularAlias(pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = canonicalPath;
     url.search = search;
-    const response = NextResponse.rewrite(url, { request: { headers: requestHeaders } });
+    const response = NextResponse.redirect(url, 308);
     response.cookies.set(LOCALE_COOKIE, isHindiPath ? "hi" : "en", {
       path: "/",
       maxAge: 60 * 60 * 24 * 365,
@@ -82,15 +76,7 @@ export function proxy(request) {
     return response;
   }
 
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
-  if (cookieLocale === "en") {
-    response.cookies.set(LOCALE_COOKIE, "en", {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: "lax"
-    });
-  }
-  return response;
+  return NextResponse.next({ request: { headers: requestHeaders } });
 }
 
 export const config = {

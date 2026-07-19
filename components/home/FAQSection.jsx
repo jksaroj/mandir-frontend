@@ -1,16 +1,17 @@
 import Accordion from "@/components/ui/Accordion";
 import { homeFaqItems } from "@/lib/homeContent";
 
-export default function FAQSection() {
+export default function FAQSection({ items = homeFaqItems }) {
+  const faqItems = items.length >= 5 ? items : homeFaqItems;
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: homeFaqItems.map((item) => ({
+    mainEntity: faqItems.map((item) => ({
       "@type": "Question",
-      name: item.title,
+      name: item.title || item.question,
       acceptedAnswer: {
         "@type": "Answer",
-        text: item.content
+        text: item.content || item.answer
       }
     }))
   };
@@ -27,7 +28,7 @@ export default function FAQSection() {
       <p className="mx-auto mt-3 max-w-xl text-center text-sm text-slate-500">
         Answers to common questions about temples, mantras and pilgrimage in India.
       </p>
-      <Accordion items={homeFaqItems} className="mt-8" />
+      <Accordion items={faqItems.map((item) => ({ title: item.title || item.question, content: item.content || item.answer }))} className="mt-8" />
     </section>
   );
 }

@@ -15,6 +15,7 @@ import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import { DEFAULT_LOCALE } from "@/lib/i18n/config";
 import { getMessage } from "@/lib/i18n/getMessage";
 import { absoluteUrl, buildMetadata, faqSchema, seoKeywords } from "@/lib/seo";
+import { fetchFaqs } from "@/lib/faqs";
 import {
   fetchSpiritualItemBySlug,
   getMantraHref,
@@ -48,6 +49,14 @@ function buildFaqs(item) {
     {
       question: "What is the best time to chant?",
       answer: item.notes || getMessage(DEFAULT_LOCALE, "common.defaultWhenToChant")
+    },
+    {
+      question: `What are the benefits of ${item.title}?`,
+      answer: item.excerpt || `${item.title} supports devotion, focus and a peaceful daily spiritual practice.`
+    },
+    {
+      question: `How many times should ${item.title} be recited?`,
+      answer: item.chantCount || "It is commonly recited 11, 21 or 108 times according to personal practice and guidance."
     }
   ];
 }
@@ -101,7 +110,8 @@ export default async function SpiritualDetailPage({ params, variant }) {
   const listHref = getSpiritualListHref(variant);
   const pageHref = `${listHref}/${slug}`;
   const image = item.image || fallbackImage;
-  const faqs = buildFaqs(item);
+  const managedFaqs = await fetchFaqs("mantra", slug);
+  const faqs = managedFaqs.length >= 5 ? managedFaqs : buildFaqs(item);
   const breadcrumbs = [
     { name: "Home", href: "/" },
     { name: getMessage(DEFAULT_LOCALE, config.listKey), href: listHref },
@@ -361,6 +371,9 @@ export default async function SpiritualDetailPage({ params, variant }) {
           description={`Common questions about the meaning, benefits, timing, and correct way to chant ${item.title}.`}
           items={faqs}
         />
+        <nav aria-label="Explore related devotional content" className="mt-8 flex flex-wrap justify-center gap-4 text-sm font-extrabold text-[#6b2323]">
+          <Link href="/temples">Explore Temples</Link><Link href="/blog">Spiritual Blog</Link><Link href={variant === "mantra" ? "/chalisa" : "/mantras"}>{variant === "mantra" ? "Read Chalisa" : "Powerful Mantras"}</Link>
+        </nav>
       </div>
       <Footer />
     </main>

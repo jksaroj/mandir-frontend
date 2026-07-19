@@ -7,6 +7,9 @@ import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import { fetchEventBySlug, fetchEvents } from "@/lib/events";
 import { absoluteUrl, buildMetadata, seoKeywords } from "@/lib/seo";
+import { fetchFaqs } from "@/lib/faqs";
+import FaqSection from "@/components/seo/FaqSection";
+import { faqSchema } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -43,6 +46,7 @@ export default async function EventDetailPage({ params }) {
   const event = await fetchEventBySlug(slug);
 
   if (!event) notFound();
+  const faqs = await fetchFaqs("event", slug);
 
   const locationName = [event.city, event.state].filter(Boolean).join(", ") || event.address || "India";
   const breadcrumbs = [
@@ -81,7 +85,7 @@ export default async function EventDetailPage({ params }) {
 
   return (
     <main className="min-h-screen bg-[#fffaf5] text-[#1f2937]">
-      <JsonLd data={eventSchema} />
+      <JsonLd data={[eventSchema, faqSchema(faqs)]} />
       <Header />
       <article className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
         <Breadcrumbs items={breadcrumbs} className="mb-7" />
@@ -109,7 +113,10 @@ export default async function EventDetailPage({ params }) {
         <div className="mt-10 flex flex-wrap gap-3">
           <Link href="/temples" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Nearby Temples</Link>
           <Link href="/pandit-services" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Book Pandit Services</Link>
+          <Link href="/mantras" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Explore Mantras</Link>
+          <Link href="/blog" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Spiritual Blog</Link>
         </div>
+        <FaqSection title={`${event.name} FAQs`} description="Common questions about this event, timing, location and participation." items={faqs} />
       </article>
       <Footer />
     </main>

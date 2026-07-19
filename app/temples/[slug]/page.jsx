@@ -14,9 +14,10 @@ import TempleScheduleGrid from "@/components/temples/TempleScheduleGrid";
 import FaqSection from "@/components/seo/FaqSection";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import JsonLd from "@/components/seo/JsonLd";
-import { fetchAllTempleSlugs, fetchTempleBySlug } from "@/lib/temples";
+import { fetchAllTempleSlugs, fetchTempleBySlug, fetchTemples } from "@/lib/temples";
 import { resolveImageUrl } from "@/lib/images";
 import { absoluteUrl, buildMetadata, faqSchema, seoKeywords } from "@/lib/seo";
+import { fetchFaqs } from "@/lib/faqs";
 
 export const revalidate = 60;
 export const dynamic = "force-dynamic";
@@ -35,7 +36,7 @@ async function legacyTempleMetadata({ params }) {
   }
 
   const description =
-    temple.excerpt ||
+    temple.metaDescription || temple.excerpt ||
     `Plan your visit to ${temple.name} in ${temple.city}. Darshan timings, facilities, how to reach, gallery, and devotee reviews on brahmatatva.`;
   const ogImage = resolveImageUrl(temple.image);
   const canonical = `${SITE_URL}/temples/${slug}`;
@@ -112,6 +113,9 @@ export default async function TempleDetailsPage({ params }) {
   if (!temple) {
     notFound();
   }
+  const managedFaqs = await fetchFaqs("temple", slug);
+  const pageFaqs = managedFaqs.length >= 5 ? managedFaqs : temple.faqs;
+  const relatedTemples = (await fetchTemples()).filter((item) => item.slug && item.slug !== slug).slice(0, 4);
 
   const pageUrl = absoluteUrl(`/temples/${slug}`);
   const heroImage = resolveImageUrl(temple.image);
@@ -137,7 +141,7 @@ export default async function TempleDetailsPage({ params }) {
 
   return (
     <main className="min-h-screen bg-[#fffaf6] text-[#15172b]">
-      <JsonLd data={[jsonLd, faqSchema(temple.faqs)]} />
+      <JsonLd data={[jsonLd, faqSchema(pageFaqs)]} />
       <Header />
       <div className="sr-only">
         <Breadcrumbs items={breadcrumbs} />
@@ -194,8 +198,21 @@ export default async function TempleDetailsPage({ params }) {
         <FaqSection
           title={`${temple.name} FAQs`}
           description="Helpful answers for devotees planning darshan, seva booking, facilities, and temple visits."
-          items={temple.faqs}
+          items={pageFaqs}
         />
+        <section className="mt-10 rounded-2xl border border-[#f1e7dc] bg-white p-7 shadow-sm">
+          <h2 className="font-serif text-3xl font-bold text-[#3d1717]">Explore More Sacred Temples</h2>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {relatedTemples.map((item) => (
+              <Link key={item.slug} href={`/temples/${item.slug}`} className="rounded-xl bg-[#fff7ed] px-4 py-4 text-sm font-extrabold text-[#6b2323] transition hover:bg-[#fff0d9]">
+                {item.name}
+              </Link>
+            ))}
+          </div>
+          <div className="mt-5 flex flex-wrap gap-4 text-sm font-bold text-[#6b2323]">
+            <Link href="/mantras">Powerful Mantras</Link><Link href="/chalisa">Read Chalisa</Link><Link href="/blog">Spiritual Blog</Link>
+          </div>
+        </section>
       </div>
       <Footer />
     </main>

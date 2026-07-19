@@ -22,11 +22,6 @@ export const metadata = {
   robots: { index: true, follow: true },
   alternates: {
     canonical: "/",
-    languages: {
-      "hi-IN": "/",
-      "en-IN": "/",
-      "x-default": "/"
-    },
     types: {
       "application/rss+xml": "/rss.xml"
     }

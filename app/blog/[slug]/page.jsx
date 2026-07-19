@@ -12,6 +12,8 @@ function sanitizeHtml(value = "") {
   return String(value)
     .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
+    .replace(/<h1(\s[^>]*)?>/gi, "<h2$1>")
+    .replace(/<\/h1\s*>/gi, "</h2>")
     .replace(/\son\w+="[^"]*"/gi, "")
     .replace(/\son\w+='[^']*'/gi, "")
     .replace(/\sjavascript:/gi, "");
@@ -94,6 +96,7 @@ export default async function BlogDetailPage({ params }) {
         <div className="mt-10 flex flex-wrap gap-3">
           <Link href="/temples" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Explore Temples</Link>
           <Link href="/mantras" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Read Mantras</Link>
+          <Link href="/chalisa" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Read Chalisa</Link>
         </div>
       </article>
       <Footer />

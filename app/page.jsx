@@ -12,6 +12,7 @@ import { fetchHomeData } from "@/lib/home";
 import { fetchBanners } from "@/lib/banners";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildMetadata, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, seoKeywords } from "@/lib/seo";
+import { fetchFaqs } from "@/lib/faqs";
 
 export const revalidate = 60;
 
@@ -58,9 +59,10 @@ export async function generateMetadata() {
 }
 
 export default async function HomePage() {
-  const [{ temples, spiritualItems, events }, banners] = await Promise.all([
+  const [{ temples, spiritualItems, events }, banners, faqs] = await Promise.all([
     fetchHomeData(),
-    fetchBanners()
+    fetchBanners(),
+    fetchFaqs("home")
   ]);
 
   return (
@@ -98,7 +100,7 @@ export default async function HomePage() {
           <BlogArticles />
         </Reveal>
         <Reveal>
-          <FAQSection />
+          <FAQSection items={faqs} />
         </Reveal>
       </main>
       <Footer />

@@ -51,7 +51,7 @@ export default function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <p>© 2025 brahmatatva. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} brahmatatva. All rights reserved.</p>
           <div className="flex gap-8"><a href="#">Terms & Conditions</a><a href="#">Privacy Policy</a></div>
         </div>
       </div>

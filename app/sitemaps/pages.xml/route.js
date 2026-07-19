@@ -8,6 +8,7 @@ const pages = [
   { path: "/mantras", changefreq: "daily", priority: "0.9" },
   { path: "/chalisa", changefreq: "daily", priority: "0.9" },
   { path: "/reels", changefreq: "daily", priority: "0.7" },
+  { path: "/blog", changefreq: "weekly", priority: "0.8" },
   { path: "/pandit-services", changefreq: "weekly", priority: "0.6" },
 ];
 

@@ -31,8 +31,8 @@ export default async function sitemap() {
   const templePages = temples.map((item) =>
     entry(`/temples/${item.slug}`, item.updatedAt || item.updated_at || item.created_at, "weekly", 0.8)
   );
-  const mantraPages = mantras.map((item) => entry(`/mantras/${item.slug}`, item.updatedAt, "weekly", 0.8));
-  const chalisaPages = chalisas.map((item) => entry(`/chalisa/${item.slug}`, item.updatedAt, "weekly", 0.8));
+  const mantraPages = mantras.filter((item) => item.slug).map((item) => entry(`/mantras/${item.slug}`, item.updatedAt || item.updated_at || item.created_at, "weekly", 0.8));
+  const chalisaPages = chalisas.filter((item) => item.slug).map((item) => entry(`/chalisa/${item.slug}`, item.updatedAt || item.updated_at || item.created_at, "weekly", 0.8));
   const blogPages = blogs
     .filter((item) => item.slug)
     .map((item) => entry(`/blog/${item.slug}`, item.updated_at || item.updatedAt || item.published_at, "weekly", 0.7));

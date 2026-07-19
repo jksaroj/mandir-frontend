@@ -6,7 +6,14 @@ export default function robots() {
       userAgent: "*",
       allow: "/"
     },
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    sitemap: [
+      `${SITE_URL}/sitemap.xml`,
+      `${SITE_URL}/sitemaps/pages.xml`,
+      `${SITE_URL}/sitemaps/temples.xml`,
+      `${SITE_URL}/sitemaps/mantras.xml`,
+      `${SITE_URL}/sitemaps/chalisas.xml`,
+      `${SITE_URL}/sitemaps/aartis.xml`
+    ],
     host: SITE_URL
   };
 }

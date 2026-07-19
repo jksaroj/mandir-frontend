@@ -6,6 +6,11 @@ import { useTranslation } from "@/components/providers/LanguageProvider";
 import { localizePath } from "@/lib/i18n/paths";
 import { fetchMenu } from "@/lib/menus";
 
+const fallbackItems = {
+  en: [["Home", "/"], ["Temples", "/temples"], ["Mantras", "/mantras"], ["Chalisa", "/chalisa"], ["Spiritual Blog", "/blog"]],
+  hi: [["होम", "/"], ["मंदिर", "/temples"], ["मंत्र", "/mantras"], ["चालीसा", "/chalisa"], ["आध्यात्मिक ब्लॉग", "/blog"]]
+};
+
 function FooterMenuItem({ item, locale, level = 0 }) {
   return (
     <li>
@@ -42,7 +47,13 @@ export default function FooterMenu({ className = "mt-4 space-y-2.5 text-sm text-
       {items.length ? (
         items.map((item) => <FooterMenuItem key={item.id} item={item} locale={locale} />)
       ) : (
-        <li>comming</li>
+        (fallbackItems[locale] || fallbackItems.en).map(([label, href]) => (
+          <li key={href}>
+            <Link href={localizePath(href, locale)} className="transition hover:text-white">
+              {label}
+            </Link>
+          </li>
+        ))
       )}
     </ul>
   );
