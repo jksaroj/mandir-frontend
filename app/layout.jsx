@@ -1,4 +1,5 @@
 import "./globals.css";
+import Script from "next/script";
 import AppProviders from "@/components/providers/AppProviders";
 import ScrollProgress from "@/components/animations/ScrollProgress";
 import { getServerLocale } from "@/lib/i18n/server";
@@ -15,6 +16,9 @@ export const metadata = {
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
+  verification: {
+    google: "LwXpmKHZr50OgrCK4J8mq1vw8XdNBP52Qm_1lTYlxgc"
+  },
   robots: { index: true, follow: true },
   alternates: {
     canonical: "/",
@@ -51,6 +55,16 @@ export default async function RootLayout({ children }) {
   return (
     <html lang={locale === "hi" ? "hi" : "en"}>
       <body>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-HR8SH3770P"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-HR8SH3770P');`}
+        </Script>
         <ScrollProgress />
         <AppProviders initialLocale={locale}>{children}</AppProviders>
       </body>
