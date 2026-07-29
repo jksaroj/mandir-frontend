@@ -7,6 +7,7 @@ import FloatingDivine from "@/components/animations/FloatingDivine";
 import SimpleSlider from "@/components/ui/SimpleSlider";
 import OptimizedImage from "@/components/ui/OptimizedImage";
 import ShareButton from "@/components/ui/ShareButton";
+import ViewCounter from "@/components/ui/ViewCounter";
 import { IMAGE_SIZES, templeImageAlt } from "@/lib/images";
 
 export default function TempleDetailsHero({ temple }) {
@@ -78,6 +79,7 @@ export default function TempleDetailsHero({ temple }) {
           <p className="mt-2 flex items-center gap-2 text-lg font-semibold text-slate-500">
             <MapPin size={19} className="text-[#d89b2b]" /> {temple.city}
           </p>
+          <ViewCounter type="temple" slug={temple.slug} initialCount={temple.viewCount} className="mt-3" />
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <span className="font-extrabold">{temple.rating}</span>
             <span className="flex gap-1">

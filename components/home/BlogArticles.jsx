@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, Clock } from "lucide-react";
 import HorizontalScroll from "@/components/ui/HorizontalScroll";
 import { fetchBlogs } from "@/lib/blogs";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 
 function estimateReadTime(article) {
   const text = `${article.description || ""} ${article.content || ""}`.replace(/<[^>]*>/g, " ");
@@ -15,7 +15,7 @@ function ArticleCard({ article }) {
     <article className="group card-lift flex h-full w-[min(100%,300px)] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#f1e4d6] bg-white shadow-sm sm:w-[280px]">
       <Link href={article.href} className="block">
         <div className="relative h-44 overflow-hidden">
-          <Image
+          <OptimizedImage
             src={article.image}
             alt={article.title}
             fill

@@ -1,10 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/site/Header";
 import Footer from "@/components/site/Footer";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
+import ViewCounter from "@/components/ui/ViewCounter";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 import { fetchBlogBySlug, fetchBlogs } from "@/lib/blogs";
 import { absoluteUrl, buildMetadata, seoKeywords, stripHtml } from "@/lib/seo";
 
@@ -85,10 +86,11 @@ export default async function BlogDetailPage({ params }) {
         <Breadcrumbs items={breadcrumbs} className="mb-7" />
         <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#9b5252]">{blog.category}</p>
         <h1 className="mt-3 font-serif text-5xl font-bold leading-tight text-[#351112]">{blog.title}</h1>
+        <ViewCounter type="blog" slug={slug} initialCount={blog.viewCount} className="mt-4" />
         <p className="mt-4 text-sm font-semibold text-slate-500">
           By {blog.author} · {new Date(blog.publishedAt).toLocaleDateString("en-IN")}
         </p>
-        <Image src={blog.imageUrl} alt={`${blog.title} featured image`} width={1200} height={630} priority className="mt-8 aspect-[1200/630] w-full rounded-lg object-cover" />
+        <OptimizedImage src={blog.imageUrl} alt={`${blog.title} featured image`} width={1200} height={630} priority className="mt-8 aspect-[1200/630] w-full rounded-lg object-cover" />
         <div
           className="prose prose-slate mt-8 max-w-none"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(blog.content || blog.description) || `<p>${stripHtml(blog.description)}</p>` }}

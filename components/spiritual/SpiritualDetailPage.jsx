@@ -9,6 +9,7 @@ import WaveText from "@/components/animations/WaveText";
 import I18n from "@/components/i18n/I18n";
 import SimpleSlider from "@/components/ui/SimpleSlider";
 import ShareButton from "@/components/ui/ShareButton";
+import ViewCounter from "@/components/ui/ViewCounter";
 import FaqSection from "@/components/seo/FaqSection";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
@@ -198,6 +199,7 @@ export default async function SpiritualDetailPage({ params, variant }) {
               <I18n k="common.mostPopular" />
             </span>
             <WaveText as="h1" text={item.title} className="mt-5 block font-serif text-5xl font-bold text-[#351112]" />
+            <ViewCounter type={variant} slug={slug} initialCount={item.viewCount} className="mt-3" />
             {(item.originalText || item.transliteration) && (
               <p className="mt-2 text-2xl font-bold text-[#9b5252]">
                 {String(item.originalText || item.transliteration).split("\n")[0]}

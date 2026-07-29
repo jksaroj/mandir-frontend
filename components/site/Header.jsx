@@ -55,7 +55,7 @@ export default function Header({ active = "home" }) {
         <nav className="hidden items-center gap-7 text-sm font-bold lg:flex">
           {navItems.length ? navItems.map((item) => (
             <MenuLink key={item.id} item={item} locale={locale} />
-          )) : <span className="py-7 text-white">comming</span>}
+          )) : null}
         </nav>
 
         <div className="flex items-center gap-3">

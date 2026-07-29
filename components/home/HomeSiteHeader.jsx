@@ -75,7 +75,7 @@ export default function HomeSiteHeader() {
 
           <nav className="hidden items-center gap-1 xl:flex" aria-label="Main navigation">
             {navItems.length ? navItems.map((item) => <MenuLink key={item.id} item={item} locale={locale} />) : (
-              <span className="rounded-lg px-2.5 py-2 text-xs font-bold text-[#4a3030]">comming</span>
+              null
             )}
             <LanguageSwitcher variant="light" />
           </nav>
@@ -128,7 +128,7 @@ export default function HomeSiteHeader() {
             </div>
             <ul className="flex-1 space-y-1 overflow-y-auto p-4">
               {navItems.length ? navItems.map((item) => <MenuLink key={item.id} item={item} locale={locale} mobile onClick={() => setMenuOpen(false)} />) : (
-                <li className="rounded-xl px-4 py-3 text-sm font-bold text-[#351112]">comming</li>
+                null
               )}
             </ul>
             <div className="border-t border-[#f1e4d6] p-4">

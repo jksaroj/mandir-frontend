@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 import Header from "@/components/site/Header";
 import Footer from "@/components/site/Footer";
 import JsonLd from "@/components/seo/JsonLd";
@@ -41,7 +41,7 @@ export default async function BlogPage() {
           {blogs.map((blog) => (
             <article key={blog.slug} className="overflow-hidden rounded-lg border border-[#f1e4d6] bg-white shadow-sm">
               <Link href={`/blog/${blog.slug}`} className="block">
-                <Image src={blog.imageUrl} alt={`${blog.title} article image`} width={480} height={252} className="h-52 w-full object-cover" />
+                <OptimizedImage src={blog.imageUrl} alt={`${blog.title} article image`} width={480} height={252} className="h-52 w-full object-cover" />
                 <div className="p-5">
                   <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#9b5252]">{blog.category}</p>
                   <h2 className="mt-2 text-xl font-extrabold text-[#351112]">{blog.title}</h2>

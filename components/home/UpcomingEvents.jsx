@@ -44,13 +44,13 @@ export default function UpcomingEvents({ events = [] }) {
     ? events.slice(0, 8).map((e, i) => ({
         slug: e.slug || `event-${i}`,
         name: e.name || e.title || "Spiritual Event",
-        date: e.date || e.startDate || "TBA",
+        date: e.date || e.startDate ? new Date(e.date || e.startDate).toLocaleDateString("en-IN") : "TBA",
         location: e.location || e.place || "India",
         description: e.description || e.excerpt || "",
         image:
-          e.image ||
+          e.image || e.imageUrl ||
           fallbackEvents[i % fallbackEvents.length].image,
-        href: e.href || "#events"
+        href: e.href || `/events/${e.slug}`
       }))
     : fallbackEvents;
 
