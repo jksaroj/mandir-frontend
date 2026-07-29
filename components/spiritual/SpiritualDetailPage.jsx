@@ -111,8 +111,8 @@ export default async function SpiritualDetailPage({ params, variant }) {
   const listHref = getSpiritualListHref(variant);
   const pageHref = `${listHref}/${slug}`;
   const image = item.image || fallbackImage;
-  const managedFaqs = await fetchFaqs("mantra", slug);
-  const faqs = managedFaqs.length >= 5 ? managedFaqs : buildFaqs(item);
+  const managedFaqs = await fetchFaqs(variant, slug);
+  const faqs = managedFaqs.length ? managedFaqs : buildFaqs(item);
   const breadcrumbs = [
     { name: "Home", href: "/" },
     { name: getMessage(DEFAULT_LOCALE, config.listKey), href: listHref },

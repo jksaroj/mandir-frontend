@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import OptimizedImage from "@/components/ui/OptimizedImage";
 import { isValidImageSrc } from "@/lib/images";
 
-export default function SimpleSlider({ slides, autoPlay = false, interval = 5000, className = "", renderSlide, activeIndex, onIndexChange }) {
+export default function SimpleSlider({ slides, autoPlay = false, interval = 5000, className = "", imageClassName = "object-cover", renderSlide, activeIndex, onIndexChange }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -64,7 +64,7 @@ export default function SimpleSlider({ slides, autoPlay = false, interval = 5000
                   alt={slideAlt}
                   fill
                   sizes="(min-width: 1024px) 55vw, 100vw"
-                  className="object-cover"
+                  className={imageClassName}
                   priority={currentIndex === 0}
                   quality={85}
                 />

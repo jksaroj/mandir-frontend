@@ -8,6 +8,9 @@ import ViewCounter from "@/components/ui/ViewCounter";
 import OptimizedImage from "@/components/ui/OptimizedImage";
 import { fetchBlogBySlug, fetchBlogs } from "@/lib/blogs";
 import { absoluteUrl, buildMetadata, seoKeywords, stripHtml } from "@/lib/seo";
+import { faqSchema } from "@/lib/seo";
+import { fetchFaqs } from "@/lib/faqs";
+import FaqSection from "@/components/seo/FaqSection";
 
 function sanitizeHtml(value = "") {
   return String(value)
@@ -56,6 +59,7 @@ export default async function BlogDetailPage({ params }) {
   const blog = await fetchBlogBySlug(slug);
 
   if (!blog) notFound();
+  const faqs = await fetchFaqs("blog", slug);
 
   const breadcrumbs = [
     { name: "Home", href: "/" },
@@ -81,7 +85,7 @@ export default async function BlogDetailPage({ params }) {
 
   return (
     <main className="min-h-screen bg-[#fffaf5] text-[#1f2937]">
-      <JsonLd data={articleSchema} />
+      <JsonLd data={[articleSchema, faqSchema(faqs)]} />
       <Header active="blog" />
       <article className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
         <Breadcrumbs items={breadcrumbs} className="mb-7" />
@@ -101,6 +105,7 @@ export default async function BlogDetailPage({ params }) {
           <Link href="/mantras" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Read Mantras</Link>
           <Link href="/chalisa" className="rounded-lg border border-[#9b5252] px-4 py-2 text-sm font-extrabold text-[#6b2323]">Read Chalisa</Link>
         </div>
+        <FaqSection title={`${blog.title} FAQs`} items={faqs} />
       </article>
       <Footer />
     </main>

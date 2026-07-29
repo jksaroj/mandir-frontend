@@ -114,7 +114,7 @@ export default async function TempleDetailsPage({ params }) {
     notFound();
   }
   const managedFaqs = await fetchFaqs("temple", slug);
-  const pageFaqs = managedFaqs.length >= 5 ? managedFaqs : temple.faqs;
+  const pageFaqs = managedFaqs.length ? managedFaqs : temple.faqs;
   const relatedTemples = (await fetchTemples()).filter((item) => item.slug && item.slug !== slug).slice(0, 4);
 
   const pageUrl = absoluteUrl(`/temples/${slug}`);

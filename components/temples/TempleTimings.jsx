@@ -10,7 +10,7 @@ export default function TempleTimings({ temple }) {
   const info = about.info ?? [];
 
   return (
-    <section className="mt-8">
+    <section id="about-temple" className="mt-8 scroll-mt-28">
       <div className="rounded-2xl border border-[#f1e7dc] bg-white p-7 shadow-sm lg:p-8">
         <h2 className="text-2xl font-extrabold leading-tight text-[#14172b]">
           About {temple.name}

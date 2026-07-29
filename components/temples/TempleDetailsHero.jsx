@@ -33,12 +33,13 @@ export default function TempleDetailsHero({ temple }) {
   ];
 
   return (
-    <section className="grid gap-10 lg:grid-cols-[1.12fr_1fr] lg:items-center">
+    <section className="grid gap-8 lg:grid-cols-[1.12fr_1fr] lg:items-start">
       <div>
         <FloatingDivine>
           <SimpleSlider
             slides={slides}
-            className="h-[360px] overflow-hidden rounded-xl bg-white shadow-sm"
+            className="aspect-[4/3] overflow-hidden rounded-xl border border-[#eadfd6] bg-[#f6f0eb] shadow-sm"
+            imageClassName="object-contain"
             autoPlay={slides.length > 1}
             activeIndex={activeImage}
             onIndexChange={setActiveImage}
@@ -89,7 +90,13 @@ export default function TempleDetailsHero({ temple }) {
             </span>
             <span className="text-sm font-semibold text-slate-500">({temple.reviewCount} Reviews)</span>
           </div>
-          <p className="mt-5 max-w-2xl text-base font-medium leading-8 text-slate-600">{temple.excerpt}</p>
+          <p className="mt-5 line-clamp-3 max-w-2xl text-base font-medium leading-8 text-slate-600">{temple.excerpt}</p>
+          <a
+            href="#about-temple"
+            className="mt-1 inline-flex text-sm font-extrabold text-[#7a2224] underline decoration-[#d7a252] underline-offset-4"
+          >
+            Read more
+          </a>
           <div className="mt-7 grid gap-4 sm:grid-cols-2">
             {badges.map(([label, value, Icon]) => (
               <div key={label} className="flex gap-3 rounded-xl bg-[#fff5e9] p-4">
