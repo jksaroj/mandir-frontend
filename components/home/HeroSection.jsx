@@ -52,13 +52,14 @@ export default function HeroSection({ banners = [] }) {
         title: banner.heading || banner.name,
         text: banner.description || "Sacred stories, rituals, festival guides and darshan timings — explore the divine journey.",
         image: banner.image,
-        foregroundImage: banner.foregroundImage,
+        backgroundColor: banner.backgroundColor,
         align: "object-center",
       }))
     : staticSlides;
 
   const [active, setActive] = useState(0);
   const slide = slides[Math.min(active, slides.length - 1)];
+  const backgroundColor = slide.backgroundColor || "#061b42";
 
   useEffect(() => {
     if (slides.length <= 1) return undefined;
@@ -70,7 +71,7 @@ export default function HeroSection({ banners = [] }) {
   const next = () => setActive((current) => (current + 1) % slides.length);
 
   return (
-    <section aria-labelledby="home-hero-heading" className="relative isolate min-h-[560px] w-full overflow-hidden bg-[#061b42] text-white lg:min-h-[620px]">
+    <section aria-labelledby="home-hero-heading" className="relative isolate min-h-[560px] w-full overflow-hidden text-white transition-colors duration-700 lg:min-h-[620px]" style={{ backgroundColor }}>
       <div className="absolute inset-x-0 top-0 h-px bg-white/20" />
 
       <div className="absolute inset-x-0 top-0 h-[48%] overflow-hidden lg:inset-y-0 lg:left-[44%] lg:right-0 lg:h-auto">
@@ -84,22 +85,13 @@ export default function HeroSection({ banners = [] }) {
             }`}
           />
         ))}
-        {slides.map((item, index) => item.foregroundImage ? (
-          <img
-            key={`${item.deity}-foreground-${index}`}
-            src={item.foregroundImage}
-            alt=""
-            className={`pointer-events-none absolute inset-y-8 right-4 h-[calc(100%-4rem)] w-[70%] object-contain drop-shadow-2xl transition-all duration-700 ${
-              index === active ? "translate-x-0 opacity-100" : "translate-x-5 opacity-0"
-            }`}
-          />
-        ) : null)}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#061b42] via-transparent to-black/5 lg:bg-[linear-gradient(90deg,#061b42_0%,rgba(6,27,66,.96)_4%,rgba(6,27,66,.72)_12%,rgba(6,27,66,.24)_24%,transparent_42%)]" />
+        <div className="absolute inset-0 lg:hidden" style={{ background: `linear-gradient(to top, ${backgroundColor}, transparent 70%)` }} />
+        <div className="absolute inset-0 hidden lg:block" style={{ background: `linear-gradient(90deg, ${backgroundColor} 0%, ${backgroundColor}f5 4%, ${backgroundColor}b8 12%, ${backgroundColor}3d 24%, transparent 42%)` }} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/15" />
       </div>
 
-      <div className="pointer-events-none absolute bottom-0 left-0 top-[42%] w-full bg-[#061b42] lg:top-0 lg:w-[47%]" />
-      <div className="pointer-events-none absolute bottom-0 left-[42%] top-0 hidden w-[18%] bg-gradient-to-r from-[#061b42] via-[#061b42]/75 to-transparent lg:block" />
+      <div className="pointer-events-none absolute bottom-0 left-0 top-[42%] w-full lg:top-0 lg:w-[47%]" style={{ backgroundColor }} />
+      <div className="pointer-events-none absolute bottom-0 left-[42%] top-0 hidden w-[18%] lg:block" style={{ background: `linear-gradient(to right, ${backgroundColor}, ${backgroundColor}bf, transparent)` }} />
 
       <div className="relative z-10 mx-auto flex min-h-[560px] w-full max-w-[1440px] items-end px-6 pb-16 pt-[285px] sm:px-10 lg:min-h-[620px] lg:items-center lg:px-16 lg:pb-14 lg:pt-0 xl:px-20">
         <div className="w-full lg:max-w-[590px]">
