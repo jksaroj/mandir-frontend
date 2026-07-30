@@ -67,14 +67,11 @@ export default function CreateShareGallery({ initialItems = [] }) {
 
   const openMedia = (item) => {
     if (photo) URL.revokeObjectURL(photo);
-    setSelected(item);
+    setSelected({ ...item, photoFrame: { ...defaultFrame } });
     setPhoto(null);
     setResult(null);
     setSenderName('');
-    setFrame({
-      ...defaultFrame,
-      xPercent: Number(item.photoFrame?.xPercent ?? defaultFrame.xPercent),
-    });
+    setFrame({ ...defaultFrame });
   };
 
   const choosePhoto = (item) => {
