@@ -2,7 +2,6 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES } from "@/lib/i18n/config";
-import { getLocaleFromPath } from "@/lib/i18n/paths";
 import { applyTranslations } from "@/lib/i18n/applyTranslations";
 import { getMessage } from "@/lib/i18n/getMessage";
 
@@ -30,8 +29,9 @@ export function LanguageProvider({ children, initialLocale = DEFAULT_LOCALE }) {
   const t = useCallback((key) => getMessage(locale, key), [locale]);
 
   useEffect(() => {
-    const pathLocale = getLocaleFromPath(window.location.pathname);
-    const saved = pathLocale || readCookieLocale();
+    const isHindiPath =
+      window.location.pathname === "/hi" || window.location.pathname.startsWith("/hi/");
+    const saved = isHindiPath ? "hi" : readCookieLocale();
     setLocaleState(saved);
     document.cookie = `${LOCALE_COOKIE}=${saved};path=/;max-age=31536000;SameSite=Lax`;
     applyTranslations(saved);
