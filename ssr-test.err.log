@@ -1,0 +1,7 @@
+⨯ TypeError: Cannot read properties of null (reading 'en')
+    at <unknown> (C:\saroj\saroj\mandir-project\frontend\.next\server\chunks\ssr\_1bhfuac._.js:1:22107)
+    at Array.map (<anonymous>)
+    at P (C:\saroj\saroj\mandir-project\frontend\.next\server\chunks\ssr\_1bhfuac._.js:1:21872)
+    at async U (C:\saroj\saroj\mandir-project\frontend\.next\server\chunks\ssr\_1bhfuac._.js:1:22958) {
+  digest: '1713774664'
+}
