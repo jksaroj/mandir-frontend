@@ -10,6 +10,8 @@ const pages = [
   { path: "/reels", changefreq: "daily", priority: "0.7" },
   { path: "/blog", changefreq: "weekly", priority: "0.8" },
   { path: "/pandit-services", changefreq: "weekly", priority: "0.6" },
+  { path: "/create-and-share", changefreq: "daily", priority: "0.8" },
+  { path: "/mantra-chalisa", changefreq: "weekly", priority: "0.8" },
 ];
 
 export async function GET() {
