@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { Check, ImagePlus, RotateCcw, Share2, X } from 'lucide-react';
 
 const defaultFrame = {
@@ -39,6 +38,7 @@ export default function CreateShareGallery({ initialItems = [] }) {
   const [photo, setPhoto] = useState(null);
   const [frame, setFrame] = useState(defaultFrame);
   const [result, setResult] = useState(null);
+  const [senderName, setSenderName] = useState('');
   const [working, setWorking] = useState(false);
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -54,6 +54,7 @@ export default function CreateShareGallery({ initialItems = [] }) {
     setSelected(item);
     setPhoto(null);
     setResult(null);
+    setSenderName('');
     setFrame({ ...defaultFrame, ...(item.photoFrame || {}) });
   };
 
@@ -65,9 +66,11 @@ export default function CreateShareGallery({ initialItems = [] }) {
   const handlePhoto = (event) => {
     const file = event.target.files?.[0];
     const item = pendingMediaRef.current || selected;
+    const currentName = selected?.id === item?.id ? senderName : '';
     event.target.value = '';
     if (!file || !item) return;
     openMedia(item);
+    setSenderName(currentName);
     setPhoto(URL.createObjectURL(file));
   };
 
@@ -105,7 +108,9 @@ export default function CreateShareGallery({ initialItems = [] }) {
   };
 
   const share = async () => {
-    const text = selected?.shareText || selected?.title || '';
+    const name = senderName.trim() || 'Ek bhakt';
+    const message = `${name} ne aapko ${selected.title} ka sandesh bheja hai`;
+    const text = [message, selected?.shareText].filter(Boolean).join('\n');
     const pageUrl = `${window.location.origin}/create-and-share/${selected.id}`;
     const blob = selected.mediaType === 'image' ? (result || await compose()) : null;
     const file = blob ? new File([blob], `${selected.name || 'brahmatatva'}.png`, { type: 'image/png' }) : null;
@@ -124,7 +129,7 @@ export default function CreateShareGallery({ initialItems = [] }) {
       <div className="mb-7 flex justify-center gap-2">{[['','All'],['image','Images'],['video','Videos']].map(([value,label])=><button key={label} onClick={()=>setFilter(value)} className={`rounded-full px-5 py-2 text-sm font-bold ${filter===value?'bg-[#6b2323] text-white':'bg-white text-[#6b2323] ring-1 ring-[#ead8c7]'}`}>{label}</button>)}</div>
       {!items.length ? <div className="rounded-2xl bg-white p-14 text-center text-slate-500">No active media available.</div> :
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{items.map((item)=><div key={item.id} className="group overflow-hidden rounded-2xl bg-white text-left shadow-sm ring-1 ring-[#f1e4d6] transition hover:-translate-y-1 hover:shadow-xl"><div className={`relative h-[70vw] overflow-hidden bg-slate-100 sm:h-auto ${item.aspectRatio==='1:1'?'sm:aspect-square':item.aspectRatio==='4:5'?'sm:aspect-[4/5]':'sm:aspect-[9/16]'}`}><img src={item.thumbnailUrl} alt={item.title} className="h-full w-full object-cover transition group-hover:scale-105"/>{item.mediaType==='video'?<span className="absolute right-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs text-white">Video</span>:<button onClick={()=>choosePhoto(item)} className="absolute inset-x-3 bottom-3 inline-flex items-center justify-center gap-2 rounded-xl bg-white/95 px-3 py-3 text-sm font-bold text-[#6b2323] shadow-lg backdrop-blur transition hover:bg-[#6b2323] hover:text-white"><ImagePlus size={17}/> Upload Your Own Photo</button>}</div><div className="p-4"><h2 className="font-serif text-lg font-bold text-[#351112]">{item.title}</h2><p className="mt-1 text-xs text-slate-500">{item.category}</p></div></div>)}</div>}
-      {selected && <div className="fixed inset-0 z-[80] overflow-y-auto bg-black/80 p-3"><div className="mx-auto my-4 max-w-4xl rounded-2xl bg-[#fffaf5] p-4 sm:p-6"><div className="mb-4 flex items-center justify-between"><div><h2 className="font-serif text-xl font-bold text-[#351112]">{selected.title}</h2><Link href={`/create-and-share/${selected.id}`} className="text-xs text-[#9b5252]">Open direct link</Link></div><button onClick={()=>setSelected(null)}><X/></button></div><div className="relative mx-auto w-fit max-w-full overflow-hidden rounded-xl bg-slate-100"><img src={selected.mediaUrl} alt={selected.title} className="h-auto max-h-[70vh] max-w-full object-contain"/>{photo&&<img src={photo} alt="Your local photo" className="absolute object-cover ring-2 ring-white" style={{left:`${frame.xPercent}%`,top:`${frame.yPercent}%`,width:`${frame.widthPercent}%`,height:`${frame.heightPercent}%`,borderRadius:frame.shape==='circle'?'999px':frame.shape==='rounded'?'16%':'0'}}/>}</div>{photo&&!result&&<><div className="mt-5 grid gap-3 sm:grid-cols-2"><label className="text-xs text-slate-600">Shape<select value={frame.shape} onChange={(e)=>setFrame({...frame,shape:e.target.value})} className="mt-1 w-full rounded-lg border bg-white p-2"><option value="circle">Circle</option><option value="rounded">Rounded</option><option value="square">Square</option></select></label>{[['xPercent','X position'],['yPercent','Y position'],['widthPercent','Width'],['heightPercent','Height']].map(([key,label])=><label key={key} className="text-xs text-slate-600">{label}: {Math.round(frame[key])}%<input type="range" min={key.includes('width')||key.includes('height')?5:0} max="100" value={frame[key]} onChange={(e)=>setFrame({...frame,[key]:Number(e.target.value)})} className="mt-2 w-full accent-[#6b2323]"/></label>)}</div><button onClick={()=>setFrame({...defaultFrame,...(selected.photoFrame||{})})} className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[#6b2323]"><RotateCcw size={13}/> Reset position</button><button onClick={done} disabled={working} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#6b2323] px-6 py-4 text-lg font-bold text-white shadow-lg"><Check size={21}/> {working?'Creating…':'Done'}</button></>}{result&&<div className="mt-5 flex items-center justify-center gap-4"><button onClick={share} className="inline-flex min-w-48 items-center justify-center gap-2 rounded-xl bg-[#6b2323] px-7 py-4 text-lg font-bold text-white shadow-lg"><Share2 size={20}/> Share</button><button onClick={()=>choosePhoto(selected)} className="text-sm font-semibold text-[#6b2323] underline underline-offset-4">Edit</button></div>}<p className="mt-3 text-center text-xs text-slate-500">Your photo stays in this browser and is never uploaded or saved in the database.</p><canvas ref={canvasRef} className="hidden"/></div></div>}
+      {selected && <div className="fixed inset-0 z-[80] overflow-y-auto bg-[#fffaf5]"><div className="min-h-screen w-full"><div className="sticky top-0 z-20 border-b border-[#ead8c7] bg-[#fffaf5]/95 px-4 py-3 backdrop-blur sm:px-6"><div className="mx-auto flex max-w-4xl items-start gap-3"><label className="min-w-0 flex-1 text-xs font-semibold text-[#351112]">Name<input value={senderName} onChange={(e)=>setSenderName(e.target.value.slice(0,60))} placeholder="Apna naam likhen" className="mt-1 w-full rounded-lg border border-[#e5d3c1] bg-white px-3 py-2.5 text-sm font-normal outline-none focus:border-[#6b2323]"/></label><button onClick={()=>setSelected(null)} aria-label="Close editor" className="mt-5 flex h-10 w-10 items-center justify-center rounded-full border border-[#e5d3c1] bg-white"><X/></button></div></div><div className="mx-auto max-w-4xl px-4 py-5 sm:px-6"><div className="relative mx-auto w-fit max-w-full overflow-hidden rounded-xl bg-slate-100"><img src={selected.mediaUrl} alt={selected.title} className="h-auto max-h-[calc(70vh+70px)] max-w-full object-contain sm:max-h-[70vh]"/>{photo&&<img src={photo} alt="Your local photo" className="absolute object-cover ring-2 ring-white" style={{left:`${frame.xPercent}%`,top:`${frame.yPercent}%`,width:`${frame.widthPercent}%`,height:`${frame.heightPercent}%`,borderRadius:frame.shape==='circle'?'999px':frame.shape==='rounded'?'16%':'0'}}/>}</div>{photo&&!result&&<><div className="mt-5 grid gap-3 sm:grid-cols-2"><label className="text-xs text-slate-600">Shape<select value={frame.shape} onChange={(e)=>setFrame({...frame,shape:e.target.value})} className="mt-1 w-full rounded-lg border bg-white p-2"><option value="circle">Circle</option><option value="rounded">Rounded</option><option value="square">Square</option></select></label>{[['xPercent','X position'],['yPercent','Y position'],['widthPercent','Width'],['heightPercent','Height']].map(([key,label])=><label key={key} className="text-xs text-slate-600">{label}: {Math.round(frame[key])}%<input type="range" min={key.includes('width')||key.includes('height')?5:0} max="100" value={frame[key]} onChange={(e)=>setFrame({...frame,[key]:Number(e.target.value)})} className="mt-2 w-full accent-[#6b2323]"/></label>)}</div><button onClick={()=>setFrame({...defaultFrame,...(selected.photoFrame||{})})} className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-[#6b2323]"><RotateCcw size={13}/> Reset position</button><button onClick={done} disabled={working} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#6b2323] px-6 py-4 text-lg font-bold text-white shadow-lg"><Check size={21}/> {working?'Creating…':'Done'}</button></>}{result&&<div className="mt-5 flex items-center justify-center gap-4"><button onClick={share} className="inline-flex min-w-48 items-center justify-center gap-2 rounded-xl bg-[#6b2323] px-7 py-4 text-lg font-bold text-white shadow-lg"><Share2 size={20}/> Share</button><button onClick={()=>choosePhoto(selected)} className="text-sm font-semibold text-[#6b2323] underline underline-offset-4">Edit</button></div>}<p className="mt-3 text-center text-xs text-slate-500">Your photo stays in this browser and is never uploaded or saved in the database.</p><canvas ref={canvasRef} className="hidden"/></div></div></div>}
     </div>
   );
 }
