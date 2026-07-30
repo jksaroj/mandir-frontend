@@ -238,6 +238,12 @@ a {
   animation: create-share-done-slide-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* The completed action is rendered in the fixed bottom bar. */
+.fixed.inset-0.z-\[80\] button.min-w-48,
+.fixed.inset-0.z-\[80\] button.min-w-48 + button {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .create-share-done-bar {
     animation: none;
