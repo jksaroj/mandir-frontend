@@ -1,6 +1,7 @@
 import SpiritualListingPage from "@/components/spiritual/SpiritualListingPage";
 import { buildMetadata, DEFAULT_OG_IMAGE, seoKeywords } from "@/lib/seo";
 import { fetchSpiritualItems } from "@/lib/mantras";
+import { fetchBanners } from "@/lib/banners";
 
 export const revalidate = 60;
 
@@ -15,6 +16,7 @@ export async function generateMetadata() {
   });
 }
 
-export default function ChalisaPage() {
-  return <SpiritualListingPage variant="chalisa" />;
+export default async function ChalisaPage() {
+  const banners = await fetchBanners("chalisa");
+  return <SpiritualListingPage variant="chalisa" banners={banners} />;
 }

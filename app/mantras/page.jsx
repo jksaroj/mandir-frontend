@@ -1,6 +1,7 @@
 import SpiritualListingPage from "@/components/spiritual/SpiritualListingPage";
 import { buildMetadata, DEFAULT_OG_IMAGE, seoKeywords } from "@/lib/seo";
 import { fetchSpiritualItems } from "@/lib/mantras";
+import { fetchBanners } from "@/lib/banners";
 
 export const revalidate = 60;
 export const dynamic = "force-dynamic";
@@ -16,6 +17,7 @@ export async function generateMetadata() {
   });
 }
 
-export default function MantrasPage() {
-  return <SpiritualListingPage variant="mantra" />;
+export default async function MantrasPage() {
+  const banners = await fetchBanners("mantra");
+  return <SpiritualListingPage variant="mantra" banners={banners} />;
 }

@@ -12,6 +12,7 @@ import I18nWaveText from "@/components/i18n/I18nWaveText";
 import ShareButton from "@/components/ui/ShareButton";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
+import PageBannerSlider from "@/components/site/PageBannerSlider";
 import { getMessage } from "@/lib/i18n/getMessage";
 import { DEFAULT_LOCALE } from "@/lib/i18n/config";
 import { itemListSchema } from "@/lib/seo";
@@ -70,7 +71,7 @@ const benefitKeys = [
   "common.benefitsList.positiveEnergy"
 ];
 
-export default async function SpiritualListingPage({ variant }) {
+export default async function SpiritualListingPage({ variant, banners = [] }) {
   const config = configs[variant];
   const items = await fetchSpiritualItems({ type: variant });
   const featured = items[0];
@@ -89,7 +90,7 @@ export default async function SpiritualListingPage({ variant }) {
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
         <Breadcrumbs items={breadcrumbs} />
       </div>
-      <section className="relative overflow-hidden bg-[#fff2df]">
+      {banners.length > 0 ? <PageBannerSlider banners={banners} title={listName} /> : <section className="relative overflow-hidden bg-[#fff2df]">
         <div className="absolute right-0 top-0 hidden h-full w-1/2 lg:block">
           <Image src={heroImage} alt="Spiritual book and diya" fill priority sizes="50vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#fff2df] via-[#fff2df]/50 to-transparent" />
@@ -118,7 +119,7 @@ export default async function SpiritualListingPage({ variant }) {
             </form>
           </div>
         </div>
-      </section>
+      </section>}
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <h2 className="sr-only">
