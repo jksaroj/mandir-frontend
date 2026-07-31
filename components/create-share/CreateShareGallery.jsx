@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { Check, ImagePlus, RotateCcw, Share2, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Check, ChevronDown, ImagePlus, RotateCcw, Share2, X } from 'lucide-react';
 
 const defaultFrame = {
   shape: 'circle',
@@ -34,6 +34,7 @@ function drawImageCover(context, image, x, y, width, height) {
 
 export default function CreateShareGallery({ initialItems = [] }) {
   const [filter, setFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
   const [selected, setSelected] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [frame, setFrame] = useState(defaultFrame);
@@ -45,7 +46,16 @@ export default function CreateShareGallery({ initialItems = [] }) {
   const previewImageRef = useRef(null);
   const fileInputRef = useRef(null);
   const pendingMediaRef = useRef(null);
-  const items = filter ? initialItems.filter((item) => item.mediaType === filter) : initialItems;
+  const categories = useMemo(
+    () => [...new Set(initialItems.map((item) => item.category).filter(Boolean))],
+    [initialItems]
+  );
+  const primaryCategories = categories.slice(0, 5);
+  const moreCategories = categories.slice(5);
+  const items = initialItems.filter((item) =>
+    (!filter || item.mediaType === filter) &&
+    (!categoryFilter || item.category === categoryFilter)
+  );
 
   useEffect(() => () => {
     if (photo) URL.revokeObjectURL(photo);
@@ -136,7 +146,7 @@ export default function CreateShareGallery({ initialItems = [] }) {
     const blob = selected.mediaType === 'image' ? (result || await compose()) : null;
     const file = blob ? new File([blob], `${selected.name || 'brahmatatva'}.png`, { type: 'image/png' }) : null;
     if (navigator.share) {
-      const shareData = { title: selected.title, text: `${text}\n${pageUrl}`.trim(), url: pageUrl };
+      const shareData = { title: selected.title, text, url: pageUrl };
       if (file && navigator.canShare?.({ files: [file] })) shareData.files = [file];
       await navigator.share(shareData);
     } else {
@@ -147,7 +157,15 @@ export default function CreateShareGallery({ initialItems = [] }) {
   return (
     <div>
       <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handlePhoto}/>
-      <div className="mb-7 flex justify-center gap-2">{[['','All'],['image','Images'],['video','Videos']].map(([value,label])=><button key={label} onClick={()=>setFilter(value)} className={`rounded-full px-5 py-2 text-sm font-bold ${filter===value?'bg-[#6b2323] text-white':'bg-white text-[#6b2323] ring-1 ring-[#ead8c7]'}`}>{label}</button>)}</div>
+      {categories.length > 0 && <div className="mb-4 flex flex-wrap justify-center gap-2">
+        <button onClick={()=>setCategoryFilter('')} className={`rounded-full px-4 py-2 text-sm font-bold ${!categoryFilter?'bg-[#6b2323] text-white':'bg-white text-[#6b2323] ring-1 ring-[#ead8c7]'}`}>All</button>
+        {primaryCategories.map((category)=><button key={category} onClick={()=>setCategoryFilter(category)} className={`rounded-full px-4 py-2 text-sm font-bold ${categoryFilter===category?'bg-[#6b2323] text-white':'bg-white text-[#6b2323] ring-1 ring-[#ead8c7]'}`}>{category}</button>)}
+        {moreCategories.length > 0 && <label className={`relative inline-flex items-center rounded-full px-4 py-2 text-sm font-bold ring-1 ring-[#ead8c7] ${moreCategories.includes(categoryFilter)?'bg-[#6b2323] text-white':'bg-white text-[#6b2323]'}`}>
+          <span>{moreCategories.includes(categoryFilter) ? categoryFilter : `More (${moreCategories.length})`}</span><ChevronDown size={14} className="ml-1"/>
+          <select aria-label="More categories" value={moreCategories.includes(categoryFilter)?categoryFilter:''} onChange={(e)=>setCategoryFilter(e.target.value)} className="absolute inset-0 cursor-pointer opacity-0"><option value="" disabled>More categories</option>{moreCategories.map((category)=><option key={category} value={category}>{category}</option>)}</select>
+        </label>}
+      </div>}
+      <div className="mb-7 flex justify-center gap-2">{[['','All Media'],['image','Images'],['video','Videos']].map(([value,label])=><button key={label} onClick={()=>setFilter(value)} className={`rounded-full px-5 py-2 text-sm font-bold ${filter===value?'bg-[#c48a2a] text-white':'bg-white text-[#6b2323] ring-1 ring-[#ead8c7]'}`}>{label}</button>)}</div>
       {!items.length ? <div className="rounded-2xl bg-white p-14 text-center text-slate-500">No active media available.</div> :
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{items.map((item)=><div key={item.id} className="group overflow-hidden rounded-2xl bg-white text-left shadow-sm ring-1 ring-[#f1e4d6] transition hover:-translate-y-1 hover:shadow-xl"><div className={`relative h-[70vw] overflow-hidden bg-slate-100 sm:h-auto ${item.aspectRatio==='1:1'?'sm:aspect-square':item.aspectRatio==='4:5'?'sm:aspect-[4/5]':'sm:aspect-[9/16]'}`}><img src={item.thumbnailUrl} alt={item.title} className="h-full w-full object-cover transition group-hover:scale-105"/>{item.mediaType==='video'?<span className="absolute right-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs text-white">Video</span>:<button onClick={()=>choosePhoto(item)} className="absolute inset-x-3 bottom-3 inline-flex items-center justify-center gap-2 rounded-xl bg-white/95 px-3 py-3 text-sm font-bold text-[#6b2323] shadow-lg backdrop-blur transition hover:bg-[#6b2323] hover:text-white"><ImagePlus size={17}/> Upload Your Own Photo</button>}</div><div className="p-4"><h2 className="font-serif text-lg font-bold text-[#351112]">{item.title}</h2><p className="mt-1 text-xs text-slate-500">{item.category}</p></div></div>)}</div>}
       {result&&selected&&<div className="create-share-done-bar fixed inset-x-0 bottom-0 z-[90] border-t border-[#ead8c7] bg-[#fffaf5]/95 px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-10px_30px_rgba(53,17,18,.12)] backdrop-blur"><div className="mx-auto flex max-w-4xl items-center gap-3"><button onClick={share} className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#762626] px-6 py-4 text-lg font-bold text-white shadow-lg"><Share2 size={20}/> Share</button><button onClick={()=>choosePhoto(selected)} className="rounded-lg px-3 py-3 text-sm font-semibold text-[#6b2323] underline underline-offset-4">Edit</button></div></div>}
