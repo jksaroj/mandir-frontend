@@ -10,6 +10,7 @@ import TempleFilters from "@/components/temples/TempleFilters";
 import TempleHero from "@/components/temples/TempleHero";
 import Reveal from "@/components/animations/Reveal";
 import { fetchTemples } from "@/lib/temples";
+import { fetchBanners } from "@/lib/banners";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import { buildMetadata, DEFAULT_OG_IMAGE, itemListSchema, seoKeywords } from "@/lib/seo";
@@ -32,7 +33,7 @@ export async function generateMetadata() {
 }
 
 export default async function TemplesPage() {
-  const temples = await fetchTemples();
+  const [temples, banners] = await Promise.all([fetchTemples(), fetchBanners("temples")]);
   const breadcrumbs = [
     { name: "Home", href: "/" },
     { name: "Temples", href: "/temples" }
@@ -45,7 +46,7 @@ export default async function TemplesPage() {
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
         <Breadcrumbs items={breadcrumbs} />
       </div>
-      <TempleHero />
+      <TempleHero banners={banners} />
       <Reveal direction="none" duration={0.6}>
         <TempleFilters />
       </Reveal>

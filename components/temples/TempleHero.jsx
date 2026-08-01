@@ -4,10 +4,12 @@ import FadeUp from "@/components/animations/FadeUp";
 import FloatingDivine from "@/components/animations/FloatingDivine";
 import I18n from "@/components/i18n/I18n";
 import I18nWaveText from "@/components/i18n/I18nWaveText";
+import PageBannerSlider from "@/components/site/PageBannerSlider";
 
 const heroImage = "https://images.unsplash.com/photo-1604076913837-52ab5629fba9?auto=format&fit=crop&w=1800&q=80";
 
-export default function TempleHero() {
+export default function TempleHero({ banners = [] }) {
+  if (banners.length > 0) return <PageBannerSlider banners={banners} title="Temples" />;
   return (
     <section className="soft-glow relative h-[380px] overflow-hidden">
       <Image src={heroImage} alt="Temple landscape" fill priority sizes="100vw" className="object-cover" />

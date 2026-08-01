@@ -22,6 +22,25 @@ import { fetchSpiritualItems, getMantraHref } from "@/lib/mantras";
 const heroImage = "https://images.unsplash.com/photo-1604608678051-64d46d9cc0e1?auto=format&fit=crop&w=1200&q=80";
 
 const configs = {
+  aarti: {
+    activeKey: "aarti",
+    heroTitle: "spiritual.mantra.heroTitle",
+    heroText: "spiritual.mantra.heroText",
+    searchPlaceholder: "spiritual.searchMantras",
+    categoryKeys: [
+      "spiritual.mantra.categories.shiva",
+      "spiritual.mantra.categories.vishnu",
+      "spiritual.mantra.categories.devi",
+      "spiritual.mantra.categories.ganesh",
+      "spiritual.mantra.categories.hanuman",
+      "spiritual.mantra.categories.other"
+    ],
+    listTitle: "spiritual.mantra.listTitle",
+    sidebarDaily: "spiritual.mantra.daily",
+    sidebarBenefits: "spiritual.mantra.benefitsTitle",
+    emptyKey: "common.emptyMantras",
+    defaultTitle: "spiritual.defaultMantraTitle"
+  },
   mantra: {
     activeKey: "mantra",
     heroTitle: "spiritual.mantra.heroTitle",
@@ -76,8 +95,8 @@ export default async function SpiritualListingPage({ variant, banners = [] }) {
   const items = await fetchSpiritualItems({ type: variant });
   const featured = items[0];
   const searchPlaceholder = getMessage(DEFAULT_LOCALE, config.searchPlaceholder);
-  const listPath = variant === "chalisa" ? "/chalisa" : "/mantras";
-  const listName = variant === "chalisa" ? "Chalisa" : "Mantras";
+  const listPath = variant === "chalisa" ? "/chalisa" : variant === "aarti" ? "/aarti" : "/mantras";
+  const listName = variant === "chalisa" ? "Chalisa" : variant === "aarti" ? "Aarti" : "Mantras";
   const breadcrumbs = [
     { name: "Home", href: "/" },
     { name: listName, href: listPath }

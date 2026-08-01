@@ -4,6 +4,8 @@ import Header from "@/components/site/Header";
 import Footer from "@/components/site/Footer";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
+import PageBannerSlider from "@/components/site/PageBannerSlider";
+import { fetchBanners } from "@/lib/banners";
 import { fetchBlogs } from "@/lib/blogs";
 import { buildMetadata, DEFAULT_OG_IMAGE, itemListSchema, seoKeywords } from "@/lib/seo";
 
@@ -22,7 +24,7 @@ export async function generateMetadata() {
 }
 
 export default async function BlogPage() {
-  const blogs = await fetchBlogs();
+  const [blogs, banners] = await Promise.all([fetchBlogs(), fetchBanners("blogs")]);
   const breadcrumbs = [
     { name: "Home", href: "/" },
     { name: "Blog", href: "/blog" }
@@ -32,6 +34,7 @@ export default async function BlogPage() {
     <main className="min-h-screen bg-[#fffaf5] text-[#1f2937]">
       <JsonLd data={itemListSchema(blogs, "/blog")} />
       <Header active="blog" />
+      {banners.length > 0 && <PageBannerSlider banners={banners} title="Blogs" />}
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <Breadcrumbs items={breadcrumbs} className="mb-7" />
         <h1 className="font-serif text-5xl font-bold text-[#351112]">Spiritual Blog</h1>
