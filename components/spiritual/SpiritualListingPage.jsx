@@ -127,9 +127,6 @@ export default async function SpiritualListingPage({ variant, banners = [] }) {
     <main className="min-h-screen bg-[#fffaf5] text-[#1f2937]">
       <JsonLd data={itemListSchema(items, listPath)} />
       <Header active={config.activeKey} />
-      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
-        <Breadcrumbs items={breadcrumbs} />
-      </div>
       {banners.length > 0 ? (
         variant === "chalisa"
           ? <HeroSection banners={banners} showActions={false} compact />
@@ -164,6 +161,10 @@ export default async function SpiritualListingPage({ variant, banners = [] }) {
           </div>
         </div>
       </section>}
+
+      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <h2 className="sr-only">

@@ -80,7 +80,7 @@ export default function HeroSection({ banners = [], showActions = true, compact 
             key={`${item.deity}-${index}`}
             src={item.image}
             alt={`${item.deity} devotional banner`}
-            className={`absolute inset-0 h-full w-full object-cover transition-all duration-1000 ${item.align} ${
+            className={`absolute inset-0 h-full w-full transition-all duration-1000 ${compact ? "object-contain" : `object-cover ${item.align}`} ${
               index === active ? "scale-100 opacity-100" : "scale-105 opacity-0"
             }`}
           />
