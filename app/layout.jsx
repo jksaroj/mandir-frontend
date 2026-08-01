@@ -16,6 +16,11 @@ export const metadata = {
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
+  icons: {
+    icon: [{ url: "/images/favicon.png", type: "image/png" }],
+    shortcut: "/images/favicon.png",
+    apple: "/images/favicon.png"
+  },
   verification: {
     google: "LwXpmKHZr50OgrCK4J8mq1vw8XdNBP52Qm_1lTYlxgc"
   },
