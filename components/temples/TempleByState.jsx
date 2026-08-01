@@ -11,9 +11,9 @@ const image = "https://images.unsplash.com/photo-1624996752380-8ec242e0f85d?auto
 
 export default function TempleByState() {
   return (
-    <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+    <section id="states" className="mx-auto max-w-7xl px-4 pb-9 sm:px-6 lg:px-8">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-extrabold">Temples by State</h2>
+        <h2 className="font-serif text-2xl font-bold text-[#531b1d]">Temples by State</h2>
         <a href="#" className="flex items-center gap-1 text-sm font-bold text-[#6b2323]">View All States <ChevronRight size={16} /></a>
       </div>
       <WaveGrid className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

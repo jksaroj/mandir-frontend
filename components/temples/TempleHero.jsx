@@ -1,45 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
-import FadeUp from "@/components/animations/FadeUp";
-import FloatingDivine from "@/components/animations/FloatingDivine";
-import I18n from "@/components/i18n/I18n";
-import I18nWaveText from "@/components/i18n/I18nWaveText";
-import PageBannerSlider from "@/components/site/PageBannerSlider";
 
-const heroImage = "https://images.unsplash.com/photo-1604076913837-52ab5629fba9?auto=format&fit=crop&w=1800&q=80";
+const fallbackImage = "https://images.unsplash.com/photo-1604076913837-52ab5629fba9?auto=format&fit=crop&w=1800&q=85";
 
 export default function TempleHero({ banners = [] }) {
-  if (banners.length > 0) return <PageBannerSlider banners={banners} title="Temples" />;
-  return (
-    <section className="soft-glow relative h-[380px] overflow-hidden">
-      <Image src={heroImage} alt="Temple landscape" fill priority sizes="100vw" className="object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#fff0d6]/95 via-[#fff3dd]/55 to-transparent" />
-      <div className="relative mx-auto flex h-full max-w-7xl items-center px-4 sm:px-6 lg:px-8">
-        <div className="max-w-xl">
-          <div className="mb-6 flex items-center gap-2 text-sm font-bold text-[#7b2929]">
-            <I18n k="common.home" />
-            <span>›</span>
-            <I18n k="nav.temples" />
-          </div>
-          <I18nWaveText k="temples.title" className="block font-serif text-6xl font-bold text-[#5b1f1f]" />
-          <FadeUp delay={0.16}>
-            <I18n
-              k="temples.heroSubtitle"
-              as="p"
-              className="mt-5 text-lg font-medium leading-8 text-[#2d2530]"
-            />
-          </FadeUp>
-          <FloatingDivine>
-            <Link
-              href="/temples/sri-venkateswara-temple"
-              className="mt-7 inline-flex rounded-lg bg-[#6b2323] px-6 py-3 text-sm font-extrabold text-white shadow-md transition hover:bg-[#5b1f1f]"
-            >
-              <I18n k="temples.exploreDetails" />
-            </Link>
-          </FloatingDivine>
-          <div className="mt-7 h-px w-28 bg-[#d89b2b]" />
-        </div>
-      </div>
-    </section>
-  );
+  const image = banners[0]?.image || fallbackImage;
+  return <section className="relative h-[430px] overflow-hidden bg-[#07162a] text-white">
+    <Image src={image} alt="Sacred temples of India" fill priority sizes="100vw" className="object-cover object-center" />
+    <div className="absolute inset-0 bg-gradient-to-r from-[#061426] via-[#061426]/80 to-transparent" />
+    <div className="relative mx-auto flex h-full max-w-7xl items-center px-4 sm:px-6 lg:px-8"><div className="max-w-xl">
+      <div className="mb-7 flex gap-3 text-xs font-bold"><Link href="/">Home</Link><span>›</span><span>Temples</span></div>
+      <p className="text-xs font-extrabold uppercase tracking-[.14em] text-[#d8aa48]">— Temple Directory —</p>
+      <h1 className="mt-4 font-serif text-5xl font-bold leading-[1.05] sm:text-6xl">Discover Sacred<br/><span className="text-[#efbd58]">Temples of India</span></h1>
+      <p className="mt-5 max-w-md text-sm leading-7 text-white/85">Explore ancient temples, darshan timings, history, festivals and travel information.</p>
+      <div className="mt-6 flex gap-3"><a href="#temple-results" className="rounded-md bg-[#efbd58] px-6 py-3 text-xs font-bold text-[#3b2014]">Explore Temples &nbsp; →</a><a href="#states" className="rounded-md border border-[#d2a545] px-6 py-3 text-xs font-bold text-[#efbd58]">Plan Your Visit &nbsp; ▣</a></div>
+    </div></div>
+  </section>;
 }

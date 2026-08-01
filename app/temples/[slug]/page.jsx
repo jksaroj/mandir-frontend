@@ -18,6 +18,7 @@ import { fetchAllTempleSlugs, fetchTempleBySlug, fetchTemples } from "@/lib/temp
 import { resolveImageUrl } from "@/lib/images";
 import { absoluteUrl, buildMetadata, faqSchema, seoKeywords } from "@/lib/seo";
 import { fetchFaqs } from "@/lib/faqs";
+import TempleDetailLayout from "@/components/temples/TempleDetailLayout";
 
 export const revalidate = 60;
 export const dynamic = "force-dynamic";
@@ -138,6 +139,15 @@ export default async function TempleDetailsPage({ params }) {
     },
     url: pageUrl,
   };
+
+  return (
+    <main className="min-h-screen bg-[#fffaf6] text-[#15172b]">
+      <JsonLd data={[jsonLd, faqSchema(pageFaqs)]} />
+      <Header />
+      <TempleDetailLayout temple={temple} faqs={pageFaqs} relatedTemples={relatedTemples} />
+      <Footer />
+    </main>
+  );
 
   return (
     <main className="min-h-screen bg-[#fffaf6] text-[#15172b]">

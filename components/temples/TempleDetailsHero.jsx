@@ -1,134 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Clock, Heart, MapPin, Navigation, Star, UserRound } from "lucide-react";
-import FadeUp from "@/components/animations/FadeUp";
-import FloatingDivine from "@/components/animations/FloatingDivine";
-import SimpleSlider from "@/components/ui/SimpleSlider";
-import OptimizedImage from "@/components/ui/OptimizedImage";
-import ShareButton from "@/components/ui/ShareButton";
-import ViewCounter from "@/components/ui/ViewCounter";
-import { IMAGE_SIZES, templeImageAlt } from "@/lib/images";
+import Image from "next/image";
+import Link from "next/link";
+import { Bookmark, CalendarDays, Clock3, MapPin, Navigation, Share2, Star, Sun } from "lucide-react";
 
 export default function TempleDetailsHero({ temple }) {
-  const [activeImage, setActiveImage] = useState(0);
-
-  const images = useMemo(() => {
-    const list = temple.images?.length ? temple.images : [temple.image];
-    return list.filter(Boolean);
-  }, [temple.images, temple.image]);
-
-  const slides = useMemo(
-    () =>
-      images.map((url, index) => ({
-        image: url,
-        alt: templeImageAlt(temple.name, { context: index === 0 ? "hero" : "gallery", index, total: images.length }),
-      })),
-    [images, temple.name]
-  );
-
-  const badges = [
-    ["Deity", temple.deity, UserRound],
-    ["Temple Timings", temple.templeTimings, Clock],
-  ];
-
-  return (
-    <section className="grid gap-8 lg:grid-cols-[1.12fr_1fr] lg:items-start">
-      <div>
-        <FloatingDivine>
-          <SimpleSlider
-            slides={slides}
-            className="aspect-[4/3] overflow-hidden rounded-xl border border-[#eadfd6] bg-[#f6f0eb] shadow-sm"
-            imageClassName="object-contain"
-            autoPlay={slides.length > 1}
-            activeIndex={activeImage}
-            onIndexChange={setActiveImage}
-          />
-        </FloatingDivine>
-        {images.length > 1 && (
-          <div className="mt-4 grid grid-cols-5 gap-3">
-            {images.map((url, index) => (
-              <button
-                key={`${url}-${index}`}
-                type="button"
-                aria-label={templeImageAlt(temple.name, { context: "thumbnail", index, total: images.length })}
-                aria-current={activeImage === index}
-                onClick={() => setActiveImage(index)}
-                className={`relative h-20 overflow-hidden rounded-lg outline-none transition ${
-                  activeImage === index ? "ring-2 ring-[#d89b2b] ring-offset-2 ring-offset-[#fffaf6]" : "ring-1 ring-transparent hover:ring-[#ead8c6]"
-                }`}
-              >
-                <OptimizedImage
-                  src={url}
-                  alt={templeImageAlt(temple.name, { context: "thumbnail", index, total: images.length })}
-                  fill
-                  sizes={IMAGE_SIZES.thumbnail}
-                  className="object-cover"
-                  quality={75}
-                />
-              </button>
-            ))}
-          </div>
-        )}
+  const timings = temple.templeTimings || "3:00 AM – 11:00 PM";
+  return <>
+    <section className="relative min-h-[520px] overflow-hidden bg-[#07162a] text-white">
+      <Image src={temple.image} alt={temple.name} fill priority sizes="100vw" className="object-cover object-[70%_center] opacity-90" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#061426] via-[#061426]/85 to-transparent" />
+      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="flex gap-3 text-xs font-bold text-white/80"><Link href="/">Home</Link><span>›</span><Link href="/temples">Temples</Link><span>›</span><span>{temple.city}</span><span>›</span><span>{temple.name}</span></div>
+        <div className="mt-12 max-w-xl"><span className="inline-flex rounded-full border border-[#c99a37] bg-[#7d5a18]/30 px-4 py-2 text-xs font-bold uppercase text-[#e5bd59]">♨ &nbsp; 12 Jyotirlingas</span><h1 className="mt-5 font-serif text-5xl font-bold leading-tight sm:text-6xl">{temple.name}</h1><p className="mt-4 flex flex-wrap items-center gap-3 text-sm"><MapPin size={17}/>{temple.city}<span className="text-white/40">|</span><span>♙ &nbsp; {temple.deity}</span></p><div className="mt-4 flex items-center gap-2"><span className="flex">{Array.from({length:5}).map((_,i)=><Star key={i} size={18} className="fill-[#ffc233] text-[#ffc233]"/>)}</span><b>{temple.rating || "4.8"}</b><span className="text-xs text-white/70">({temple.reviewCount || "12,345"})</span></div><p className="mt-4 max-w-lg text-sm leading-6 text-white/85">{temple.excerpt}</p><div className="mt-6 flex flex-wrap gap-3"><a href="#plan-visit" className="rounded-md border border-[#d5a33e] px-6 py-3 text-xs font-bold">Plan Your Visit &nbsp; ▣</a><a href="#how-to-reach" className="rounded-md border border-[#d5a33e] px-6 py-3 text-xs font-bold">View on Map &nbsp; ◉</a><button className="rounded-md border border-white/35 p-3"><Bookmark size={18}/></button><button className="rounded-md border border-white/35 p-3"><Share2 size={18}/></button></div><div className="mt-7 flex flex-wrap gap-2 text-[10px]"><span className="rounded-full bg-white/15 px-3 py-2 text-green-300">● &nbsp; Open Today</span><span className="rounded-full bg-white/15 px-3 py-2">◉ &nbsp; Photography Restricted</span><span className="rounded-full bg-white/15 px-3 py-2 text-green-300">▣ &nbsp; Free Entry</span></div></div>
       </div>
-      <FadeUp>
-        <div>
-          <span className="inline-flex items-center gap-2 rounded-lg bg-[#fff0dc] px-3 py-2 text-xs font-extrabold text-[#b66a14]">
-            <Star size={14} className="fill-[#f7b313] text-[#f7b313]" /> Popular Temple
-          </span>
-          <h1 className="mt-5 font-serif text-5xl font-bold leading-tight text-[#351112]">{temple.name}</h1>
-          <p className="mt-2 flex items-center gap-2 text-lg font-semibold text-slate-500">
-            <MapPin size={19} className="text-[#d89b2b]" /> {temple.city}
-          </p>
-          <ViewCounter type="temple" slug={temple.slug} initialCount={temple.viewCount} className="mt-3" />
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <span className="font-extrabold">{temple.rating}</span>
-            <span className="flex gap-1">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} size={20} className="fill-[#f7b313] text-[#f7b313]" />
-              ))}
-            </span>
-            <span className="text-sm font-semibold text-slate-500">({temple.reviewCount} Reviews)</span>
-          </div>
-          <p className="mt-5 line-clamp-3 max-w-2xl text-base font-medium leading-8 text-slate-600">{temple.excerpt}</p>
-          <a
-            href="#about-temple"
-            className="mt-1 inline-flex text-sm font-extrabold text-[#7a2224] underline decoration-[#d7a252] underline-offset-4"
-          >
-            Read more
-          </a>
-          <div className="mt-7 grid gap-4 sm:grid-cols-2">
-            {badges.map(([label, value, Icon]) => (
-              <div key={label} className="flex gap-3 rounded-xl bg-[#fff5e9] p-4">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-[#d89b2b]">
-                  <Icon size={20} />
-                </span>
-                <div>
-                  <p className="text-xs font-bold text-slate-500">{label}</p>
-                  <p className="mt-1 text-sm font-extrabold text-[#3b2430]">{value}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-7 flex flex-wrap gap-4">
-            <a href="#" className="inline-flex items-center gap-2 rounded-lg border border-[#9b5252] px-8 py-3 text-sm font-extrabold text-[#6b2323]">
-              <Navigation size={17} /> Get Directions
-            </a>
-            <button type="button" className="flex h-12 w-12 items-center justify-center rounded-lg border border-[#d9b7a6] text-[#9b5252]">
-              <Heart size={18} />
-            </button>
-            <ShareButton
-              title={temple.name}
-              url={temple.slug ? `/temples/${temple.slug}` : ""}
-              label={`Share ${temple.name}`}
-              modalTitle="Share this temple"
-              iconOnly
-              iconSize={18}
-              className="flex h-12 w-12 items-center justify-center rounded-lg border border-[#d9b7a6] text-[#9b5252] hover:bg-[#fff5e9]"
-            />
-          </div>
-        </div>
-      </FadeUp>
     </section>
-  );
+    <section className="relative z-10 mx-auto -mt-6 max-w-6xl px-4 sm:px-6"><div className="grid overflow-hidden rounded-xl border border-[#e3cba8] bg-white shadow-lg sm:grid-cols-2 lg:grid-cols-4">{[[Clock3,"Today’s Darshan",timings,"Open Now"],[Sun,"Mangala Aarti","3:00 AM","Daily"],[CalendarDays,"Best Time to Visit","Oct – Mar","Pleasant Weather"],[Clock3,"Avg. Visit Duration","1 – 2 Hours","Approx."]].map(([Icon,a,b,c],i)=><div key={a} className={`flex items-center gap-4 p-5 ${i?"lg:border-l lg:border-[#ead8c6]":""}`}><Icon size={31} className="shrink-0 text-[#c18a35]"/><div><p className="text-[10px] text-slate-500">{a}</p><b className="mt-1 block text-sm">{b}</b><span className="text-[10px] text-slate-500">{c}</span></div></div>)}</div></section>
+  </>;
 }

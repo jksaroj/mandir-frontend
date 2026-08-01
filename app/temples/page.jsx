@@ -12,8 +12,8 @@ import Reveal from "@/components/animations/Reveal";
 import { fetchTemples } from "@/lib/temples";
 import { fetchBanners } from "@/lib/banners";
 import JsonLd from "@/components/seo/JsonLd";
-import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import { buildMetadata, DEFAULT_OG_IMAGE, itemListSchema, seoKeywords } from "@/lib/seo";
+import TempleDirectoryExtras from "@/components/temples/TempleDirectoryExtras";
 
 export const revalidate = 60;
 export const dynamic = "force-dynamic";
@@ -34,18 +34,10 @@ export async function generateMetadata() {
 
 export default async function TemplesPage() {
   const [temples, banners] = await Promise.all([fetchTemples(), fetchBanners("temples")]);
-  const breadcrumbs = [
-    { name: "Home", href: "/" },
-    { name: "Temples", href: "/temples" }
-  ];
-
   return (
     <main className="min-h-screen bg-[#fffaf6] text-[#15172b]">
       <JsonLd data={itemListSchema(temples, "/temples")} />
       <Header />
-      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
-        <Breadcrumbs items={breadcrumbs} />
-      </div>
       <TempleHero banners={banners} />
       <Reveal direction="none" duration={0.6}>
         <TempleFilters />
@@ -56,15 +48,18 @@ export default async function TemplesPage() {
       <Reveal direction="left">
         <PopularTempleCards temples={temples} />
       </Reveal>
+      <TempleDirectoryExtras section="services" />
       <Reveal direction="right">
         <TempleByState />
       </Reveal>
       <Reveal>
         <RecentlyAddedTemples temples={temples} />
       </Reveal>
+      <TempleDirectoryExtras section="circuits" />
       <Reveal scale>
         <TempleBenefits />
       </Reveal>
+      <TempleDirectoryExtras section="heritage" />
       <Reveal>
         <NewsletterSection />
       </Reveal>

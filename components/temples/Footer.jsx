@@ -7,7 +7,7 @@ const supportLinks = ["Help Center", "FAQ", "Terms & Conditions", "Privacy Polic
 
 export default function Footer() {
   return (
-    <footer className="mt-12 bg-gradient-to-r from-[#401112] via-[#5b1f1f] to-[#321010] text-white">
+    <footer className="bg-gradient-to-r from-[#401112] via-[#5b1f1f] to-[#321010] text-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div>
           <div className="flex items-center gap-3">

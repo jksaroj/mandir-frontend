@@ -16,12 +16,13 @@ function formatDate(dateStr) {
 
 export default function RecentlyAddedTemples({ temples = staticTemples }) {
   // temples are already sorted newest-first from fetchTemples()
-  const recent = temples.slice(0, 5);
+  const source = Array.isArray(temples) && temples.length > 0 ? temples : staticTemples;
+  const recent = source.slice(0, 5);
 
   return (
     <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-extrabold">Recently Added Temples</h2>
+        <h2 className="font-serif text-2xl font-bold text-[#531b1d]">Recently Added Temples</h2>
         <Link href="/temples" className="flex items-center gap-1 text-sm font-bold text-[#6b2323]">
           View All <ChevronRight size={16} />
         </Link>

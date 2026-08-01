@@ -13,11 +13,11 @@ const categories = [
 
 export default function TempleCategoryGrid() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <h2 className="sr-only">Temple Categories</h2>
+    <section className="mx-auto max-w-7xl px-4 py-9 sm:px-6 lg:px-8">
+      <h2 className="mb-5 font-serif text-2xl font-bold text-[#531b1d]">Explore Temples by Deity</h2>
       <WaveGrid className="grid gap-6 sm:grid-cols-2 lg:grid-cols-6">
         {categories.map(({ title, count, icon: Icon, color }) => (
-          <WaveGridItem key={title}><AnimatedCard as="a" href="#" className="block rounded-2xl border border-[#f1e7dc] bg-white p-7 text-center shadow-sm transition hover:shadow-md">
+          <WaveGridItem key={title}><AnimatedCard as="a" href="#temple-results" className="block rounded-xl border border-[#e5cda9] bg-white p-5 text-center shadow-sm transition hover:shadow-md">
             <span className={`mx-auto flex h-16 w-16 items-center justify-center rounded-full ${color}`}>
               <Icon size={32} strokeWidth={1.8} />
             </span>
