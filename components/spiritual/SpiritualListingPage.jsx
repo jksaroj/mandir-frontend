@@ -17,7 +17,7 @@ import HeroSection from "@/components/home/HeroSection";
 import { getMessage } from "@/lib/i18n/getMessage";
 import { DEFAULT_LOCALE } from "@/lib/i18n/config";
 import { itemListSchema } from "@/lib/seo";
-import { BookOpen, Clock, Music2, Play, Search, Star } from "lucide-react";
+import { Clock, Music2, Play, Search, Star } from "lucide-react";
 import { fetchSpiritualItems, getMantraHref } from "@/lib/mantras";
 
 const heroImage = "https://images.unsplash.com/photo-1604608678051-64d46d9cc0e1?auto=format&fit=crop&w=1200&q=80";
@@ -73,8 +73,7 @@ const configs = {
       "spiritual.chalisa.categories.durga",
       "spiritual.chalisa.categories.shiva",
       "spiritual.chalisa.categories.lakshmi",
-      "spiritual.chalisa.categories.saraswati",
-      "spiritual.chalisa.categories.other"
+      "spiritual.chalisa.categories.saraswati"
     ],
     listTitle: "spiritual.chalisa.listTitle",
     sidebarDaily: "spiritual.chalisa.daily",
@@ -90,6 +89,27 @@ const benefitKeys = [
   "common.benefitsList.discipline",
   "common.benefitsList.positiveEnergy"
 ];
+
+const chalisaCategoryTerms = [
+  ["hanuman", "हनुमान"],
+  ["ram", "राम"],
+  ["durga", "दुर्गा"],
+  ["shiva", "shiv", "शिव"],
+  ["lakshmi", "laxmi", "लक्ष्मी"],
+  ["saraswati", "सरस्वती"]
+];
+
+const categoryHref = (items, variant, index) => {
+  if (variant !== "chalisa") {
+    return items[index] ? getMantraHref(items[index]) : `/${variant === "mantra" ? "mantras" : variant}`;
+  }
+  const terms = chalisaCategoryTerms[index] || [];
+  const matchingItem = items.find((item) => {
+    const searchableText = `${item.title} ${item.deity} ${item.categoryLabel}`.toLowerCase();
+    return terms.some((term) => searchableText.includes(term));
+  });
+  return matchingItem ? getMantraHref(matchingItem) : "/chalisa";
+};
 
 export default async function SpiritualListingPage({ variant, banners = [] }) {
   const config = configs[variant];
@@ -149,18 +169,15 @@ export default async function SpiritualListingPage({ variant, banners = [] }) {
         <h2 className="sr-only">
           <I18n k={variant === "mantra" ? "nav.mantra" : "nav.chalisa"} />
         </h2>
-        <WaveGrid className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <WaveGrid className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 lg:grid lg:grid-cols-6 lg:overflow-visible lg:pb-0">
           {config.categoryKeys.map((categoryKey, index) => (
-            <WaveGridItem key={categoryKey}>
+            <WaveGridItem key={categoryKey} className="w-[72vw] max-w-[260px] shrink-0 snap-start lg:w-auto lg:max-w-none">
               <Link
-                href={items[index] ? getMantraHref(items[index]) : `/${variant === "mantra" ? "mantras" : "chalisa"}`}
-                className="block"
+                href={categoryHref(items, variant, index)}
+                className="block h-full"
               >
-                <AnimatedCard className="rounded-2xl border border-[#f1e4d6] bg-white p-6 text-center shadow-sm transition hover:shadow-md">
-                  <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#fff2df] text-[#d9a441]">
-                    {variant === "chalisa" ? <BookOpen size={26} /> : <Music2 size={26} />}
-                  </span>
-                  <I18n k={categoryKey} as="h3" className="mt-4 block text-sm font-extrabold" />
+                <AnimatedCard className="flex min-h-24 h-full items-center justify-center rounded-2xl border border-[#f1e4d6] bg-white p-5 text-center shadow-sm transition hover:shadow-md">
+                  <I18n k={categoryKey} as="h3" className="block text-sm font-extrabold" />
                 </AnimatedCard>
               </Link>
             </WaveGridItem>

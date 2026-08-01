@@ -71,7 +71,7 @@ export default function HeroSection({ banners = [], showActions = true, compact 
   const next = () => setActive((current) => (current + 1) % slides.length);
 
   return (
-    <section aria-labelledby="home-hero-heading" className={`relative isolate w-full overflow-hidden text-white transition-colors duration-700 ${compact ? "min-h-[300px] sm:min-h-[380px]" : "min-h-[560px] lg:min-h-[620px]"}`} style={{ backgroundColor }}>
+    <section aria-labelledby="home-hero-heading" className={`relative isolate w-full overflow-hidden text-white transition-colors duration-700 ${compact ? "min-h-[450px] sm:min-h-[625px]" : "min-h-[560px] lg:min-h-[620px]"}`} style={{ backgroundColor }}>
       <div className="absolute inset-x-0 top-0 h-px bg-white/20" />
 
       <div className={`absolute overflow-hidden ${compact ? "inset-0" : "inset-x-0 top-0 h-[48%] lg:inset-y-0 lg:left-[44%] lg:right-0 lg:h-auto"}`}>
@@ -93,7 +93,7 @@ export default function HeroSection({ banners = [], showActions = true, compact 
       {!compact && <div className="pointer-events-none absolute bottom-0 left-0 top-[42%] w-full lg:top-0 lg:w-[47%]" style={{ backgroundColor }} />}
       {!compact && <div className="pointer-events-none absolute bottom-0 left-[42%] top-0 hidden w-[18%] lg:block" style={{ background: `linear-gradient(to right, ${backgroundColor}, ${backgroundColor}bf, transparent)` }} />}
 
-      <div className={`relative z-10 mx-auto flex w-full max-w-[1440px] px-6 sm:px-10 lg:px-16 xl:px-20 ${compact ? "min-h-[300px] items-center py-10 sm:min-h-[380px]" : "min-h-[560px] items-end pb-16 pt-[285px] lg:min-h-[620px] lg:items-center lg:pb-14 lg:pt-0"}`}>
+      <div className={`relative z-10 mx-auto flex w-full max-w-[1440px] px-6 sm:px-10 lg:px-16 xl:px-20 ${compact ? "min-h-[450px] items-center py-10 sm:min-h-[625px]" : "min-h-[560px] items-end pb-16 pt-[285px] lg:min-h-[620px] lg:items-center lg:pb-14 lg:pt-0"}`}>
         <div className="w-full lg:max-w-[590px]">
           <AnimatePresence mode="wait">
             <motion.div
