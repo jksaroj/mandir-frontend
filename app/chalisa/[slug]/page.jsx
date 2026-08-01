@@ -1,4 +1,5 @@
-import SpiritualDetailPage, { generateSpiritualMetadata } from "@/components/spiritual/SpiritualDetailPage";
+import { generateSpiritualMetadata } from "@/components/spiritual/SpiritualDetailPage";
+import ChalisaDetailDesign from "@/components/spiritual/ChalisaDetailDesign";
 
 export const revalidate = 60;
 
@@ -7,5 +8,5 @@ export async function generateMetadata({ params }) {
 }
 
 export default function ChalisaDetailPage({ params }) {
-  return <SpiritualDetailPage params={params} variant="chalisa" />;
+  return <ChalisaDetailDesign params={params} />;
 }

@@ -47,11 +47,21 @@ function MenuLink({ item, locale, mobile = false, onClick }) {
   );
 }
 
+const fallbackNav = [
+  { id: "aarti", label: "Aarti", url: "/aarti" },
+  { id: "temples", label: "Temples", url: "/temples" },
+  { id: "chalisa", label: "Chalisa", url: "/chalisa" },
+  { id: "mantras", label: "Mantras", url: "/mantras" },
+  { id: "blogs", label: "Blogs", url: "/blog" },
+  { id: "share", label: "Share Photo", url: "/create-and-share" },
+];
+
 export default function HomeSiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [navItems, setNavItems] = useState([]);
   const { locale } = useTranslation();
+  const menuItems = navItems.length > 0 ? navItems : fallbackNav;
 
   useEffect(() => {
     let mounted = true;
@@ -74,10 +84,9 @@ export default function HomeSiteHeader() {
           <HomeSearchInline className="mx-auto hidden max-w-md flex-1 lg:block" />
 
           <nav className="hidden items-center gap-1 xl:flex" aria-label="Main navigation">
-            {navItems.length ? navItems.map((item) => <MenuLink key={item.id} item={item} locale={locale} />) : (
-              null
-            )}
+            {menuItems.map((item) => <MenuLink key={item.id} item={item} locale={locale} />)}
             <LanguageSwitcher variant="light" />
+            <Link href="/login" className="rounded-lg border border-[#d9c9b8] px-3 py-2 text-xs font-bold text-maroon">Login</Link>
           </nav>
 
           <div className="ml-auto flex items-center gap-2 lg:ml-0">
@@ -127,9 +136,7 @@ export default function HomeSiteHeader() {
               </button>
             </div>
             <ul className="flex-1 space-y-1 overflow-y-auto p-4">
-              {navItems.length ? navItems.map((item) => <MenuLink key={item.id} item={item} locale={locale} mobile onClick={() => setMenuOpen(false)} />) : (
-                null
-              )}
+              {menuItems.map((item) => <MenuLink key={item.id} item={item} locale={locale} mobile onClick={() => setMenuOpen(false)} />)}
             </ul>
             <div className="border-t border-[#f1e4d6] p-4">
               <LanguageSwitcher variant="light" />

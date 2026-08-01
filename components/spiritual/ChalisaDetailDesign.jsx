@@ -1,0 +1,63 @@
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { BookOpen, Bookmark, Clock3, Download, Globe2, Headphones, List, Play, Share2, ShieldCheck, Sparkles, Star, Sun } from "lucide-react";
+import Header from "@/components/home/Header";
+import Footer from "@/components/home/Footer";
+import Accordion from "@/components/ui/Accordion";
+import { fetchSpiritualItemBySlug, getMantraHref } from "@/lib/mantras";
+import { fetchFaqs } from "@/lib/faqs";
+import { fallbackChalisas } from "@/lib/homeContent";
+import ChalisaLyricsReader from "@/components/spiritual/ChalisaLyricsReader";
+
+const genericBenefits = ["Mental Peace", "Courage & Strength", "Removal of Fear", "Spiritual Discipline", "Divine Blessings", "Positive Energy"];
+const steps = [["Prepare Yourself", "Bathe early, wear clean clothes and choose a peaceful place."], ["Light a Diya", "Light a lamp and offer flowers with devotion."], ["Chant with Devotion", "Read or listen with full attention and concentration."], ["Conclude with Prayer", "Offer gratitude and pray for peace and well-being."]];
+
+export default async function ChalisaDetailDesign({ params }) {
+  const { slug } = await params;
+  const item = await fetchSpiritualItemBySlug(slug, "chalisa");
+  if (!item) notFound();
+  const managedFaqs = await fetchFaqs("chalisa", slug);
+  const faqs = managedFaqs.length ? managedFaqs.map(x => ({ title: x.question, content: x.answer })) : [
+    { title: `What is ${item.title} and who wrote it?`, content: item.excerpt || `${item.title} is a forty-verse devotional hymn.` },
+    { title: `How many verses are there in ${item.title}?`, content: "A Chalisa traditionally contains forty verses, usually with an opening and concluding Doha." },
+    { title: `What are the benefits of reading ${item.title} daily?`, content: "Daily devotional reading supports peace, focus, courage and spiritual discipline." },
+    { title: `What is the best time to chant ${item.title}?`, content: item.notes || "Morning or evening in a clean and peaceful place is ideal." },
+  ];
+  const fallbackLyrics = `${item.title}\n\nComplete lyrics will be available after they are added from the admin panel.`;
+  const hindiLyrics = item.originalTextHi || item.originalText || fallbackLyrics;
+  const englishLyrics = item.transliteration || item.originalText || fallbackLyrics;
+  const related = item.related?.length ? item.related.slice(0, 3) : fallbackChalisas.filter(x => x.slug !== slug).slice(0, 3);
+  const deity = item.deity || item.title.replace(/\s+Chalisa$/i, "") || "Divine";
+  return <main className="min-h-screen bg-[#fffaf5] text-[#291d22]">
+    <Header />
+    <section className="relative min-h-[500px] overflow-hidden border-b border-[#b88432] bg-[#061329] text-white">
+      <Image src={item.image} alt={item.title} fill priority sizes="100vw" className="object-cover object-[72%_center] opacity-65" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#061329] via-[#061329]/90 to-transparent" />
+      <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:py-20"><div className="max-w-xl"><span className="inline-flex rounded-full bg-[#bce96d] px-5 py-2 text-xs font-extrabold uppercase text-[#173519]">◉ &nbsp; {item.title}</span><h1 className="mt-6 font-serif text-6xl font-bold text-[#f0c464]">{item.title}</h1><p className="mt-2 font-serif text-3xl">{item.title}</p><p className="mt-5 max-w-lg text-base leading-7 text-white/85">Read the complete {item.title} with Hindi lyrics, English transliteration, meaning, benefits and chanting method.</p><div className="mt-5 flex flex-wrap gap-2 text-xs"><span className="rounded-md border border-white/30 px-4 py-2">◷ {item.readTime || "10 min"}</span><span className="rounded-md border border-white/30 px-4 py-2">▣ 40 Chaupais</span><span className="rounded-md border border-white/30 px-4 py-2">◎ Hindi + English</span></div><div className="mt-6 flex gap-3"><a href="#lyrics" className="rounded-md bg-[#f0c464] px-8 py-3 text-sm font-bold text-[#321a18]">▤ &nbsp; Start Reading</a><button className="rounded-md border border-[#e5b952] px-8 py-3 text-sm font-bold text-[#f0c45f]">▷ &nbsp; Listen Audio</button></div></div></div>
+    </section>
+    <nav className="sticky top-16 z-40 border-b border-[#d1a14e] bg-gradient-to-r from-[#421015] to-[#6b2227] text-white"><div className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4">{[["⌂","Overview","about"],["▤","Chalisa Lyrics","lyrics"],["◉","Meaning","meaning"],["♧","Benefits","benefits"],["▣","How to Chant","how-to"],["?","FAQ","faq"]].map(([icon,label,id])=><a key={id} href={`#${id}`} className="whitespace-nowrap border-b-2 border-transparent px-5 py-4 text-xs font-bold hover:border-[#efc861] hover:text-[#efc861]">{icon} &nbsp; {label}</a>)}<span className="ml-auto flex"><button className="px-5"><Bookmark size={18}/></button><button className="flex items-center gap-2 px-5"><Share2 size={17}/> Share</button></span></div></nav>
+    <div className="mx-auto max-w-7xl px-4 py-5 text-xs sm:px-6 lg:px-8"><Link href="/">Home</Link><span className="mx-3">›</span><Link href="/chalisa">Chalisa</Link><span className="mx-3">›</span><b className="text-maroon">{item.title}</b></div>
+    <div className="mx-auto grid max-w-7xl gap-5 px-4 pb-10 sm:px-6 lg:grid-cols-[1fr_310px] lg:px-8">
+      <div className="space-y-5">
+        <section id="about" className="rounded-xl border border-[#e4cdae] bg-white p-6"><h2 className="font-serif text-xl font-bold">♨ About {item.title}</h2><p className="mt-4 text-sm leading-7 text-slate-600">{item.excerpt || `${item.title} is a sacred hymn dedicated to ${deity}. Regular recitation brings peace, courage, removes fear and bestows spiritual growth.`}</p></section>
+        <section className="flex items-center gap-4 rounded-xl border border-[#e4cdae] bg-white p-5"><div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full"><Image src={item.image} alt="" fill className="object-cover"/></div><button className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#7a1e24] text-white"><Play size={18} fill="currentColor"/></button><div className="min-w-0 flex-1"><h3 className="font-serif font-bold">Listen to {item.title}</h3><div className="mt-3 h-10 bg-[repeating-linear-gradient(90deg,#d9cfc7_0_2px,transparent_2px_6px)] opacity-70"/></div><span className="text-xs">10:24</span><button className="rounded-full border p-2"><Download size={16}/></button></section>
+        <ChalisaLyricsReader
+          title={item.title}
+          hindi={hindiLyrics}
+          english={englishLyrics}
+          meaning={item.excerpt || `Read ${item.title} with devotion for peace, courage and spiritual growth.`}
+        />
+        <section id="meaning" className="rounded-xl border border-[#e4cdae] bg-white p-5"><h2 className="font-serif text-xl font-bold">{item.title} Meaning (In Brief)</h2><p className="mt-1 text-xs text-slate-500">Each verse describes {deity}’s form, virtues and compassion.</p><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{["Glorifies the Divine","Seeks Protection","Grants Blessings","Path to Liberation"].map(x=><div key={x} className="rounded-lg border border-[#ead8c6] p-4"><Sparkles className="text-[#bf7b25]"/><b className="mt-3 block text-sm">{x}</b><p className="mt-1 text-xs leading-5 text-slate-500">Prayer, devotion and spiritual growth through divine grace.</p></div>)}</div></section>
+        <section id="benefits" className="rounded-xl border border-[#e4cdae] bg-white p-5"><h2 className="font-serif text-xl font-bold">Benefits of Reading {item.title}</h2><div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">{(item.benefits?.length?item.benefits:genericBenefits).slice(0,6).map((x,i)=><div key={x} className="rounded-lg border border-[#ead8c6] p-3 text-center"><Star className="mx-auto text-[#bd7924]"/><p className="mt-2 text-[10px] font-bold">{x}</p></div>)}</div></section>
+        <section id="how-to" className="rounded-xl border border-[#e4cdae] bg-white p-5"><h2 className="font-serif text-xl font-bold">How to Chant {item.title}</h2><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{steps.map(([a,b],i)=><div key={a} className="rounded-lg border border-[#ead8c6] p-4"><span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#c78b31] font-bold text-white">{i+1}</span><b className="mt-3 block text-sm">{a}</b><p className="mt-2 text-xs leading-5 text-slate-500">{b}</p></div>)}</div><div className="mt-4 rounded-md bg-[#fff1d7] py-3 text-center text-xs font-bold">▣ &nbsp; Best Days: Monday, Pradosh, Maha Shivratri</div></section>
+        <section id="faq" className="rounded-xl border border-[#e4cdae] bg-white p-5"><h2 className="font-serif text-xl font-bold">Frequently Asked Questions</h2><Accordion items={faqs} className="mt-4"/></section>
+      </div>
+      <Sidebar item={item} deity={deity} related={related}/>
+    </div>
+    <Recommendations item={item}/><Footer />
+  </main>;
+}
+
+function Sidebar({item,deity,related}){return <aside className="space-y-5"><div className="rounded-xl border border-[#e4cdae] bg-white p-5"><h2 className="font-serif text-xl font-bold">♕ On This Page</h2><ul className="mt-4 space-y-4 text-xs text-slate-600">{["About this Chalisa","Chalisa Lyrics","Chalisa Meaning","Benefits of Reading","How to Chant","Frequently Asked Questions"].map(x=><li key={x}>♧ &nbsp; {x}</li>)}</ul></div><div className="rounded-xl border border-[#e4cdae] bg-white p-5"><h3 className="font-serif text-lg font-bold">Daily Chanting Progress</h3><p className="mt-1 text-xs text-slate-500">Keep your daily streak alive</p><div className="mt-5 flex justify-between">{["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map((x,i)=><div key={x} className="text-center text-[9px]"><span className={`mt-2 flex h-7 w-7 items-center justify-center rounded-full ${i<4?"bg-[#75a444] text-white":"border border-[#e4cdae]"}`}>{i<4?"✓":""}</span>{x}</div>)}</div><p className="mt-5 text-xs">Current Streak</p><b className="font-serif text-xl">4 Days</b><button className="mt-4 w-full rounded-md bg-[#781e24] py-3 text-xs font-bold text-white">Mark as Completed</button></div><div className="rounded-xl border border-[#e4cdae] bg-white p-5"><h3 className="font-serif text-lg font-bold">Chalisa Details</h3>{[["Deity",deity],["Verses","40 (Chaupais)"],["Language","Hindi / Sanskrit"],["Reading Time",item.readTime||"10 Minutes"],["Best Day","Monday"]].map(([a,b])=><p key={a} className="flex justify-between border-b py-3 text-xs"><b>{a}</b><span>{b}</span></p>)}</div><div className="rounded-xl border border-[#d5ae6f] bg-[#fff2dc] p-6 text-center"><p className="text-3xl font-bold">ॐ नमः शिवाय</p><p className="font-serif text-lg">Om Namah Shivaya</p><button className="mt-4 w-full rounded-md bg-[#781e24] py-3 text-xs font-bold text-white">Chant 108 Times</button></div><div className="rounded-xl border border-[#e4cdae] bg-white p-5"><div className="flex justify-between"><h3 className="font-serif text-lg font-bold">Related Chalisas</h3><Link href="/chalisa" className="text-[10px] font-bold text-maroon">View All ›</Link></div><div className="mt-4 space-y-4">{related.map(x=><Link key={x.slug} href={x.href||getMantraHref(x)} className="flex gap-3"><div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md"><Image src={x.image} alt="" fill className="object-cover"/></div><div><b className="text-sm">{x.title}</b><p className="mt-1 line-clamp-2 text-[10px] text-slate-500">Read this sacred Chalisa with meaning.</p></div></Link>)}</div></div></aside>}
+function Recommendations({item}){const cards=[[item.image,"Divine Aarti","Experience divine Aarti with lyrics and audio."],[item.image,"Maha Mrityunjaya Mantra","Powerful mantra for healing and protection."],["https://images.unsplash.com/photo-1561361058-c24cecae35ca?auto=format&fit=crop&w=600&q=80","12 Jyotirlingas","Explore the sacred Jyotirlingas."],[item.image,"Monday Puja Vidhi","Step-by-step puja vidhi for devotees."]];return <section className="border-t border-[#e4cdae] py-8"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><h2 className="font-serif text-xl font-bold">You May Also Like</h2><div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{cards.map(([img,title,text])=><article key={title} className="overflow-hidden rounded-lg border border-[#e4cdae] bg-white"><div className="relative h-36"><Image src={img} alt="" fill className="object-cover"/></div><div className="p-4"><b className="font-serif">{title}</b><p className="mt-1 text-xs text-slate-500">{text}</p><p className="mt-3 text-[10px]">◷ 10 min &nbsp; • &nbsp; Listen</p></div></article>)}</div></div></section>}

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ChevronRight, Clock } from "lucide-react";
-import HorizontalScroll from "@/components/ui/HorizontalScroll";
 import { fetchBlogs } from "@/lib/blogs";
 import OptimizedImage from "@/components/ui/OptimizedImage";
+import { blogArticles } from "@/lib/homeContent";
 
 function estimateReadTime(article) {
   const text = `${article.description || ""} ${article.content || ""}`.replace(/<[^>]*>/g, " ");
@@ -12,7 +12,7 @@ function estimateReadTime(article) {
 
 function ArticleCard({ article }) {
   return (
-    <article className="group card-lift flex h-full w-[min(100%,300px)] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#f1e4d6] bg-white shadow-sm sm:w-[280px]">
+    <article className="group card-lift flex h-full flex-col overflow-hidden rounded-xl border border-[#eaded2] bg-white shadow-sm">
       <Link href={article.href} className="block">
         <div className="relative h-44 overflow-hidden">
           <OptimizedImage
@@ -49,32 +49,28 @@ function ArticleCard({ article }) {
 
 export default async function BlogArticles() {
   const blogs = await fetchBlogs();
-  if (!blogs.length) return null;
-
-  const articles = blogs.slice(0, 8).map((blog) => ({
-    slug: blog.slug,
-    title: blog.title,
-    excerpt: blog.shortDescription || blog.description,
-    readTime: estimateReadTime(blog),
-    image: blog.imageUrl,
-    href: `/blog/${blog.slug}`,
-  }));
+  const articles = blogs.length > 0
+    ? blogs.slice(0, 8).map((blog) => ({
+        slug: blog.slug,
+        title: blog.title,
+        excerpt: blog.shortDescription || blog.description,
+        readTime: estimateReadTime(blog),
+        image: blog.imageUrl,
+        href: `/blog/${blog.slug}`,
+      }))
+    : blogArticles;
 
   return (
-    <section id="blog" className="bg-gradient-to-b from-cream to-[#fff9f0] py-12">
+    <section id="blog" className="py-7">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-extrabold text-[#11162b] sm:text-3xl">
-          Spiritual Blogs &amp; Articles
-        </h2>
+        <div className="flex items-center justify-between"><h2 className="font-serif text-2xl font-bold text-[#2d2020]">♨ Mantras, Aartis &amp; Spiritual Guides</h2><Link href="/blog" className="text-xs font-bold text-maroon">View All Articles ›</Link></div>
         <p className="mt-2 max-w-2xl text-sm text-slate-500">
           Devotional guides, temple travel tips and mantra meanings for daily practice.
         </p>
-        <div className="mt-6">
-          <HorizontalScroll ariaLabel="Blog articles carousel">
+        <div className="mt-5 grid gap-5 md:grid-cols-3">
             {articles.map((article) => (
               <ArticleCard key={article.slug} article={article} />
-            ))}
-          </HorizontalScroll>
+            )).slice(0, 3)}
         </div>
       </div>
     </section>

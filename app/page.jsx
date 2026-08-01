@@ -1,8 +1,6 @@
 import Header from "@/components/home/Header";
 import HeroSection from "@/components/home/HeroSection";
 import PopularTemples from "@/components/home/PopularTemples";
-import SpiritualReels from "@/components/home/SpiritualReels";
-import DevotionalColumns from "@/components/home/DevotionalColumns";
 import UpcomingEvents from "@/components/home/UpcomingEvents";
 import BlogArticles from "@/components/home/BlogArticles";
 import FAQSection from "@/components/home/FAQSection";
@@ -13,6 +11,7 @@ import { fetchBanners } from "@/lib/banners";
 import JsonLd from "@/components/seo/JsonLd";
 import { buildMetadata, DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, seoKeywords } from "@/lib/seo";
 import { fetchFaqs } from "@/lib/faqs";
+import { ChalisaShowcase, QuickActions, SpiritualJourney, TrustStrip } from "@/components/home/HomeShowcase";
 
 export const revalidate = 60;
 
@@ -84,21 +83,19 @@ export default async function HomePage() {
       <Header />
       <main className="min-h-screen bg-cream">
         <HeroSection banners={banners} />
+        <QuickActions />
         <Reveal>
           <PopularTemples temples={temples} />
         </Reveal>
-        <Reveal direction="left">
-          <SpiritualReels />
-        </Reveal>
-        <Reveal direction="right">
-          <DevotionalColumns items={spiritualItems} />
-        </Reveal>
+        <SpiritualJourney />
+        <ChalisaShowcase items={spiritualItems} />
         <Reveal scale>
           <UpcomingEvents events={events} />
         </Reveal>
         <Reveal>
           <BlogArticles />
         </Reveal>
+        <TrustStrip />
         <Reveal>
           <FAQSection items={faqs} />
         </Reveal>

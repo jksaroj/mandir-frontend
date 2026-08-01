@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Clock } from "lucide-react";
-import { reelFilters } from "@/lib/homeContent";
+import { reelFilters, spiritualReels } from "@/lib/homeContent";
 import { fetchReels } from "@/lib/reels";
 import ReelPopup from "@/components/reels/ReelPopup";
 
@@ -89,7 +89,7 @@ export default function SpiritualReels() {
       setLoading(true);
       const data = await fetchReels({ limit: 12 });
       if (!ignore) {
-        setReels(data);
+        setReels(Array.isArray(data) && data.length > 0 ? data : spiritualReels);
         setLoading(false);
       }
     }
@@ -156,7 +156,7 @@ export default function SpiritualReels() {
           ) : filtered.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-[#f1e4d6] py-14 text-center">
               <p className="text-sm font-semibold text-slate-400">
-                {reels.length === 0 ? "Koi reel upload nahi hui abhi. Admin se reels add karwayein." : "Is category mein koi reel nahi mili."}
+                Is category mein koi reel nahi mili.
               </p>
             </div>
           ) : (

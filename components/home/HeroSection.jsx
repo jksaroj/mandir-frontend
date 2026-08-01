@@ -7,11 +7,11 @@ import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 
 const staticSlides = [
   {
-    deity: "Mahadev",
-    title: "Celebrate Devotion at Revered Shiva Temples Across India",
-    text: "Explore sacred Jyotirlingas, morning mantras, aarti timings and peaceful temple guides devoted to Lord Shiva.",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Statue_of_lord_shiva.jpg?width=1800",
-    align: "object-[58%_36%]",
+    deity: "Krishna Puja",
+    title: "Krishna Puja",
+    text: "Seek Lord Krishna’s divine blessings with Krishna Puja. Immerse in devotion, chant mantras, and invite peace, love, and prosperity.",
+    image: "/reels/hero-krishna.png",
+    align: "object-[70%_center]",
   },
   {
     deity: "Hanuman Ji",
@@ -55,7 +55,7 @@ export default function HeroSection({ banners = [], showActions = true, compact 
         backgroundColor: banner.backgroundColor,
         align: "object-center",
       }))
-    : staticSlides;
+    : staticSlides.slice(0, 1);
 
   const [active, setActive] = useState(0);
   const slide = slides[Math.min(active, slides.length - 1)];
@@ -71,7 +71,7 @@ export default function HeroSection({ banners = [], showActions = true, compact 
   const next = () => setActive((current) => (current + 1) % slides.length);
 
   return (
-    <section aria-labelledby="home-hero-heading" className={`relative isolate w-full overflow-hidden text-white transition-colors duration-700 ${compact ? "min-h-[450px] sm:min-h-[625px]" : "min-h-[560px] lg:min-h-[620px]"}`} style={{ backgroundColor }}>
+    <section aria-labelledby="home-hero-heading" className={`relative isolate w-full overflow-hidden text-white transition-colors duration-700 ${compact ? "min-h-[450px] sm:min-h-[625px]" : "min-h-[430px] lg:min-h-[510px]"}`} style={{ backgroundColor }}>
       <div className="absolute inset-x-0 top-0 h-px bg-white/20" />
 
       <div className={`absolute overflow-hidden ${compact ? "inset-0" : "inset-x-0 top-0 h-[48%] lg:inset-y-0 lg:left-[44%] lg:right-0 lg:h-auto"}`}>
@@ -93,7 +93,7 @@ export default function HeroSection({ banners = [], showActions = true, compact 
       {!compact && <div className="pointer-events-none absolute bottom-0 left-0 top-[42%] w-full lg:top-0 lg:w-[47%]" style={{ backgroundColor }} />}
       {!compact && <div className="pointer-events-none absolute bottom-0 left-[42%] top-0 hidden w-[18%] lg:block" style={{ background: `linear-gradient(to right, ${backgroundColor}, ${backgroundColor}bf, transparent)` }} />}
 
-      <div className={`relative z-10 mx-auto flex w-full max-w-[1440px] px-6 sm:px-10 lg:px-16 xl:px-20 ${compact ? "min-h-[450px] items-center py-10 sm:min-h-[625px]" : "min-h-[560px] items-end pb-16 pt-[285px] lg:min-h-[620px] lg:items-center lg:pb-14 lg:pt-0"}`}>
+      <div className={`relative z-10 mx-auto flex w-full max-w-7xl px-6 sm:px-10 lg:px-8 ${compact ? "min-h-[450px] items-center py-10 sm:min-h-[625px]" : "min-h-[430px] items-end pb-12 pt-[220px] lg:min-h-[510px] lg:items-center lg:pb-10 lg:pt-0"}`}>
         <div className="w-full lg:max-w-[590px]">
           <AnimatePresence mode="wait">
             <motion.div
@@ -103,7 +103,7 @@ export default function HeroSection({ banners = [], showActions = true, compact 
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="inline-flex items-center gap-3 rounded-full bg-[#c9ed79] px-5 py-2.5 font-bold text-[#173519] shadow-lg">
+              <div className="inline-flex items-center gap-3 rounded-full bg-[#c9ed79] px-5 py-2.5 font-bold uppercase text-[#173519] shadow-lg">
                 <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#173519] text-[#c9ed79]">
                   <Sparkles size={17} />
                 </span>

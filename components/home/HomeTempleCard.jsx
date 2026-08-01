@@ -4,29 +4,18 @@ import OptimizedImage from "@/components/ui/OptimizedImage";
 import { IMAGE_SIZES, templeImageAlt } from "@/lib/images";
 import { getTempleHref } from "@/lib/temples";
 
-function bhagwanFromDeity(deity = "") {
-  const d = deity.toLowerCase();
-  if (d.includes("shiva")) return "Shiva";
-  if (d.includes("hanuman")) return "Hanuman";
-  if (d.includes("ram")) return "Ram";
-  if (d.includes("krishna") || d.includes("vishnu") || d.includes("venkateswara")) return "Krishna";
-  if (d.includes("devi") || d.includes("goddess") || d.includes("lakshmi") || d.includes("durga")) return "Devi";
-  return "Divine";
-}
-
 export default function HomeTempleCard({ temple, grid = false }) {
   const href = getTempleHref(temple.slug);
-  const tag = bhagwanFromDeity(temple.deity);
   const excerpt =
     temple.excerpt ||
     `Visit ${temple.name} for darshan, aarti timings and spiritual guidance.`;
 
   return (
-    <article className={`group card-lift flex h-full flex-col overflow-hidden rounded-2xl border border-[#f1e7dc] bg-white shadow-sm ${
+    <article className={`group card-lift flex h-full flex-col overflow-hidden rounded-xl border border-[#eaded2] bg-white shadow-sm ${
       grid ? "w-full" : "w-[min(100%,280px)] shrink-0 snap-start sm:w-[260px] lg:w-[calc((100%-5*1.25rem)/5)] lg:min-w-[200px] lg:max-w-[240px]"
     }`}>
       <Link href={href} className="block">
-        <div className="relative h-44 overflow-hidden">
+        <div className="relative h-48 overflow-hidden">
           <OptimizedImage
             src={temple.image}
             alt={templeImageAlt(temple.name, { context: "card" })}
@@ -35,8 +24,8 @@ export default function HomeTempleCard({ temple, grid = false }) {
             className="img-zoom object-cover"
             quality={80}
           />
-          <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-extrabold text-[#b86b12] shadow-sm">
-            {tag}
+          <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-extrabold text-[#8b3a26] shadow-sm">
+            📍 {temple.badge || temple.city}
           </span>
         </div>
       </Link>
