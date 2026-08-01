@@ -13,6 +13,7 @@ import ShareButton from "@/components/ui/ShareButton";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
 import PageBannerSlider from "@/components/site/PageBannerSlider";
+import HeroSection from "@/components/home/HeroSection";
 import { getMessage } from "@/lib/i18n/getMessage";
 import { DEFAULT_LOCALE } from "@/lib/i18n/config";
 import { itemListSchema } from "@/lib/seo";
@@ -109,7 +110,11 @@ export default async function SpiritualListingPage({ variant, banners = [] }) {
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
         <Breadcrumbs items={breadcrumbs} />
       </div>
-      {banners.length > 0 ? <PageBannerSlider banners={banners} title={listName} /> : <section className="relative overflow-hidden bg-[#fff2df]">
+      {banners.length > 0 ? (
+        variant === "chalisa"
+          ? <HeroSection banners={banners} showActions={false} compact />
+          : <PageBannerSlider banners={banners} title={listName} />
+      ) : <section className="relative overflow-hidden bg-[#fff2df]">
         <div className="absolute right-0 top-0 hidden h-full w-1/2 lg:block">
           <Image src={heroImage} alt="Spiritual book and diya" fill priority sizes="50vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#fff2df] via-[#fff2df]/50 to-transparent" />
@@ -144,7 +149,7 @@ export default async function SpiritualListingPage({ variant, banners = [] }) {
         <h2 className="sr-only">
           <I18n k={variant === "mantra" ? "nav.mantra" : "nav.chalisa"} />
         </h2>
-        <WaveGrid className="grid gap-5 sm:grid-cols-2 lg:grid-cols-7">
+        <WaveGrid className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {config.categoryKeys.map((categoryKey, index) => (
             <WaveGridItem key={categoryKey}>
               <Link
@@ -210,16 +215,18 @@ export default async function SpiritualListingPage({ variant, banners = [] }) {
               ))}
             </div>
           ) : (
-            <WaveGrid className="grid gap-5 sm:grid-cols-2">
+            <WaveGrid className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {items.map((item) => (
                 <WaveGridItem key={item.slug}>
-                  <Link href={getMantraHref(item)} className="block">
-                    <AnimatedCard className="rounded-2xl border border-[#f1e4d6] bg-white p-6 shadow-sm transition hover:shadow-md">
-                      <OptimizedImage src={item.image} alt={item.title} width={80} height={80} className="h-20 w-20 rounded-xl object-cover" />
-                      <h3 className="mt-5 font-extrabold">{item.title}</h3>
-                      <p className="mt-2 text-sm font-semibold text-slate-500">
-                        {item.excerpt ? item.excerpt : <I18n k="common.readLyricsMeaning" />}
-                      </p>
+                  <Link href={getMantraHref(item)} className="block h-full">
+                    <AnimatedCard className="h-[370px] overflow-hidden rounded-2xl border border-[#f1e4d6] bg-white shadow-sm transition hover:shadow-md">
+                      <OptimizedImage src={item.image} alt={item.title} width={640} height={360} className="h-[60%] w-full object-cover" />
+                      <div className="p-5">
+                        <h3 className="font-extrabold">{item.title}</h3>
+                        <p className="mt-2 line-clamp-3 text-sm font-semibold text-slate-500">
+                          {item.excerpt ? item.excerpt : <I18n k="common.readLyricsMeaning" />}
+                        </p>
+                      </div>
                     </AnimatedCard>
                   </Link>
                 </WaveGridItem>

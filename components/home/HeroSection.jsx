@@ -45,7 +45,7 @@ const staticSlides = [
 
 const AUTO_SLIDE_MS = 5600;
 
-export default function HeroSection({ banners = [] }) {
+export default function HeroSection({ banners = [], showActions = true, compact = false }) {
   const slides = banners.length
     ? banners.map((banner) => ({
         deity: banner.name,
@@ -71,10 +71,10 @@ export default function HeroSection({ banners = [] }) {
   const next = () => setActive((current) => (current + 1) % slides.length);
 
   return (
-    <section aria-labelledby="home-hero-heading" className="relative isolate min-h-[560px] w-full overflow-hidden text-white transition-colors duration-700 lg:min-h-[620px]" style={{ backgroundColor }}>
+    <section aria-labelledby="home-hero-heading" className={`relative isolate w-full overflow-hidden text-white transition-colors duration-700 ${compact ? "min-h-[300px] sm:min-h-[380px]" : "min-h-[560px] lg:min-h-[620px]"}`} style={{ backgroundColor }}>
       <div className="absolute inset-x-0 top-0 h-px bg-white/20" />
 
-      <div className="absolute inset-x-0 top-0 h-[48%] overflow-hidden lg:inset-y-0 lg:left-[44%] lg:right-0 lg:h-auto">
+      <div className={`absolute overflow-hidden ${compact ? "inset-0" : "inset-x-0 top-0 h-[48%] lg:inset-y-0 lg:left-[44%] lg:right-0 lg:h-auto"}`}>
         {slides.map((item, index) => (
           <img
             key={`${item.deity}-${index}`}
@@ -85,15 +85,15 @@ export default function HeroSection({ banners = [] }) {
             }`}
           />
         ))}
-        <div className="absolute inset-0 lg:hidden" style={{ background: `linear-gradient(to top, ${backgroundColor}, transparent 70%)` }} />
-        <div className="absolute inset-0 hidden lg:block" style={{ background: `linear-gradient(90deg, ${backgroundColor} 0%, ${backgroundColor}f5 4%, ${backgroundColor}b8 12%, ${backgroundColor}3d 24%, transparent 42%)` }} />
+        <div className={`absolute inset-0 ${compact ? "bg-gradient-to-r from-black/75 via-black/35 to-black/5" : "lg:hidden"}`} style={compact ? undefined : { background: `linear-gradient(to top, ${backgroundColor}, transparent 70%)` }} />
+        {!compact && <div className="absolute inset-0 hidden lg:block" style={{ background: `linear-gradient(90deg, ${backgroundColor} 0%, ${backgroundColor}f5 4%, ${backgroundColor}b8 12%, ${backgroundColor}3d 24%, transparent 42%)` }} />}
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/15" />
       </div>
 
-      <div className="pointer-events-none absolute bottom-0 left-0 top-[42%] w-full lg:top-0 lg:w-[47%]" style={{ backgroundColor }} />
-      <div className="pointer-events-none absolute bottom-0 left-[42%] top-0 hidden w-[18%] lg:block" style={{ background: `linear-gradient(to right, ${backgroundColor}, ${backgroundColor}bf, transparent)` }} />
+      {!compact && <div className="pointer-events-none absolute bottom-0 left-0 top-[42%] w-full lg:top-0 lg:w-[47%]" style={{ backgroundColor }} />}
+      {!compact && <div className="pointer-events-none absolute bottom-0 left-[42%] top-0 hidden w-[18%] lg:block" style={{ background: `linear-gradient(to right, ${backgroundColor}, ${backgroundColor}bf, transparent)` }} />}
 
-      <div className="relative z-10 mx-auto flex min-h-[560px] w-full max-w-[1440px] items-end px-6 pb-16 pt-[285px] sm:px-10 lg:min-h-[620px] lg:items-center lg:px-16 lg:pb-14 lg:pt-0 xl:px-20">
+      <div className={`relative z-10 mx-auto flex w-full max-w-[1440px] px-6 sm:px-10 lg:px-16 xl:px-20 ${compact ? "min-h-[300px] items-center py-10 sm:min-h-[380px]" : "min-h-[560px] items-end pb-16 pt-[285px] lg:min-h-[620px] lg:items-center lg:pb-14 lg:pt-0"}`}>
         <div className="w-full lg:max-w-[590px]">
           <AnimatePresence mode="wait">
             <motion.div
@@ -109,20 +109,22 @@ export default function HeroSection({ banners = [] }) {
                 </span>
                 <span className="text-sm uppercase tracking-[0.08em] sm:text-base">{slide.deity}</span>
               </div>
-              <h1 id="home-hero-heading" className="mt-7 max-w-xl text-3xl font-black leading-[1.2] sm:text-4xl lg:mt-12 lg:text-[44px]">
+              <h1 id="home-hero-heading" className={`max-w-xl font-black leading-[1.2] ${compact ? "mt-4 text-3xl sm:text-4xl" : "mt-7 text-3xl sm:text-4xl lg:mt-12 lg:text-[44px]"}`}>
                 {slide.title}
               </h1>
               <p className="mt-4 max-w-lg text-sm font-medium leading-7 text-white/75 sm:text-base">
                 {slide.text}
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link href="/temples" className="rounded-lg bg-white px-8 py-3.5 text-sm font-extrabold text-[#071a3d] shadow-xl transition hover:-translate-y-0.5 hover:bg-[#c9ed79]">
-                  Explore Temples
-                </Link>
-                <Link href="#reels" className="rounded-lg border border-white/35 px-8 py-3.5 text-sm font-extrabold text-white transition hover:bg-white/10">
-                  Watch Reels
-                </Link>
-              </div>
+              {showActions && (
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <Link href="/temples" className="rounded-lg bg-white px-8 py-3.5 text-sm font-extrabold text-[#071a3d] shadow-xl transition hover:-translate-y-0.5 hover:bg-[#c9ed79]">
+                    Explore Temples
+                  </Link>
+                  <Link href="#reels" className="rounded-lg border border-white/35 px-8 py-3.5 text-sm font-extrabold text-white transition hover:bg-white/10">
+                    Watch Reels
+                  </Link>
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
