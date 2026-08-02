@@ -5,18 +5,14 @@ import Header from "@/components/site/Header";
 import Footer from "@/components/site/Footer";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/seo/Breadcrumbs";
-import { fetchEventBySlug, fetchEvents } from "@/lib/events";
+import { fetchEventBySlug } from "@/lib/events";
 import { absoluteUrl, buildMetadata, seoKeywords } from "@/lib/seo";
 import { fetchFaqs } from "@/lib/faqs";
 import FaqSection from "@/components/seo/FaqSection";
 import { faqSchema } from "@/lib/seo";
 
 export const revalidate = 60;
-
-export async function generateStaticParams() {
-  const events = await fetchEvents();
-  return events.map((event) => ({ slug: event.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -51,7 +47,7 @@ export default async function EventDetailPage({ params }) {
   const locationName = [event.city, event.state].filter(Boolean).join(", ") || event.address || "India";
   const breadcrumbs = [
     { name: "Home", href: "/" },
-    { name: "Events", href: "/" },
+    { name: "Events", href: "/events" },
     { name: event.name, href: `/events/${slug}` }
   ];
   const eventSchema = {
