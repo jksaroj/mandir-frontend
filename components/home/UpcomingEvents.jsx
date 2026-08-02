@@ -4,7 +4,11 @@ import { MapPin } from "lucide-react";
 import { fallbackEvents } from "@/lib/homeContent";
 
 function EventCard({ event }) {
-  const parsedDate = new Date(event.date);
+  const rawDate = String(event.date || "");
+  const isoParts = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  const parsedDate = isoParts
+    ? new Date(Number(isoParts[1]), Number(isoParts[2]) - 1, Number(isoParts[3]))
+    : new Date(rawDate);
   const hasValidDate = !Number.isNaN(parsedDate.getTime());
   const dateParts = hasValidDate
     ? {
@@ -55,15 +59,15 @@ export default function UpcomingEvents({ events = [] }) {
     ? events.slice(0, 4).map((e, i) => ({
         slug: e.slug || `event-${i}`,
         name: e.name || e.title || "Spiritual Event",
-        date: e.date || e.startDate ? new Date(e.date || e.startDate).toLocaleDateString("en-IN") : "TBA",
-        location: e.location || e.place || "India",
-        description: e.description || e.excerpt || "",
+        date: e.date || e.startDate || null,
+        location: e.location || e.address || e.place || "India",
+        description: e.shortDescription || e.description || e.excerpt || "",
         image:
           e.image || e.imageUrl ||
           fallbackEvents[i % fallbackEvents.length].image,
         href: e.href || `/events/${e.slug}`
       }))
-    : fallbackEvents.slice(0, 4);
+    : [];
 
   return (
     <section id="events" className="mx-auto max-w-7xl px-4 py-7 sm:px-6 lg:px-8">
@@ -71,11 +75,11 @@ export default function UpcomingEvents({ events = [] }) {
       <p className="mt-2 max-w-2xl text-sm text-slate-500">
         Festivals, melas and special darshan across India&apos;s holy cities.
       </p>
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {display.length > 0 ? <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {display.map((event) => (
             <EventCard key={event.slug} event={event} />
           ))}
-      </div>
+      </div> : <div className="mt-5 rounded-xl border border-dashed border-[#d9c2ad] bg-white px-5 py-8 text-center text-sm text-slate-500">No upcoming events are available right now.</div>}
     </section>
   );
 }
