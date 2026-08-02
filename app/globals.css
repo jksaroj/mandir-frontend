@@ -223,6 +223,20 @@ a {
   }
 }
 
+.event-rich-content h2 {
+  margin-top: 2rem;
+  color: #351112;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.event-rich-content h3 { margin-top: 1.4rem; color: #4d1519; font-size: 1.05rem; font-weight: 700; }
+.event-rich-content p { margin-top: .8rem; }
+.event-rich-content ul, .event-rich-content ol { margin: .8rem 0 0 1.25rem; }
+.event-rich-content ul { list-style: disc; }
+.event-rich-content ol { list-style: decimal; }
+.event-rich-content li { margin-top: .35rem; }
+
 @keyframes create-share-done-slide-up {
   from {
     opacity: 0;
