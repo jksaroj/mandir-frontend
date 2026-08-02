@@ -33,13 +33,17 @@ export default function EventsCollectionPage({ events = [], now = new Date().toI
   const current = new Date(now);
   const year = current.getUTCFullYear();
   const month = current.getUTCMonth();
+  const monthStart = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+  const monthEnd = new Date(Date.UTC(year, month + 1, 0)).toISOString().slice(0, 10);
   const today = now.slice(0, 10);
   const upcoming = events
     .filter((event) => dateKey(event.endDate || event.startDate) >= today)
     .sort((a, b) => dateKey(a.startDate).localeCompare(dateKey(b.startDate)));
+  // Include ongoing events that started in an earlier month but end in this month.
   const thisMonth = upcoming.filter((event) => {
-    const date = new Date(event.startDate);
-    return !Number.isNaN(date.getTime()) && date.getUTCFullYear() === year && date.getUTCMonth() === month;
+    const start = dateKey(event.startDate);
+    const end = dateKey(event.endDate || event.startDate);
+    return Boolean(start && end && start <= monthEnd && end >= monthStart);
   });
   const laterEvents = upcoming.filter((event) => !thisMonth.some((item) => item.slug === event.slug));
   const monthName = current.toLocaleDateString("en-IN", { month: "long", year: "numeric", timeZone: "UTC" });
