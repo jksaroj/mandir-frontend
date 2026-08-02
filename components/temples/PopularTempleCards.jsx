@@ -15,9 +15,16 @@ export default function PopularTempleCards({ temples = staticTemples }) {
           View All Temples <ChevronRight size={16} />
         </Link>
       </div>
-      <WaveGrid className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <WaveGrid className="grid gap-5 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_minmax(0,1fr)] lg:grid-rows-2">
         {shown.map((temple, index) => (
-          <WaveGridItem key={temple.slug} className={`h-full ${index === 0 ? "sm:row-span-2 lg:[&_article>div:first-child]:h-[350px]" : ""}`}>
+          <WaveGridItem
+            key={temple.slug}
+            className={`h-full min-w-0 ${
+              index === 0
+                ? "sm:row-span-2 lg:[&_article>div:first-child]:h-[350px]"
+                : "lg:[&_article>div:first-child]:h-40"
+            }`}
+          >
             <TempleCard temple={temple} />
           </WaveGridItem>
         ))}
